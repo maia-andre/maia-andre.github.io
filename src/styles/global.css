@@ -199,6 +199,43 @@ main {
   color: var(--carimbo);
 }
 
+/* Home */
+.apresentacao {
+  margin-bottom: 3.5rem;
+}
+
+.apresentacao p:first-of-type {
+  font-size: 1.1875rem;
+  color: var(--grafite);
+  font-style: italic;
+}
+
+.secao-home {
+  margin-top: 3.5rem;
+}
+
+.secao-cabecalho {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.25rem 1rem;
+  margin-bottom: 0.75rem;
+}
+
+.secao-cabecalho h2 {
+  margin: 0;
+}
+
+.secao-cabecalho a {
+  color: var(--grafite);
+  text-decoration: none;
+}
+
+.secao-cabecalho a:hover {
+  color: var(--carimbo);
+}
+
 /* Listagem de artigos */
 .filtro-categorias {
   display: flex;
