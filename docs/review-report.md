@@ -1,25 +1,28 @@
-# Review report — 2026-07-12 (INC-04)
-Spec: docs/spec.md (Versão 1, aprovada) | Incremento: INC-04 — Sistema de projetos | Build report: 2026-07-12 (INC-04)
+# Review report — 2026-07-12 (INC-05)
+Spec: docs/spec.md (Versão 1, aprovada) | Incremento: INC-05 — Home + Sobre | Build report: 2026-07-12 (INC-05)
 ## VEREDITO: APROVADO
 
-Suíte rodada pelo auditor: 91/91. Verify sem FALHAs. Regressão limpa (layout, artigos, listagens, rascunhos e builds inválidos todos verdes).
+Suíte rodada pelo auditor: 102/102. Verify sem FALHAs. O CE-04, declarado "não observável" pelo verify, foi **dirigido pelo auditor** em build isolado.
 
 ## Verificação requisito a requisito
 | Item | Status | Evidência / Falha |
 |------|--------|-------------------|
-| REQ-08 | Atendido | `esquemaProjeto` em `src/lib/conteudo.ts` com exatamente os campos da spec (obrigatórios e opcionais com defaults corretos); regra de tags compartilhada com artigos (RN-03); 14 testes campo a campo incluindo URLs inválidas e listas vazias. |
-| REQ-09 | Atendido | `/projetos/` e `/projetos/site-pessoal/` dirigidas no preview real (HTTP 200, h1, tecnologias, repositório e tags linkadas); seções de opcionais ausentes não renderizam. |
-| CE-07 | Atendido | Dois níveis de evidência: página servida sem `<img>` e com exatamente 1 link (só repositório); build real com projeto mínimo (só obrigatórios) gera página sem nenhuma seção opcional. |
-| Regressão INC-01/02/03 | Limpa | 91/91 na rodada do auditor; rotas anteriores dirigidas no verify (200/404 corretos). |
+| REQ-02 | Atendido | Home servida com h1, apresentação editável contendo a mensagem principal (2× na página: apresentação + rodapé-carimbo), seção de recentes com link do artigo e link "todos os artigos" (verify via curl). |
+| REQ-10 | Atendido | Projeto `destaque: true` na Home com link; seleção filtra não destacados e corta em 4 (unitários). |
+| REQ-12 | Atendido | `/sobre/` servida com h1, Markdown renderizado cobrindo quem sou / por que escrevo / por que desenvolvo / contato (link GitHub). Conteúdo em arquivo editável (`src/content/paginas/sobre.md`). |
+| RN-04 | Atendido | Constantes 5/4; unitários nos valores-limite (6→5, 1→1, 0→0, 5 destacados→4, não destacado→fora). |
+| CE-04 | Atendido | **Dirigido pelo auditor**: artigo único rascunhado + destaque removido temporariamente → build isolado → Home sem NENHUMA das duas seções (0 ocorrências dos títulos). Conteúdo restaurado (working tree limpo). |
+| Extras (hardening INC-04) | Verificado | `urlHttp()` rejeita `javascript:`/`data:` com testes; regressão de URLs http(s) aceitas. |
+| Regressão INC-01–04 | Limpa | 102/102; rotas anteriores 200/404 corretos no verify. `/tags/` e `/busca/` 404 são estado esperado (INC-06/07 pendentes). |
 
 ## Qualidade dos testes (TDD)
-- Vermelho documentado (14 falhas antes da implementação). Dois defeitos estavam nos próprios testes (asserção contra seção legítima; caminho sem slugificação) — corrigidos ANTES da implementação mudar, mantendo o contrato honesto.
-- Achado de estabilidade correto: consolidação dos testes de build real em um único arquivo elimina contaminação de `src/content/` entre workers paralelos — flake real observado e eliminado nesta rodada.
-- Extras absorvidos verificados: `Object.hasOwn` aplicado; guarda de colisão de slugs instanciada por coleção (instâncias separadas, sem falso positivo entre artigo e projeto com mesmo slug).
+- Vermelho documentado (9 falhas antes da implementação).
+- Teste da mensagem principal restrito ao `main` — evita falso verde pela ocorrência do rodapé. Bom cuidado.
+- Rascunho re-verificado em nova superfície (Home) — RN-05 acompanha cada superfície nova, como o plano exige.
+- Sem testes triviais; funções de seleção testadas nos limites exatos da RN-04.
 
 ## Segurança
-- **Baixa**: `esquemaProjeto` aceita URLs com esquema `javascript:` e `data:` em `repositorio` e `links[].url` (verificado pelo auditor: `safeParse` retorna sucesso). O conteúdo é exclusivamente autoral — sem vetor de terceiros hoje —, mas é hardening barato: restringir a `http(s)` no schema. **Correção indicada para a rodada de build do INC-05** (não bloqueia).
-- `npm audit`: 0 vulnerabilidades. Sem segredos. Astro escapa interpolações; sem `set:html`.
+- Nenhum achado. Hardening do review anterior aplicado e testado. `npm audit`: 0 vulnerabilidades. Conteúdo de `paginas` é autoral e renderizado via pipeline Markdown do Astro (escape padrão).
 
 ## Correções necessárias (para o /build)
-Nenhuma bloqueante. Próximo passo: `/ship`. (A rodada do INC-05 deve absorver: restringir esquemas de URL a http/https em `repositorio` e `links[].url`, com teste rejeitando `javascript:` e `data:`.)
+Nenhuma. Próximo passo: `/ship`.

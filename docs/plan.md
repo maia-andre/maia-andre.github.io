@@ -1,6 +1,6 @@
 # Plan: Site pessoal — arquivo vivo (v1)
 Spec: docs/spec.md (Versão 1, aprovada) | Gerado: 2026-07-12
-Progresso: 4/10 incrementos concluídos
+Progresso: 5/10 incrementos concluídos
 
 Convenção de release (RN-06): cada incremento concluído via /ship gera a release `v0.<nº do incremento>.0`; o INC-10 fecha a `v1.0.0`.
 
@@ -31,7 +31,7 @@ Depende de: INC-02
 Entrega verificável: `/projetos/` lista os projetos e `/projetos/<slug>/` renderiza a página individual; projeto sem `repositorio`, `links` ou `imagem` renderiza sem essas seções, comprovado por teste.
 
 ### INC-05 — Home + Sobre
-Status: pendente
+Status: concluído (v0.5.0, 2026-07-12)
 Itens da spec: REQ-02, REQ-10, REQ-12 | RN-04 | CE-04
 Depende de: INC-03, INC-04
 Entrega verificável: Home exibe apresentação com a mensagem principal, os 5 artigos mais recentes e até 4 projetos `destaque: true` (seções omitidas quando vazias, provado por teste); `/sobre/` renderiza o conteúdo Markdown editável.
