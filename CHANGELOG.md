@@ -7,6 +7,24 @@ e o versionamento segue o [SemVer](https://semver.org/lang/pt-BR/): cada
 incremento do [plano](docs/plan.md) entregue gera uma release `v0.x.0`, até a
 `v1.0.0` fechar o escopo da primeira versão.
 
+## [0.5.0] — 2026-07-12 · INC-05 — Home e Sobre
+
+Review APROVADO em 2026-07-12. Atende REQ-02, REQ-10, REQ-12, RN-04; cobre CE-04.
+
+### Adicionado
+
+- Home real: apresentação editável em Markdown com a mensagem principal,
+  os 5 artigos mais recentes e até 4 projetos em destaque — seções somem
+  quando não há conteúdo
+- Página `/sobre/` com conteúdo Markdown editável (quem sou, por que escrevo,
+  por que desenvolvo software, contato)
+- Coleção de páginas fixas editáveis (`src/content/paginas/`)
+
+### Segurança
+
+- URLs de repositório e links de projetos restritas a http(s) — esquemas
+  `javascript:` e `data:` rejeitados no build
+
 ## [0.4.0] — 2026-07-12 · INC-04 — Sistema de projetos
 
 Review APROVADO em 2026-07-12. Atende REQ-08, REQ-09; cobre CE-07.

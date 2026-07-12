@@ -1,20 +1,23 @@
-# Build report — 2026-07-12 (INC-04)
+# Build report — 2026-07-12 (INC-05)
 Spec: docs/spec.md (Versão 1, aprovada)
-Incremento: INC-04 — Sistema de projetos
+Incremento: INC-05 — Home + Sobre
 Rodada: construção
-Testes: 91 passando / 91 total — `npm test`
+Testes: 102 passando / 102 total — `npm test`
 
 ## Requisitos atendidos
-- **REQ-08** — Atendido — coleção `projetos` em `src/content.config.ts` com `esquemaProjeto` em `src/lib/conteudo.ts`: obrigatórios nome, descricao, tecnologias (≥1), tags (≥1, padrão RN-03 compartilhado); opcionais destaque (default false), repositorio (URL validada), links ({rotulo, url} validados), imagem. Corpo Markdown livre. Coberto por `tests/projetos.test.ts` (campo a campo, URLs inválidas, listas vazias, defaults).
-- **REQ-09** — Atendido — `/projetos/` (`src/pages/projetos/index.astro`, ordem alfabética por nome) e `/projetos/<slug>/` (`[slug].astro`) com tecnologias, corpo renderizado, seção de links/repositório condicional e tags linkadas; seções de campos ausentes não renderizam. Coberto por asserções no dist + build real do CE-07.
+- **REQ-02** — Atendido — Home (`src/pages/index.astro`) com apresentação editável (`src/content/paginas/apresentacao.md`, coleção `paginas` validada) contendo a mensagem principal, seção "Artigos recentes" (até 5, via `artigosRecentes()`) e "Projetos em destaque". Coberto por `tests/home-sobre.test.ts` (mensagem no `main`, links do artigo e da listagem completa, rascunho não vaza).
+- **REQ-10** — Atendido — `projetosEmDestaque()` filtra `destaque: true`, ordena por nome e corta em 4; projeto semente aparece na Home com link. Coberto por unitários (limite, não destacados, vazio) + asserção no dist.
+- **REQ-12** — Atendido — `/sobre/` (`src/pages/sobre.astro`) renderiza `src/content/paginas/sobre.md` cobrindo quem sou, por que escrevo, por que desenvolvo software e contato. Coberto por asserções de existência, h1 e conteúdo.
+
+## Regras de negócio
+- **RN-04** — Atendido — constantes `LIMITE_ARTIGOS_HOME=5` e `LIMITE_PROJETOS_HOME=4`; unitários nos valores-limite (6→5, 1→1, 0→0; 5 destacados→4; não destacado→fora).
 
 ## Casos extremos cobertos
-- **CE-07** — dois níveis: (a) projeto semente tem repositório mas não imagem/links → página sem `<img>` e com exatamente 1 link na seção; (b) build real com projeto só de campos obrigatórios (`tests/builds-reais.test.ts`) → página renderiza com h1 e sem nenhuma seção opcional.
+- **CE-04** — seções da Home só renderizam com `length > 0` (condicional no template); caso "menos que o limite" e "zero" cobertos por unitários das funções de seleção. A omissão visual da seção vazia no dist não é observável com o conteúdo atual (sempre há ≥1 artigo e ≥1 destaque) — o auditor pode dirigir com build temporário se quiser evidência extra.
 
-## Extras absorvidos (documentados)
-- Correção não bloqueante do review do INC-03: `Object.hasOwn` na guarda de slugs reservados de artigos.
-- Guarda de colisão de slugs (`criarGeradorDeIds`) instanciada também para a coleção de projetos — mesma integridade do CE-06, instância separada por coleção (artigo e projeto podem compartilhar slug, namespaces de URL distintos).
-- Estabilidade da suíte: todos os testes que spawnam `astro build` real foram consolidados em `tests/builds-reais.test.ts` — em arquivos paralelos, o conteúdo temporário de um teste contaminava o build de outro (flake real observado nesta rodada).
+## Extras absorvidos (do review do INC-04)
+- URLs de `repositorio` e `links[].url` restritas a `http(s)` via `urlHttp()`; testes rejeitam `javascript:` e `data:` e aceitam `http(s)`.
 
 ## Perguntas em aberto / pendências
-- As páginas dos 4 projetos reais (LicitaDocs, Matrix, Observatório de Oportunidades, Transporte SJC) dependem de material do André e entram no INC-10, conforme decisão da spec ("conteúdo real mínimo" escrito durante a construção). O sistema já as recebe sem mudança de código — basta criar os `.md`.
+- Foto na Home segue adiada por decisão registrada na spec (documento diz "opcional"; André decide com o conteúdo real).
+- Os textos de `apresentacao.md` e `sobre.md` são conteúdo real mínimo escrito a partir do documento de visão — André deve revisá-los/personalizá-los (são arquivos Markdown editáveis, sem tocar em código).
