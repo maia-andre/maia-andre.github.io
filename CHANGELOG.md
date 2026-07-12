@@ -7,6 +7,17 @@ e o versionamento segue o [SemVer](https://semver.org/lang/pt-BR/): cada
 incremento do [plano](docs/plan.md) entregue gera uma release `v0.x.0`, até a
 `v1.0.0` fechar o escopo da primeira versão.
 
+## [0.9.0] — 2026-07-12 · INC-09 — Deploy automático
+
+Review APROVADO em 2026-07-12. Atende REQ-15; cobre CE-08.
+**O site está no ar: <https://maia-andre.github.io>**
+
+### Adicionado
+
+- Deploy automático: push na `main` roda a suíte inteira, constrói e publica
+  no GitHub Pages — build quebrado nunca chega ao ar (o site mantém a versão
+  anterior, comprovado com um build de teste quebrado)
+
 ## [0.8.0] — 2026-07-12 · INC-08 — Tema claro/escuro
 
 Review APROVADO em 2026-07-12. Atende REQ-14, RNF-01; cobre CE-05.
