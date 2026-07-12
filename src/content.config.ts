@@ -1,6 +1,11 @@
 import { defineCollection } from 'astro:content';
 import { glob } from 'astro/loaders';
-import { criarGeradorDeIds, esquemaArtigo, esquemaProjeto } from './lib/conteudo';
+import {
+  criarGeradorDeIds,
+  esquemaArtigo,
+  esquemaPagina,
+  esquemaProjeto,
+} from './lib/conteudo';
 
 const artigos = defineCollection({
   loader: glob({
@@ -20,4 +25,13 @@ const projetos = defineCollection({
   schema: esquemaProjeto,
 });
 
-export const collections = { artigos, projetos };
+const paginas = defineCollection({
+  loader: glob({
+    pattern: '**/*.md',
+    base: './src/content/paginas',
+    generateId: criarGeradorDeIds(),
+  }),
+  schema: esquemaPagina,
+});
+
+export const collections = { artigos, projetos, paginas };

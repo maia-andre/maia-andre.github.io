@@ -39,17 +39,51 @@ export const esquemaProjeto = z.object({
   tecnologias: z.array(z.string().min(1)).min(1, 'informe ao menos uma tecnologia'),
   tags: esquemaTags,
   destaque: z.boolean().default(false),
-  repositorio: z.string().url('repositorio deve ser uma URL válida').optional(),
+  repositorio: urlHttp('repositorio').optional(),
   links: z
     .array(
       z.object({
         rotulo: z.string().min(1),
-        url: z.string().url('url do link deve ser válida'),
+        url: urlHttp('url do link'),
       }),
     )
     .optional(),
   imagem: z.string().min(1).optional(),
 });
+
+// Hardening: só http(s) — bloqueia javascript:, data: etc.
+function urlHttp(campo: string) {
+  return z
+    .string()
+    .url(`${campo} deve ser uma URL válida`)
+    .regex(/^https?:\/\//, `${campo} deve usar http ou https`);
+}
+
+// Conteúdo editável de páginas fixas (apresentação da Home, Sobre)
+export const esquemaPagina = z.object({
+  titulo: z.string().min(1),
+});
+
+// RN-04 — limites da Home; menos que o limite mostra os existentes,
+// zero omite a seção (CE-04, condicional no template)
+export const LIMITE_ARTIGOS_HOME = 5;
+export const LIMITE_PROJETOS_HOME = 4;
+
+export function artigosRecentes<E extends { data: { rascunho: boolean; data: Date; titulo: string } }>(
+  entradas: E[],
+  ehProducao: boolean,
+): E[] {
+  return prepararListagem(entradas, ehProducao).slice(0, LIMITE_ARTIGOS_HOME);
+}
+
+export function projetosEmDestaque<E extends { data: { nome: string; destaque: boolean } }>(
+  entradas: E[],
+): E[] {
+  return entradas
+    .filter((entrada) => entrada.data.destaque)
+    .sort((a, b) => a.data.nome.localeCompare(b.data.nome, 'pt-BR', { sensitivity: 'base' }))
+    .slice(0, LIMITE_PROJETOS_HOME);
+}
 
 function slugificar(caminho: string): string {
   return caminho
