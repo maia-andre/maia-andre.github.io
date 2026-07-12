@@ -37,6 +37,16 @@ const atual = (href: string) =>
     <meta name="generator" content={Astro.generator} />
     <meta name="description" content={descricao} />
     <title>{tituloPagina}</title>
+    <script is:inline>
+      // REQ-14: aplica o tema salvo ANTES da pintura para não haver flash.
+      // CE-05: localStorage indisponível cai no tema do sistema, sem erro.
+      try {
+        var temaSalvo = localStorage.getItem('tema');
+        if (temaSalvo === 'claro' || temaSalvo === 'escuro') {
+          document.documentElement.dataset.tema = temaSalvo;
+        }
+      } catch (erro) {}
+    </script>
   </head>
   <body>
     <a class="salto-conteudo" href="#conteudo">Pular para o conteúdo</a>
@@ -56,6 +66,12 @@ const atual = (href: string) =>
             }
           </ul>
         </nav>
+        <button
+          id="alternar-tema"
+          class="botao-tema"
+          type="button"
+          aria-label="Alternar entre tema claro e escuro"
+          hidden>◐</button>
       </div>
     </header>
     <main id="conteudo" class="pagina">
@@ -73,5 +89,24 @@ const atual = (href: string) =>
         </p>
       </div>
     </footer>
+    <script>
+      import { alternarTema } from '../lib/tema';
+
+      const botao = document.getElementById('alternar-tema');
+      if (botao) {
+        // RNF-01: sem JavaScript o botão permanece oculto — nada de controle morto
+        botao.removeAttribute('hidden');
+        const preferencia = window.matchMedia('(prefers-color-scheme: dark)');
+        let storage: Storage | null = null;
+        try {
+          storage = window.localStorage;
+        } catch {
+          storage = null;
+        }
+        botao.addEventListener('click', () => {
+          alternarTema(document, storage, preferencia.matches);
+        });
+      }
+    </script>
   </body>
 </html>
