@@ -1,0 +1,15 @@
+---
+import { getEntry, render } from 'astro:content';
+import Base from '../layouts/Base.astro';
+
+const pagina = await getEntry('paginas', 'sobre');
+if (!pagina) throw new Error('Conteúdo editável ausente: src/content/paginas/sobre.md');
+const { Content } = await render(pagina);
+---
+
+<Base titulo={pagina.data.titulo} descricao="Quem sou, por que escrevo e por que desenvolvo software.">
+  <h1>{pagina.data.titulo}</h1>
+  <div class="prosa">
+    <Content />
+  </div>
+</Base>
