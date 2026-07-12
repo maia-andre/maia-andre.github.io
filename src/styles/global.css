@@ -17,6 +17,27 @@
   --espaco-pagina: clamp(1.25rem, 5vw, 2.5rem);
 }
 
+/* Tema escuro (REQ-14): escolha explícita vence; sem escolha, segue o sistema */
+:root[data-tema='escuro'] {
+  --papel: #17181c;
+  --tinta: #e6e6e2;
+  --grafite: #9a9da6;
+  --carimbo: #8fa3ff;
+  --linha: #2a2c33;
+  --superficie: #1f2127;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-tema='claro']) {
+    --papel: #17181c;
+    --tinta: #e6e6e2;
+    --grafite: #9a9da6;
+    --carimbo: #8fa3ff;
+    --linha: #2a2c33;
+    --superficie: #1f2127;
+  }
+}
+
 *,
 *::before,
 *::after {
@@ -25,6 +46,16 @@
 
 html {
   color-scheme: light;
+}
+
+:root[data-tema='escuro'] {
+  color-scheme: dark;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-tema='claro']) {
+    color-scheme: dark;
+  }
 }
 
 body {
@@ -164,6 +195,23 @@ img {
   color: var(--carimbo);
   text-decoration: underline;
   text-underline-offset: 0.35em;
+}
+
+.botao-tema {
+  font-family: var(--fonte-registro);
+  font-size: 1rem;
+  line-height: 1;
+  color: var(--grafite);
+  background: none;
+  border: 1px solid var(--linha);
+  border-radius: 4px;
+  padding: 0.25rem 0.5rem;
+  cursor: pointer;
+}
+
+.botao-tema:hover {
+  color: var(--carimbo);
+  border-color: var(--carimbo);
 }
 
 main {
