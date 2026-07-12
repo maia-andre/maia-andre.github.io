@@ -1,25 +1,20 @@
-# Verify report — 2026-07-12
-Incremento: INC-01 — Esqueleto executável: Astro + layout base + repositório como projeto | Build report: 2026-07-12
-Como rodei: `npm run build` + `npx astro preview --port 4399 --host 127.0.0.1` (porta isolada; sem env vars relevantes)
-Suíte de testes: 18 passando / 18 total (`npm test`)
+# Verify report — 2026-07-12 (INC-02, rodada de correção)
+Incremento: INC-02 — Coleção de artigos validada + página do artigo | Build report: 2026-07-12 (INC-02, rodada 2)
+Como rodei: `npx astro build --outDir <scratch>` com arquivos colidentes temporários; `npm run build` para regressão do build válido
+Suíte de testes: 64 passando / 64 total (`npm test`)
 
 ## Fluxos dirigidos
 | Item | Fluxo exercitado | Evidência (comando → saída) | Resultado |
 |------|------------------|-----------------------------|-----------|
-| REQ-01 | Abrir a home no servidor de preview e inspecionar cabeçalho/navegação | `curl -w "%{http_code}" /` → `HTTP 200`; nav com os 6 links exatos: `<a href="/" aria-current="page">Início</a>`, `/artigos/`, `/projetos/`, `/tags/`, `/sobre/`, `/busca/` | FUNCIONA |
-| REQ-01 | Layout compartilhado nas duas páginas | `grep -o '<header'\|'<footer'\|'<main'` → home: 1/1/1; 404: 1/1/1 | FUNCIONA |
-| REQ-01 | Rota inexistente cai na 404 customizada | `curl -w "%{http_code}" /rota-que-nao-existe/` → `HTTP 404` + `<h1>Página não encontrada</h1>` com layout completo | FUNCIONA |
-| REQ-16 | Conferir docs do repositório | `head README.md` → título e descrição corretos; `grep -c keepachangelog.com CHANGELOG.md` → 1; ROADMAP menciona Notas/RSS | FUNCIONA |
-| RNF-04 | Idioma da página servida | `grep '<html lang'` → `<html lang="pt-BR"` | FUNCIONA |
-| RNF-05 | Meta viewport e CSS responsivo realmente servidos | `name="viewport" content="width=device-width, initial-scale=1"`; CSS inline na página contém `width:min(100% - 2 * var(--espaco-pagina)` e `flex-wrap:wrap` | FUNCIONA |
-| RN-06 | Versão SemVer visível no rodapé-carimbo | `grep -oE 'v0\.1\.0'` na home servida → `v0.1.0` | FUNCIONA |
-| Acessibilidade (RNF-03, parcial) | Skip-link presente no HTML servido | `salto-conteudo" href="#conteudo"` | FUNCIONA |
+| CE-06 | Recriado o cenário exato da reprovação: `__ce01__colisao ce06.md` + `__ce01__colisao-ce06.md` (slugificam igual), `astro build` real | `exit: 1` + `Slug duplicado "ce01-colisao-ce06": os arquivos "__ce01__colisao ce06.md" e "__ce01__colisao-ce06.md" geram o mesmo endereço. Renomeie um deles.` — os **dois** arquivos nomeados | FUNCIONA |
+| Regressão REQ-06 | Build válido com o artigo real após a troca do generateId | `npm run build` → `3 page(s) built`, `Complete!`; slug `construindo-este-site` inalterado (suíte de página verde) | FUNCIONA |
+| Regressão CE-01 | Frontmatter inválido continua derrubando o build | teste de integração `CE-01` verde na suíte (build real, exit ≠ 0, arquivo na saída) | FUNCIONA |
+| Regressão INC-01 | Layout/404/docs | suíte completa 64/64 | FUNCIONA |
 
 ## Falhas encontradas (para o /build)
 Nenhuma.
 
 ## Não verificável de ponta a ponta
-- **Renderização visual em 320px (RNF-05)**: sem navegador headless instalado na máquina; verifiquei o CSS servido (container fluido `min()`, `flex-wrap`, `clamp()`) e a meta viewport. A checagem visual plena fica para o INC-10 (auditoria Lighthouse), que exigirá navegador.
-- **Botão de tema do REQ-01**: adiado para o INC-08 junto com REQ-14, conforme nota registrada no build-report e cobertura do plano.
+- Nada nesta rodada — a colisão, antes não verificável, agora é dirigida de verdade pelo build.
 
-Ambiente limpo: servidor de preview derrubado, arquivos de scratch removidos.
+Ambiente limpo: arquivos temporários removidos (restou apenas `construindo-este-site.md`), outDirs de scratch apagados.

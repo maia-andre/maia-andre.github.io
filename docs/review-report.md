@@ -1,30 +1,31 @@
-# Review report — 2026-07-12
-Spec: docs/spec.md (Versão 1, aprovada) | Incremento: INC-01 — Esqueleto executável | Build report: 2026-07-12
+# Review report — 2026-07-12 (INC-02, 2ª auditoria)
+Spec: docs/spec.md (Versão 1, aprovada) | Incremento: INC-02 — Coleção de artigos validada + página do artigo | Build report: 2026-07-12 (INC-02, rodada 2)
 ## VEREDITO: APROVADO
 
-Suíte rodada pelo auditor: 18/18 passando (`npm test`). Verify-report sem FALHAs em aberto. Regressão: não se aplica (primeiro incremento); commits de docs anteriores intactos.
+Suíte rodada pelo auditor: 64/64. As 3 correções do review anterior foram verificadas no código e dirigidas de verdade.
 
 ## Verificação requisito a requisito
 | Item | Status | Evidência / Falha |
 |------|--------|-------------------|
-| REQ-01 | Atendido | `src/layouts/Base.astro` (nav com os 6 itens exatos, header/footer compartilhados, skip-link), `src/pages/404.astro`; dirigido no preview real (HTTP 200 na home, HTTP 404 com página customizada em rota inexistente); `tests/layout.test.ts` com asserções exatas de rótulo+href. **Observação vinculante**: o "botão de tema" citado no texto do REQ-01 foi adiado para o INC-08, onde o REQ-14 o exige explicitamente ("botão no cabeçalho alterna e persiste") — a revisão do INC-08 deve confirmá-lo; um botão inerte agora seria defeito de UX, e a matriz de cobertura do plano aprovado aloca o tema inteiro no INC-08. |
-| REQ-16 | Atendido | `README.md` (o que é, stack, como rodar), `ROADMAP.md` (todas as seções futuras da spec), `CHANGELOG.md` (link keepachangelog.com + seção `## [Unreleased]`); `tests/repo-docs.test.ts` cobre conteúdo, não só existência. |
-| RNF-04 | Atendido | `<html lang="pt-BR">` em `src/layouts/Base.astro`; asserção em ambas as páginas geradas. |
-| RNF-05 | Atendido | Meta viewport testada; CSS sem nenhuma largura fixa em px (verificado por grep), container fluido `min(100% - 2*var(--espaco-pagina), 44rem)`, nav com `flex-wrap` — servidos de verdade (conferido no /verify). Checagem visual plena em 320px fica garantida pelo gate Lighthouse do INC-10 (RNF-02/03). |
-| RN-06 | Atendido | `package.json` em `0.1.0` (SemVer testado), CHANGELOG documenta a convenção `v0.x.0 → v1.0.0`, rodapé exibe a versão lida do `package.json`. A tag da release é responsabilidade do `/ship`. |
+| REQ-03 | Atendido | Inalterado desde a 1ª auditoria (schema campo a campo testado); regressão limpa. |
+| REQ-04 | Atendido | Inalterado; dirigido na 1ª rodada com categoria inválida → exit 1. |
+| REQ-06 | Atendido | Regressão dirigida: build válido pós-correção gera `3 page(s)` com slug `construindo-este-site` inalterado; suíte da página verde. |
+| RN-01 | Atendido | Inalterado. |
+| RN-03 | Atendido | Inalterado. |
+| CE-01 | Atendido | Teste de integração continua verde (build real, exit ≠ 0, arquivo nomeado). |
+| CE-06 | **Atendido** | Correção 1 verificada: `criarGeradorDeIds()` (`src/lib/conteudo.ts`) plugado como `generateId` do `glob()` (`src/content.config.ts`) — detecção ANTES da deduplicação do loader. Dirigido pelo auditor/verify: cenário exato da reprovação agora dá `exit: 1` com `Slug duplicado "ce01-colisao-ce06": os arquivos "__ce01__colisao ce06.md" e "__ce01__colisao-ce06.md" geram o mesmo endereço.` Correção 2 verificada: teste de integração com build real e asserção dos dois nomes. Correção 3 verificada: guarda morta removida da página e da lib. |
+| Regressão INC-01 | Limpa | Suíte de layout/docs verde na rodada do auditor. |
 
 ## Qualidade dos testes (TDD)
-- Ciclo vermelho→verde real e documentado: commit `test(inc-01)` com 16 falhas antes do `feat(layout)`; histórico prova o RED.
-- Testes fazem asserções sobre o **HTML real do build** (globalSetup roda `astro build`), não sobre mocks — quebras de layout, rótulo, href, lang ou viewport ficariam vermelhas.
-- Testes de docs verificam conteúdo obrigatório (stack, comandos, seções do roadmap, formato do changelog), não apenas existência de arquivo.
-- Lacuna menor (não bloqueante): a exibição da versão no rodapé não tem asserção automatizada — coberta manualmente no /verify; sugerido absorver num teste quando o rodapé ganhar mais responsabilidade.
-- Dois testes nasceram verdes (semver do package.json, index existe) por dependerem do scaffold pré-existente — aceitável, testam estado real.
+- O teste que na 1ª auditoria "testava o mock" foi substituído por: (a) unitários do gerador real (slugificação com acentos, idempotência para recarga, colisão com os dois nomes, não-colisão) e (b) integração que reproduz a reprovação no build real. Ciclo vermelho→verde documentado (5 falhas antes da correção).
+- Cobertura do incremento íntegra e sem testes triviais.
 
 ## Segurança
-- Nenhum achado. Site estático sem entrada de usuário nesta fase; Astro escapa interpolações por padrão e não há `set:html`/`innerHTML` (grep limpo).
-- `npm audit`: 0 vulnerabilidades (astro 7.0.7, vitest 4).
-- Sem segredos em código ou histórico git (hits do grep eram o nome da dependência `@azure/keyvault-secrets` no lockfile).
-- Postura positiva: npm com allow-scripts bloqueou o postinstall do esbuild e o build funciona mesmo assim — manter.
+- Nenhum achado. `npm audit`: 0 vulnerabilidades. A perda silenciosa de conteúdo apontada na 1ª auditoria está eliminada.
+
+## Observações não bloqueantes (fora do escopo da spec)
+- Renomear um arquivo em sessão de dev longa pode acusar colisão falsa com o "fantasma" do nome antigo (estado do closure) — resolve com restart do dev server; o build de produção (processo novo) não é afetado.
+- Arquivo com nome patológico (ex.: `---.md`) slugificaria para string vazia; nenhum item da spec cobre isso. Sugestão de guarda `min-length` num incremento futuro, se incomodar.
 
 ## Correções necessárias (para o /build)
-Nenhuma.
+Nenhuma. Próximo passo: `/ship`.
