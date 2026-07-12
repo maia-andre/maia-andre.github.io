@@ -1,6 +1,6 @@
 # Plan: Site pessoal — arquivo vivo (v1)
 Spec: docs/spec.md (Versão 1, aprovada) | Gerado: 2026-07-12
-Progresso: 9/10 incrementos concluídos
+Progresso: 10/10 incrementos concluídos — backlog encerrado (v1.0.0)
 
 Convenção de release (RN-06): cada incremento concluído via /ship gera a release `v0.<nº do incremento>.0`; o INC-10 fecha a `v1.0.0`.
 
@@ -61,7 +61,7 @@ Depende de: INC-01
 Entrega verificável: push na `main` do repositório `maia-andre.github.io` dispara o workflow que builda e publica em `https://maia-andre.github.io`; um build quebrado marca o workflow como falho e o site mantém a última versão publicada.
 
 ### INC-10 — Conteúdo real + qualidade final (v1.0.0)
-Status: pendente
+Status: concluído (v1.0.0, 2026-07-12)
 Itens da spec: RNF-02, RNF-03
 Depende de: INC-01–INC-09
 Entrega verificável: 2 artigos reais e as páginas dos 4 projetos reais (LicitaDocs, Matrix, Observatório de Oportunidades, Transporte SJC) publicados em produção; Lighthouse (mobile) ≥ 95 em Performance e Accessibility na Home e em um artigo; navegação completa por teclado e contraste AA nos dois temas. Requer material de conteúdo fornecido pelo André.
