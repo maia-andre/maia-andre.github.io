@@ -16,6 +16,7 @@
     "fuse.js": "^7.4.2"
   },
   "devDependencies": {
+    "happy-dom": "^20.10.6",
     "node-html-parser": "^9.0.0",
     "vitest": "^4.1.10"
   }
