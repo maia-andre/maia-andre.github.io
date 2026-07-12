@@ -7,6 +7,25 @@ e o versionamento segue o [SemVer](https://semver.org/lang/pt-BR/): cada
 incremento do [plano](docs/plan.md) entregue gera uma release `v0.x.0`, até a
 `v1.0.0` fechar o escopo da primeira versão.
 
+## [1.0.0] — 2026-07-12 · INC-10 — Conteúdo real e qualidade final
+
+Review APROVADO em 2026-07-12. Atende RNF-02, RNF-03 e fecha a definição de
+concluído da spec — **o backlog da v1 está completo**.
+
+### Adicionado
+
+- Os 4 projetos reais: Matrix (mundo procedural com blocos sencientes),
+  Centro Logístico Municipal — SJC, Conferidor de Encargos em COBOL e
+  Observatório de Oportunidades Institucionais
+- Segundo artigo real: "A régua que desbota — o que um mundo de blocos me
+  ensinou sobre medir a mente" (derivado das notas de pesquisa do Matrix)
+- Botão de tema com estado acessível (`aria-pressed`)
+
+### Qualidade
+
+- Lighthouse (mobile): Performance 100 e Accessibility 100 na Home, artigo,
+  projeto e busca — metas da spec eram ≥ 95
+
 ## [0.9.0] — 2026-07-12 · INC-09 — Deploy automático
 
 Review APROVADO em 2026-07-12. Atende REQ-15; cobre CE-08.
