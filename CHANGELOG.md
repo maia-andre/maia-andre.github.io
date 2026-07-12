@@ -7,6 +7,27 @@ e o versionamento segue o [SemVer](https://semver.org/lang/pt-BR/): cada
 incremento do [plano](docs/plan.md) entregue gera uma release `v0.x.0`, até a
 `v1.0.0` fechar o escopo da primeira versão.
 
+## [0.4.0] — 2026-07-12 · INC-04 — Sistema de projetos
+
+Review APROVADO em 2026-07-12. Atende REQ-08, REQ-09; cobre CE-07.
+
+### Adicionado
+
+- Coleção de projetos em Markdown validada no build: nome, descrição,
+  tecnologias e tags obrigatórios; destaque, repositório, links e imagem
+  opcionais
+- Página `/projetos/` e páginas individuais `/projetos/<slug>/` com corpo
+  livre para objetivos, roadmap e changelog; seções de campos ausentes não
+  aparecem
+- Primeiro projeto registrado: este próprio site
+
+### Corrigido
+
+- Guarda de slugs reservados não consulta mais a cadeia de protótipos
+  (`Object.hasOwn`)
+- Testes que rodam builds reais consolidados num único arquivo (conteúdo
+  temporário de um teste não contamina mais o build de outro)
+
 ## [0.3.0] — 2026-07-12 · INC-03 — Listagens de artigos e rascunhos
 
 Review APROVADO em 2026-07-12. Atende REQ-05, REQ-07, RN-02, RN-05.
