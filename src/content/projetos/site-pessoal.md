@@ -10,7 +10,7 @@ tags:
   - astro
   - typescript
   - engenharia-de-software
-destaque: true
+destaque: false
 repositorio: https://github.com/maia-andre/maia-andre.github.io
 ---
 
