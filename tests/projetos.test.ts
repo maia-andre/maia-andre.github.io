@@ -57,6 +57,19 @@ describe('REQ-08 — schema do projeto', () => {
       esquemaProjeto.safeParse({ ...valido, links: [{ rotulo: 'x', url: 'nope' }] }).success,
     ).toBe(false);
   });
+
+  it('rejeita esquemas de URL fora de http(s) — javascript:, data: (hardening)', () => {
+    expect(
+      esquemaProjeto.safeParse({ ...valido, repositorio: 'javascript:alert(1)' }).success,
+    ).toBe(false);
+    expect(
+      esquemaProjeto.safeParse({ ...valido, links: [{ rotulo: 'x', url: 'data:text/html,oi' }] })
+        .success,
+    ).toBe(false);
+    expect(
+      esquemaProjeto.safeParse({ ...valido, repositorio: 'http://exemplo.dev' }).success,
+    ).toBe(true);
+  });
 });
 
 describe('REQ-09 — páginas de projetos', () => {
