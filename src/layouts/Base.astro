@@ -1,0 +1,77 @@
+---
+import pkg from '../../package.json';
+import '../styles/global.css';
+
+interface Props {
+  titulo?: string;
+  descricao?: string;
+}
+
+const NOME_SITE = 'André Maia';
+const MENSAGEM = 'Entre código, gestão pública e as coisas que ainda estou tentando entender.';
+
+const { titulo, descricao = MENSAGEM } = Astro.props;
+const tituloPagina = titulo ? `${titulo} — ${NOME_SITE}` : NOME_SITE;
+
+const itensNavegacao = [
+  { rotulo: 'Início', href: '/' },
+  { rotulo: 'Artigos', href: '/artigos/' },
+  { rotulo: 'Projetos', href: '/projetos/' },
+  { rotulo: 'Tags', href: '/tags/' },
+  { rotulo: 'Sobre', href: '/sobre/' },
+  { rotulo: 'Busca', href: '/busca/' },
+];
+
+const caminhoAtual = Astro.url.pathname;
+const atual = (href: string) =>
+  href === caminhoAtual || (href !== '/' && caminhoAtual.startsWith(href))
+    ? 'page'
+    : undefined;
+---
+
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="generator" content={Astro.generator} />
+    <meta name="description" content={descricao} />
+    <title>{tituloPagina}</title>
+  </head>
+  <body>
+    <a class="salto-conteudo" href="#conteudo">Pular para o conteúdo</a>
+    <header class="cabecalho">
+      <div class="pagina cabecalho-conteudo">
+        <a class="marca" href="/">{NOME_SITE}</a>
+        <nav class="navegacao" aria-label="Navegação principal">
+          <ul>
+            {
+              itensNavegacao.map(({ rotulo, href }) => (
+                <li>
+                  <a href={href} aria-current={atual(href)}>
+                    {rotulo}
+                  </a>
+                </li>
+              ))
+            }
+          </ul>
+        </nav>
+      </div>
+    </header>
+    <main id="conteudo" class="pagina">
+      <slot />
+    </main>
+    <footer class="rodape">
+      <div class="pagina">
+        <p class="rodape-mensagem">{MENSAGEM}</p>
+        <p class="rodape-registro registro">
+          <span>v{pkg.version}</span>
+          <span aria-hidden="true">·</span>
+          <span>construído com Astro</span>
+          <span aria-hidden="true">·</span>
+          <a href="https://github.com/maia-andre/maia-andre.github.io">código-fonte</a>
+        </p>
+      </div>
+    </footer>
+  </body>
+</html>
