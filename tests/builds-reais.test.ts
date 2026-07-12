@@ -1,9 +1,22 @@
 import { spawnSync } from 'node:child_process';
-import { mkdtempSync, rmSync, unlinkSync, writeFileSync } from 'node:fs';
+import {
+  mkdirSync,
+  mkdtempSync,
+  readFileSync,
+  rmSync,
+  unlinkSync,
+  writeFileSync,
+} from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
+import { parse } from 'node-html-parser';
 import { describe, expect, it } from 'vitest';
 
+// Todos os testes que spawnam `astro build` REAL vivem neste único arquivo:
+// dentro de um arquivo o Vitest roda sequencial, então o conteúdo temporário
+// de um teste não contamina o build de outro (arquivos de teste paralelos
+// compartilham o mesmo src/content/).
+//
 // CE-01 — frontmatter inválido faz o `astro build` real falhar com mensagem
 // que identifica o arquivo. Usa outDir isolado para não tocar no dist/ da suíte.
 
@@ -75,6 +88,51 @@ describe('CE-06 — build falha com slugs colidentes', () => {
     } finally {
       unlinkSync(COLISAO_A);
       unlinkSync(COLISAO_B);
+      rmSync(outDir, { recursive: true, force: true });
+    }
+  }, 150_000);
+});
+
+// CE-07 — projeto só com campos obrigatórios renderiza sem seções opcionais
+const PROJETO_MINIMO = join(process.cwd(), 'src/content/projetos', '__ce01__minimo.md');
+
+describe('CE-07 — projeto só com campos obrigatórios renderiza sem seções opcionais', () => {
+  it('build real gera a página sem repositório, links ou imagem', () => {
+    mkdirSync(join(process.cwd(), '.astro'), { recursive: true });
+    const outDir = mkdtempSync(join(process.cwd(), '.astro', 'dist-ce07-'));
+    writeFileSync(
+      PROJETO_MINIMO,
+      `---
+nome: Projeto Mínimo
+descricao: só o obrigatório
+tecnologias:
+  - c
+tags:
+  - c
+---
+
+corpo do projeto mínimo
+`,
+    );
+    try {
+      const env = { ...process.env };
+      for (const k of ['NODE_ENV', 'PROD', 'DEV', 'MODE', 'BASE_URL', 'TEST', 'VITEST', 'SSR'])
+        delete env[k];
+      const r = spawnSync('npx', ['astro', 'build', '--outDir', outDir], {
+        cwd: process.cwd(),
+        encoding: 'utf-8',
+        timeout: 120_000,
+        env,
+      });
+      expect(r.status, `build deveria passar: ${r.stdout}\n${r.stderr}`).toBe(0);
+      // __ce01__minimo.md slugifica para ce01-minimo (underscores viram separadores)
+      const html = parse(readFileSync(join(outDir, 'projetos/ce01-minimo/index.html'), 'utf-8'));
+      const main = html.querySelector('main')!;
+      expect(main.querySelector('h1')?.text).toContain('Projeto Mínimo');
+      expect(main.querySelector('img')).toBeNull();
+      expect(main.querySelector('.links-projeto')).toBeNull();
+    } finally {
+      unlinkSync(PROJETO_MINIMO);
       rmSync(outDir, { recursive: true, force: true });
     }
   }, 150_000);
