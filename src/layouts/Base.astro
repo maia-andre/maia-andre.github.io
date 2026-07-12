@@ -90,7 +90,7 @@ const atual = (href: string) =>
       </div>
     </footer>
     <script>
-      import { alternarTema } from '../lib/tema';
+      import { alternarTema, temaEfetivo } from '../lib/tema';
 
       const botao = document.getElementById('alternar-tema');
       if (botao) {
@@ -103,8 +103,15 @@ const atual = (href: string) =>
         } catch {
           storage = null;
         }
+        const refletirEstado = () => {
+          const escuroAtivo = temaEfetivo(document, preferencia.matches) === 'escuro';
+          botao.setAttribute('aria-pressed', String(escuroAtivo));
+        };
+        refletirEstado();
+        preferencia.addEventListener('change', refletirEstado);
         botao.addEventListener('click', () => {
           alternarTema(document, storage, preferencia.matches);
+          refletirEstado();
         });
       }
     </script>
