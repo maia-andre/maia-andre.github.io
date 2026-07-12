@@ -32,19 +32,32 @@ export const esquemaArtigo = z.object({
   rascunho: z.boolean().default(false),
 });
 
-// CE-06 — dois arquivos que resultem no mesmo slug derrubam o build
-export function garantirSlugsUnicos(slugs: string[]): void {
-  const vistos = new Set<string>();
-  const duplicados = new Set<string>();
-  for (const slug of slugs) {
-    if (vistos.has(slug)) duplicados.add(slug);
-    vistos.add(slug);
-  }
-  if (duplicados.size > 0) {
-    throw new Error(
-      `Slugs duplicados na coleção: ${[...duplicados].join(', ')} — cada arquivo deve gerar um slug único.`,
-    );
-  }
+function slugificar(caminho: string): string {
+  return caminho
+    .replace(/\.(md|mdx)$/i, '')
+    .normalize('NFD')
+    .replace(/[̀-ͯ]/g, '')
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '');
+}
+
+// CE-06 — a colisão precisa ser detectada AQUI, no generateId do loader:
+// depois disso o content layer deduplica por id em silêncio e um artigo
+// desapareceria do site sem erro.
+export function criarGeradorDeIds(): (opcoes: { entry: string }) => string {
+  const vistos = new Map<string, string>();
+  return ({ entry }) => {
+    const slug = slugificar(entry);
+    const existente = vistos.get(slug);
+    if (existente !== undefined && existente !== entry) {
+      throw new Error(
+        `Slug duplicado "${slug}": os arquivos "${existente}" e "${entry}" geram o mesmo endereço. Renomeie um deles.`,
+      );
+    }
+    vistos.set(slug, entry);
+    return slug;
+  };
 }
 
 const formatoDataLonga = new Intl.DateTimeFormat('pt-BR', {

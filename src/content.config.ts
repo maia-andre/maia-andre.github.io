@@ -1,9 +1,13 @@
 import { defineCollection } from 'astro:content';
 import { glob } from 'astro/loaders';
-import { esquemaArtigo } from './lib/conteudo';
+import { criarGeradorDeIds, esquemaArtigo } from './lib/conteudo';
 
 const artigos = defineCollection({
-  loader: glob({ pattern: '**/*.md', base: './src/content/artigos' }),
+  loader: glob({
+    pattern: '**/*.md',
+    base: './src/content/artigos',
+    generateId: criarGeradorDeIds(),
+  }),
   schema: esquemaArtigo,
 });
 

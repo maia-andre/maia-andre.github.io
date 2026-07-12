@@ -1,16 +1,10 @@
 ---
 import { getCollection, render } from 'astro:content';
 import Base from '../../layouts/Base.astro';
-import {
-  CATEGORIAS,
-  dataISO,
-  formatarData,
-  garantirSlugsUnicos,
-} from '../../lib/conteudo';
+import { CATEGORIAS, dataISO, formatarData } from '../../lib/conteudo';
 
 export async function getStaticPaths() {
   const artigos = await getCollection('artigos');
-  garantirSlugsUnicos(artigos.map((artigo) => artigo.id));
   return artigos.map((artigo) => ({
     params: { slug: artigo.id },
     props: { artigo },
