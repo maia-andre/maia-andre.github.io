@@ -70,7 +70,7 @@ Notas, Currículo, Laboratório, Arquivo, RSS, sitemap, SEO avançado, índice a
 
 ## Definição de concluído
 - [ ] Site publicado em `https://maia-andre.github.io` pelo workflow do GitHub Actions a partir da `main`
-- [ ] 2 artigos reais publicados e as páginas dos 4 projetos reais (LicitaDocs, Matrix, Observatório de Oportunidades, Transporte SJC) no ar
+- [ ] 2 artigos reais publicados e as páginas dos 4 projetos reais (Matrix, Centro Logístico Municipal, Conferidor de Encargos em COBOL, Observatório de Oportunidades) no ar
 - [ ] Dado um novo artigo Markdown válido commitado na `main`, após o deploy ele aparece na Home, em `/artigos/`, na página da sua categoria, nas páginas das suas tags e na busca
 - [ ] Dado um artigo com `rascunho: true`, nada dele existe no site publicado
 - [ ] Alternar o tema e recarregar a página mantém o tema escolhido
@@ -85,3 +85,5 @@ Notas, Currículo, Laboratório, Arquivo, RSS, sitemap, SEO avançado, índice a
 
 ## Decisões registradas
 - Usuário do GitHub: `maia-andre` ⇒ repositório `maia-andre.github.io`, publicado em `https://maia-andre.github.io` (2026-07-12).
+- Os 4 projetos da v1 são os do material real fornecido pelo André em 2026-07-12: Matrix, Centro Logístico Municipal (SJC), Conferidor de Encargos em COBOL (frank_cobol) e Observatório de Oportunidades — substituindo a lista provisória do documento de visão (LicitaDocs e Transporte SJC ficam para depois, como conteúdo novo sem mudança de código).
+- O repositório do Centro Logístico é privado ⇒ a página do projeto não exibe link de repositório (campo opcional, CE-07).
