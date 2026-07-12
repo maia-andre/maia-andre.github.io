@@ -1,6 +1,6 @@
 # Plan: Site pessoal — arquivo vivo (v1)
 Spec: docs/spec.md (Versão 1, aprovada) | Gerado: 2026-07-12
-Progresso: 6/10 incrementos concluídos
+Progresso: 7/10 incrementos concluídos
 
 Convenção de release (RN-06): cada incremento concluído via /ship gera a release `v0.<nº do incremento>.0`; o INC-10 fecha a `v1.0.0`.
 
@@ -43,7 +43,7 @@ Depende de: INC-03, INC-04
 Entrega verificável: `/tags/` lista as tags em uso com contagem; `/tags/<tag>/` lista artigos e projetos da tag; tags exibidas em artigos/projetos são links; tag usada só por rascunho não gera página (teste).
 
 ### INC-07 — Busca
-Status: pendente
+Status: concluído (v0.7.0, 2026-07-12)
 Itens da spec: REQ-13 | CE-02
 Depende de: INC-03, INC-04
 Entrega verificável: `/busca/` encontra artigos e projetos por título, descrição, tag e categoria via Fuse.js sobre índice JSON gerado no build (sem rascunhos); termo inexistente mostra estado vazio; com JS desabilitado a página informa que a busca requer JavaScript.
