@@ -1,12 +1,63 @@
 ---
+import { getCollection, getEntry, render } from 'astro:content';
+import ListaArtigos from '../components/ListaArtigos.astro';
 import Base from '../layouts/Base.astro';
-// Placeholder do esqueleto — a Home real (apresentação, recentes, destaques) é o INC-05.
+import { artigosRecentes, projetosEmDestaque } from '../lib/conteudo';
+
+const apresentacao = await getEntry('paginas', 'apresentacao');
+if (!apresentacao)
+  throw new Error('Conteúdo editável ausente: src/content/paginas/apresentacao.md');
+const { Content: Apresentacao } = await render(apresentacao);
+
+const recentes = artigosRecentes(await getCollection('artigos'), import.meta.env.PROD);
+const destaques = projetosEmDestaque(await getCollection('projetos'));
 ---
 
 <Base>
-  <h1>André Maia</h1>
-  <p>
-    Entre código, gestão pública e as coisas que ainda estou tentando entender.
-  </p>
-  <p class="registro">registro em construção — v0.1</p>
+  <section class="apresentacao prosa">
+    <h1>André Maia</h1>
+    <Apresentacao />
+  </section>
+
+  {
+    recentes.length > 0 && (
+      <section class="secao-home" aria-labelledby="titulo-recentes">
+        <div class="secao-cabecalho">
+          <h2 id="titulo-recentes">Artigos recentes</h2>
+          <a class="registro" href="/artigos/">
+            todos os artigos →
+          </a>
+        </div>
+        <ListaArtigos artigos={recentes} mensagemVazia="" />
+      </section>
+    )
+  }
+
+  {
+    destaques.length > 0 && (
+      <section class="secao-home" aria-labelledby="titulo-destaques">
+        <div class="secao-cabecalho">
+          <h2 id="titulo-destaques">Projetos em destaque</h2>
+          <a class="registro" href="/projetos/">
+            todos os projetos →
+          </a>
+        </div>
+        <ol class="lista-artigos">
+          {destaques.map(({ id, data: projeto }) => (
+            <li class="item-artigo">
+              <p class="registro artigo-meta">
+                {projeto.tecnologias.map((tecnologia) => (
+                  <span class="tecnologia">{tecnologia}</span>
+                ))}
+              </p>
+              <h3 class="item-titulo">
+                <a href={`/projetos/${id}/`}>{projeto.nome}</a>
+              </h3>
+              <p class="item-descricao">{projeto.descricao}</p>
+            </li>
+          ))}
+        </ol>
+      </section>
+    )
+  }
 </Base>
