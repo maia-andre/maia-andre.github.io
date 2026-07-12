@@ -1,0 +1,21 @@
+{
+  "name": "maia-andre.github.io",
+  "description": "Site pessoal de André Maia — arquivo vivo de código, gestão pública e reflexões",
+  "type": "module",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "test": "vitest run",
+    "astro": "astro"
+  },
+  "dependencies": {
+    "astro": "^7.0.7"
+  },
+  "devDependencies": {
+    "node-html-parser": "^9.0.0",
+    "vitest": "^4.1.10"
+  }
+}
