@@ -1,0 +1,53 @@
+---
+import { getCollection, render } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+
+export async function getStaticPaths() {
+  const projetos = await getCollection('projetos');
+  return projetos.map((projeto) => ({
+    params: { slug: projeto.id },
+    props: { projeto },
+  }));
+}
+
+const { projeto } = Astro.props;
+const { Content } = await render(projeto);
+const { nome, descricao, tecnologias, tags, repositorio, links, imagem } = projeto.data;
+---
+
+<Base titulo={nome} descricao={descricao}>
+  <article>
+    <header class="artigo-cabecalho">
+      <p class="registro artigo-meta">
+        <span>projeto</span>
+        <span aria-hidden="true">·</span>
+        {tecnologias.map((tecnologia) => <span class="tecnologia">{tecnologia}</span>)}
+      </p>
+      <h1>{nome}</h1>
+      <p class="artigo-descricao">{descricao}</p>
+    </header>
+    {imagem && <img class="capa-projeto" src={imagem} alt={`Imagem do projeto ${nome}`} />}
+    <div class="prosa">
+      <Content />
+    </div>
+    {
+      (repositorio || (links && links.length > 0)) && (
+        <p class="links-projeto registro">
+          {repositorio && <a href={repositorio}>repositório ↗</a>}
+          {links?.map(({ rotulo, url }) => <a href={url}>{rotulo} ↗</a>)}
+        </p>
+      )
+    }
+    <footer class="artigo-rodape">
+      <ul class="lista-tags registro" aria-label="Tags do projeto">
+        {
+          tags.map((tag) => (
+            <li>
+              <a href={`/tags/${tag}/`}>#{tag}</a>
+            </li>
+          ))
+        }
+      </ul>
+    </footer>
+  </article>
+</Base>

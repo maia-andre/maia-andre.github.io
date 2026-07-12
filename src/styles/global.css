@@ -260,6 +260,25 @@ main {
   border-top: 1px solid var(--linha);
 }
 
+/* Projetos */
+.tecnologia + .tecnologia::before {
+  content: '· ';
+  color: var(--grafite);
+}
+
+.capa-projeto {
+  border: 1px solid var(--linha);
+  border-radius: 4px;
+  margin-bottom: 2rem;
+}
+
+.links-projeto {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 1.25rem;
+  margin-top: 2rem;
+}
+
 /* Artigo: a "ficha de registro" do conteúdo */
 .artigo-cabecalho {
   margin-bottom: 2.5rem;

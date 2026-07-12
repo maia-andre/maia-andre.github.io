@@ -1,0 +1,40 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+
+const projetos = (await getCollection('projetos')).sort((a, b) =>
+  a.data.nome.localeCompare(b.data.nome, 'pt-BR', { sensitivity: 'base' }),
+);
+---
+
+<Base titulo="Projetos" descricao="Projetos de software: descrição, objetivos, tecnologias e roadmap.">
+  <h1>Projetos</h1>
+  {
+    projetos.length === 0 ? (
+      <p class="estado-vazio">Nenhum projeto publicado ainda.</p>
+    ) : (
+      <ol class="lista-artigos">
+        {projetos.map(({ id, data: projeto }) => (
+          <li class="item-artigo">
+            <p class="registro artigo-meta">
+              {projeto.tecnologias.map((tecnologia) => (
+                <span class="tecnologia">{tecnologia}</span>
+              ))}
+            </p>
+            <h2 class="item-titulo">
+              <a href={`/projetos/${id}/`}>{projeto.nome}</a>
+            </h2>
+            <p class="item-descricao">{projeto.descricao}</p>
+            <ul class="lista-tags registro" aria-label="Tags do projeto">
+              {projeto.tags.map((tag) => (
+                <li>
+                  <a href={`/tags/${tag}/`}>#{tag}</a>
+                </li>
+              ))}
+            </ul>
+          </li>
+        ))}
+      </ol>
+    )
+  }
+</Base>

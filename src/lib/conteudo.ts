@@ -12,6 +12,10 @@ export type CategoriaSlug = keyof typeof CATEGORIAS;
 // RN-03 — tags em kebab-case minúsculo, sem acentos
 export const PADRAO_TAG = /^[a-z0-9]+(-[a-z0-9]+)*$/;
 
+const esquemaTags = z
+  .array(z.string().regex(PADRAO_TAG, 'tag deve ser kebab-case minúsculo, sem acentos'))
+  .min(1, 'informe ao menos uma tag');
+
 // REQ-03/REQ-04 — frontmatter do artigo; erro de validação derruba o build (CE-01)
 export const esquemaArtigo = z.object({
   titulo: z.string().min(1, 'titulo é obrigatório'),
@@ -23,13 +27,28 @@ export const esquemaArtigo = z.object({
     Object.keys(CATEGORIAS) as [CategoriaSlug, ...CategoriaSlug[]],
     { errorMap: () => ({ message: 'categoria deve ser computacao, gestao-publica ou reflexoes' }) },
   ),
-  tags: z
-    .array(
-      z.string().regex(PADRAO_TAG, 'tag deve ser kebab-case minúsculo, sem acentos'),
-    )
-    .min(1, 'informe ao menos uma tag'),
+  tags: esquemaTags,
   atualizado: z.coerce.date().optional(),
   rascunho: z.boolean().default(false),
+});
+
+// REQ-08 — frontmatter do projeto; corpo Markdown livre (objetivos, roadmap, changelog)
+export const esquemaProjeto = z.object({
+  nome: z.string().min(1, 'nome é obrigatório'),
+  descricao: z.string().min(1, 'descricao é obrigatória'),
+  tecnologias: z.array(z.string().min(1)).min(1, 'informe ao menos uma tecnologia'),
+  tags: esquemaTags,
+  destaque: z.boolean().default(false),
+  repositorio: z.string().url('repositorio deve ser uma URL válida').optional(),
+  links: z
+    .array(
+      z.object({
+        rotulo: z.string().min(1),
+        url: z.string().url('url do link deve ser válida'),
+      }),
+    )
+    .optional(),
+  imagem: z.string().min(1).optional(),
 });
 
 function slugificar(caminho: string): string {
