@@ -71,11 +71,12 @@ describe('REQ-02 — Home', () => {
 });
 
 describe('REQ-10 — projetos em destaque na Home', () => {
-  it('lista o projeto com destaque: true com link', () => {
+  it('lista projetos com destaque: true com link', () => {
     const main = parsePage('index.html').querySelector('main')!;
     expect(main.text).toContain('Projetos em destaque');
     const hrefs = main.querySelectorAll('a').map((a) => a.getAttribute('href'));
-    expect(hrefs).toContain('/projetos/site-pessoal/');
+    // desde o INC-10 os destaques são os 4 projetos reais (site-pessoal saiu)
+    expect(hrefs).toContain('/projetos/matrix/');
     expect(hrefs).toContain('/projetos/');
   });
 });
