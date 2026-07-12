@@ -1,13 +1,13 @@
 # Plan: Site pessoal — arquivo vivo (v1)
 Spec: docs/spec.md (Versão 1, aprovada) | Gerado: 2026-07-12
-Progresso: 0/10 incrementos concluídos
+Progresso: 1/10 incrementos concluídos
 
 Convenção de release (RN-06): cada incremento concluído via /ship gera a release `v0.<nº do incremento>.0`; o INC-10 fecha a `v1.0.0`.
 
 ## Backlog
 
 ### INC-01 — Esqueleto executável: Astro + layout base + repositório como projeto
-Status: pendente
+Status: concluído (v0.1.0, 2026-07-12)
 Itens da spec: REQ-01, REQ-16 | RNF-04, RNF-05 | RN-06
 Depende de: —
 Entrega verificável: `npm run dev` sobe o site com layout base (cabeçalho com navegação completa, rodapé, `lang="pt-BR"`, responsivo sem scroll horizontal) e página 404; `npm run build` e a suíte de testes rodam verdes; `README.md`, `ROADMAP.md` e `CHANGELOG.md` presentes e preenchidos.
