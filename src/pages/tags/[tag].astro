@@ -1,0 +1,68 @@
+---
+import { getCollection } from 'astro:content';
+import ListaArtigos from '../../components/ListaArtigos.astro';
+import Base from '../../layouts/Base.astro';
+import { colecionarTags, prepararListagem } from '../../lib/conteudo';
+
+export async function getStaticPaths() {
+  const tags = colecionarTags(
+    await getCollection('artigos'),
+    await getCollection('projetos'),
+    import.meta.env.PROD,
+  );
+  return [...tags.entries()].map(([tag, conteudo]) => ({
+    params: { tag },
+    props: { conteudo },
+  }));
+}
+
+const { tag } = Astro.params;
+const { conteudo } = Astro.props;
+const artigos = prepararListagem(conteudo.artigos, import.meta.env.PROD);
+const projetos = [...conteudo.projetos].sort((a, b) =>
+  a.data.nome.localeCompare(b.data.nome, 'pt-BR', { sensitivity: 'base' }),
+);
+---
+
+<Base titulo={`Tag #${tag}`} descricao={`Artigos e projetos com a tag ${tag}.`}>
+  <p class="registro">tag</p>
+  <h1>#{tag}</h1>
+
+  {
+    artigos.length > 0 && (
+      <section class="secao-home" aria-labelledby="titulo-tag-artigos">
+        <div class="secao-cabecalho">
+          <h2 id="titulo-tag-artigos">Artigos</h2>
+        </div>
+        <ListaArtigos artigos={artigos} mensagemVazia="" />
+      </section>
+    )
+  }
+
+  {
+    projetos.length > 0 && (
+      <section class="secao-home" aria-labelledby="titulo-tag-projetos">
+        <div class="secao-cabecalho">
+          <h2 id="titulo-tag-projetos">Projetos</h2>
+        </div>
+        <ol class="lista-artigos">
+          {projetos.map(({ id, data: projeto }) => (
+            <li class="item-artigo">
+              <p class="registro artigo-meta">
+                {projeto.tecnologias.map((tecnologia: string) => (
+                  <span class="tecnologia">{tecnologia}</span>
+                ))}
+              </p>
+              <h3 class="item-titulo">
+                <a href={`/projetos/${id}/`}>{projeto.nome}</a>
+              </h3>
+              <p class="item-descricao">{projeto.descricao}</p>
+            </li>
+          ))}
+        </ol>
+      </section>
+    )
+  }
+
+  <p class="registro"><a href="/tags/">← todas as tags</a></p>
+</Base>

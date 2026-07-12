@@ -150,6 +150,33 @@ export function prepararListagem<E extends { data: { rascunho: boolean; data: Da
     .sort((a, b) => compararArtigos(a.data, b.data));
 }
 
+// REQ-11 — união de tags de artigos e projetos publicados; CE-03: tag usada
+// só por rascunho não existe em produção
+export function colecionarTags<
+  A extends { data: { rascunho: boolean; tags: string[] } },
+  P extends { data: { tags: string[] } },
+>(artigos: A[], projetos: P[], ehProducao: boolean): Map<string, { artigos: A[]; projetos: P[] }> {
+  const mapa = new Map<string, { artigos: A[]; projetos: P[] }>();
+  const grupo = (tag: string) => {
+    let g = mapa.get(tag);
+    if (!g) {
+      g = { artigos: [], projetos: [] };
+      mapa.set(tag, g);
+    }
+    return g;
+  };
+  for (const artigo of artigos) {
+    if (!ehPublicado(artigo.data, ehProducao)) continue;
+    for (const tag of artigo.data.tags) grupo(tag).artigos.push(artigo);
+  }
+  for (const projeto of projetos) {
+    for (const tag of projeto.data.tags) grupo(tag).projetos.push(projeto);
+  }
+  return new Map(
+    [...mapa.entries()].sort(([a], [b]) => a.localeCompare(b, 'pt-BR')),
+  );
+}
+
 const formatoDataLonga = new Intl.DateTimeFormat('pt-BR', {
   dateStyle: 'long',
   timeZone: 'UTC',
