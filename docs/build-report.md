@@ -1,22 +1,20 @@
-# Build report — 2026-07-12 (INC-03)
+# Build report — 2026-07-12 (INC-04)
 Spec: docs/spec.md (Versão 1, aprovada)
-Incremento: INC-03 — Listagens de artigos + rascunhos
+Incremento: INC-04 — Sistema de projetos
 Rodada: construção
-Testes: 77 passando / 77 total — `npm test`
+Testes: 91 passando / 91 total — `npm test`
 
 ## Requisitos atendidos
-- **REQ-05** — Atendido — `/artigos/` (`src/pages/artigos/index.astro`) e `/artigos/<categoria>/` (`src/pages/artigos/[categoria].astro`) com o componente compartilhado `src/components/ListaArtigos.astro` exibindo título, descrição, data, categoria e tags; navegação entre categorias; estado vazio para categoria sem artigos. Coberto por `tests/artigos-listagem.test.ts` (existência das 4 páginas, conteúdo do item, filtro por categoria, tags na listagem, estado vazio).
-- **REQ-07** — Atendido — `getStaticPaths` de `[slug].astro` filtra rascunhos em produção via `ehPublicado()`; listagens usam `prepararListagem()`. Rascunho real (`controle-patrimonial-na-pratica.md`) atua como fixture permanente: testes provam ausência de página própria e de menção em qualquer listagem no dist de produção. No dev o autor pré-visualiza rascunhos (spec só exige exclusão em produção).
-
-## Regras de negócio
-- **RN-02** — Atendido — `ordenarArtigos()` (data desc, empate por título com colação pt-BR, sem mutação); testes unitários com datas distintas, empate com acentos/maiúsculas e imutabilidade. Nota honesta: com apenas 1 artigo publicado, a ordenação ainda não é observável no dist — está garantida pela função pura usada pelas páginas e será exercitada naturalmente quando houver mais conteúdo (INC-10).
-- **RN-05** — Atendido — mesma mecânica do REQ-07: rascunho fora de página própria e listagens; superfícies futuras (tags INC-06, busca INC-07) deverão reusar `ehPublicado`/`prepararListagem` — anotado para os próximos incrementos.
+- **REQ-08** — Atendido — coleção `projetos` em `src/content.config.ts` com `esquemaProjeto` em `src/lib/conteudo.ts`: obrigatórios nome, descricao, tecnologias (≥1), tags (≥1, padrão RN-03 compartilhado); opcionais destaque (default false), repositorio (URL validada), links ({rotulo, url} validados), imagem. Corpo Markdown livre. Coberto por `tests/projetos.test.ts` (campo a campo, URLs inválidas, listas vazias, defaults).
+- **REQ-09** — Atendido — `/projetos/` (`src/pages/projetos/index.astro`, ordem alfabética por nome) e `/projetos/<slug>/` (`[slug].astro`) com tecnologias, corpo renderizado, seção de links/repositório condicional e tags linkadas; seções de campos ausentes não renderizam. Coberto por asserções no dist + build real do CE-07.
 
 ## Casos extremos cobertos
-Nenhum CE do plano pertence ao INC-03. Guardas adicionais desta rodada: slug de artigo colidindo com slug de categoria derruba o build (proteção da coexistência REQ-05×REQ-06 nas rotas `/artigos/*`); categoria sem artigos mostra estado vazio sem vazar conteúdo de outras.
+- **CE-07** — dois níveis: (a) projeto semente tem repositório mas não imagem/links → página sem `<img>` e com exatamente 1 link na seção; (b) build real com projeto só de campos obrigatórios (`tests/builds-reais.test.ts`) → página renderiza com h1 e sem nenhuma seção opcional.
 
-## Descoberta técnica da rodada
-O Vitest injeta `PROD=""` (string vazia, falsy), `NODE_ENV=test`, `DEV=1`, `MODE=test` e `BASE_URL` no `process.env`; o build filho da suíte herdava essas variáveis e o Vite resolvia `import.meta.env.PROD=false`, vazando rascunhos só no dist da suíte (o build real estava correto). Corrigido em `tests/setup/build-site.ts` limpando `VARS_DO_VITEST` — o build da suíte agora espelha CI. Registrado na memória do projeto.
+## Extras absorvidos (documentados)
+- Correção não bloqueante do review do INC-03: `Object.hasOwn` na guarda de slugs reservados de artigos.
+- Guarda de colisão de slugs (`criarGeradorDeIds`) instanciada também para a coleção de projetos — mesma integridade do CE-06, instância separada por coleção (artigo e projeto podem compartilhar slug, namespaces de URL distintos).
+- Estabilidade da suíte: todos os testes que spawnam `astro build` real foram consolidados em `tests/builds-reais.test.ts` — em arquivos paralelos, o conteúdo temporário de um teste contaminava o build de outro (flake real observado nesta rodada).
 
 ## Perguntas em aberto / pendências
-- Nenhuma.
+- As páginas dos 4 projetos reais (LicitaDocs, Matrix, Observatório de Oportunidades, Transporte SJC) dependem de material do André e entram no INC-10, conforme decisão da spec ("conteúdo real mínimo" escrito durante a construção). O sistema já as recebe sem mudança de código — basta criar os `.md`.

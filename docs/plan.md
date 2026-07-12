@@ -1,6 +1,6 @@
 # Plan: Site pessoal — arquivo vivo (v1)
 Spec: docs/spec.md (Versão 1, aprovada) | Gerado: 2026-07-12
-Progresso: 3/10 incrementos concluídos
+Progresso: 4/10 incrementos concluídos
 
 Convenção de release (RN-06): cada incremento concluído via /ship gera a release `v0.<nº do incremento>.0`; o INC-10 fecha a `v1.0.0`.
 
@@ -25,7 +25,7 @@ Depende de: INC-02
 Entrega verificável: `/artigos/` e `/artigos/<categoria>/` listam artigos ordenados por data desc (empate por título); artigo com `rascunho: true` não tem página nem aparece em nenhuma listagem de produção.
 
 ### INC-04 — Sistema de projetos
-Status: pendente
+Status: concluído (v0.4.0, 2026-07-12)
 Itens da spec: REQ-08, REQ-09 | CE-07
 Depende de: INC-02
 Entrega verificável: `/projetos/` lista os projetos e `/projetos/<slug>/` renderiza a página individual; projeto sem `repositorio`, `links` ou `imagem` renderiza sem essas seções, comprovado por teste.
