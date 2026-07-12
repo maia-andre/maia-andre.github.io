@@ -7,6 +7,17 @@ e o versionamento segue o [SemVer](https://semver.org/lang/pt-BR/): cada
 incremento do [plano](docs/plan.md) entregue gera uma release `v0.x.0`, até a
 `v1.0.0` fechar o escopo da primeira versão.
 
+## [0.6.0] — 2026-07-12 · INC-06 — Tags
+
+Review APROVADO em 2026-07-12. Atende REQ-11; cobre CE-03.
+
+### Adicionado
+
+- Página `/tags/` com todas as tags em uso e contagem de conteúdo
+- Páginas `/tags/<tag>/` unindo artigos e projetos da tag
+- Tags exibidas em qualquer lugar do site levam à página da tag
+- Tags usadas apenas por rascunhos não existem no site publicado
+
 ## [0.5.0] — 2026-07-12 · INC-05 — Home e Sobre
 
 Review APROVADO em 2026-07-12. Atende REQ-02, REQ-10, REQ-12, RN-04; cobre CE-04.
