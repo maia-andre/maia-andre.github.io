@@ -7,7 +7,9 @@ e o versionamento segue o [SemVer](https://semver.org/lang/pt-BR/): cada
 incremento do [plano](docs/plan.md) entregue gera uma release `v0.x.0`, até a
 `v1.0.0` fechar o escopo da primeira versão.
 
-## [Unreleased]
+## [0.1.0] — 2026-07-12 · INC-01 — Esqueleto executável
+
+Review APROVADO em 2026-07-12. Atende REQ-01, REQ-16, RNF-04, RNF-05, RN-06.
 
 ### Adicionado
 
