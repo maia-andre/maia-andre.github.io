@@ -60,6 +60,43 @@ export function criarGeradorDeIds(): (opcoes: { entry: string }) => string {
   };
 }
 
+// RN-05 — rascunho some de produção por completo; no dev o autor pré-visualiza
+export function ehPublicado(item: { rascunho: boolean }, ehProducao: boolean): boolean {
+  return !ehProducao || !item.rascunho;
+}
+
+export function filtrarPublicados<T extends { rascunho: boolean }>(
+  itens: T[],
+  ehProducao: boolean,
+): T[] {
+  return itens.filter((item) => ehPublicado(item, ehProducao));
+}
+
+// RN-02 — data decrescente; empate pela ordem alfabética do título
+function compararArtigos(
+  a: { data: Date; titulo: string },
+  b: { data: Date; titulo: string },
+): number {
+  return (
+    b.data.getTime() - a.data.getTime() ||
+    a.titulo.localeCompare(b.titulo, 'pt-BR', { sensitivity: 'base' })
+  );
+}
+
+export function ordenarArtigos<T extends { data: Date; titulo: string }>(itens: T[]): T[] {
+  return [...itens].sort(compararArtigos);
+}
+
+// Listagens de páginas: filtra rascunhos e ordena entradas da coleção
+export function prepararListagem<E extends { data: { rascunho: boolean; data: Date; titulo: string } }>(
+  entradas: E[],
+  ehProducao: boolean,
+): E[] {
+  return entradas
+    .filter((entrada) => ehPublicado(entrada.data, ehProducao))
+    .sort((a, b) => compararArtigos(a.data, b.data));
+}
+
 const formatoDataLonga = new Intl.DateTimeFormat('pt-BR', {
   dateStyle: 'long',
   timeZone: 'UTC',

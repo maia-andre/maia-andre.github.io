@@ -1,14 +1,28 @@
 ---
 import { getCollection, render } from 'astro:content';
 import Base from '../../layouts/Base.astro';
-import { CATEGORIAS, dataISO, formatarData } from '../../lib/conteudo';
+import {
+  CATEGORIAS,
+  dataISO,
+  ehPublicado,
+  formatarData,
+} from '../../lib/conteudo';
 
 export async function getStaticPaths() {
   const artigos = await getCollection('artigos');
-  return artigos.map((artigo) => ({
-    params: { slug: artigo.id },
-    props: { artigo },
-  }));
+  // Slugs iguais aos das categorias colidiriam com /artigos/<categoria>/
+  const reservados = artigos.filter((artigo) => artigo.id in CATEGORIAS);
+  if (reservados.length > 0) {
+    throw new Error(
+      `Slug de artigo reservado para categoria: ${reservados.map((a) => a.id).join(', ')}. Renomeie o arquivo.`,
+    );
+  }
+  return artigos
+    .filter((artigo) => ehPublicado(artigo.data, import.meta.env.PROD))
+    .map((artigo) => ({
+      params: { slug: artigo.id },
+      props: { artigo },
+    }));
 }
 
 const { artigo } = Astro.props;

@@ -1,0 +1,31 @@
+---
+import { getCollection } from 'astro:content';
+import ListaArtigos from '../../components/ListaArtigos.astro';
+import Base from '../../layouts/Base.astro';
+import {
+  CATEGORIAS,
+  prepararListagem,
+  type CategoriaSlug,
+} from '../../lib/conteudo';
+
+export function getStaticPaths() {
+  return (Object.keys(CATEGORIAS) as CategoriaSlug[]).map((categoria) => ({
+    params: { categoria },
+  }));
+}
+
+const { categoria } = Astro.params as { categoria: CategoriaSlug };
+const nome = CATEGORIAS[categoria];
+
+const artigos = prepararListagem(
+  (await getCollection('artigos')).filter((artigo) => artigo.data.categoria === categoria),
+  import.meta.env.PROD,
+);
+---
+
+<Base titulo={`Artigos de ${nome}`} descricao={`Artigos da categoria ${nome}.`}>
+  <p class="registro">categoria</p>
+  <h1>{nome}</h1>
+  <ListaArtigos artigos={artigos} mensagemVazia="Nenhum artigo nesta categoria ainda." />
+  <p class="registro"><a href="/artigos/">← todos os artigos</a></p>
+</Base>
