@@ -1,20 +1,19 @@
-# Build report — 2026-07-12 (INC-07)
+# Build report — 2026-07-12 (INC-08)
 Spec: docs/spec.md (Versão 1, aprovada)
-Incremento: INC-07 — Busca
+Incremento: INC-08 — Tema claro/escuro
 Rodada: construção
-Testes: 122 passando / 122 total — `npm test`
+Testes: 133 passando / 133 total — `npm test`
 
 ## Requisitos atendidos
-- **REQ-13** — Atendido — índice em `src/pages/busca-indice.json.ts` (endpoint estático → `dist/busca-indice.json`) com exatamente os campos da spec (título, descrição, tags, categoria) + url, de artigos e projetos publicados; página `/busca/` (`src/pages/busca.astro`) com campo rotulado que consulta via Fuse.js no cliente. A lógica de busca vive em `src/lib/busca.ts` e é a MESMA importada pela página e pelos testes — comportamento unitariamente testado (por título, tag, categoria; termo vazio; termo inexistente). Resultados renderizados com DOM APIs (`textContent`), sem `innerHTML`, em região `aria-live`.
-- Cobertura: `tests/busca.test.ts` — índice real do dist (campos, artigo com categoria, projeto com categoria null, rascunho ausente), comportamento do Fuse, página (input+label, noscript, aria-live).
+- **REQ-14** — Atendido — lógica em `src/lib/tema.ts` (storage injetável, testada com happy-dom): padrão segue `prefers-color-scheme`; escolha explícita vence; botão no cabeçalho (`Base.astro`) alterna e persiste na chave `tema` do localStorage; script `is:inline` no `<head>` aplica o tema salvo antes da pintura (sem flash). Tokens escuros no CSS em dois caminhos: `@media (prefers-color-scheme: dark)` quando não há escolha, e `[data-tema=escuro]`/`[data-tema=claro]` para escolha explícita — inclusive `color-scheme`. Fecha também o botão de tema do texto do REQ-01 (nota vinculante do review do INC-01), presente em todas as páginas.
+- **RNF-01** — Atendido — leitura e navegação 100% sem JS; os dois únicos usos de JS são a busca (INC-07, com noscript) e a alternância manual de tema; o botão nasce `hidden` e só é revelado pelo script — sem controle morto quando JS está desabilitado; sem JS o tema segue o sistema via media query pura (CSS).
 
 ## Casos extremos cobertos
-- **CE-02** — termo inexistente → `[]` (unitário) e mensagem "Nenhum resultado" (código da página); `<noscript>` com aviso de JavaScript e alternativas de navegação (asserção no dist). Falha de rede do índice → mensagem de erro amigável (try/catch).
+- **CE-05** — testes com storage lançando exceção e storage nulo: `lerTemaSalvo`/`salvarTema` não lançam; `alternarTema` continua aplicando o tema no documento (vale para a página aberta). Valor corrompido no storage é ignorado.
 
 ## Observações
-- `fuse.js` entra como dependência bundlada pelo Vite — nenhum CDN externo (RNF-02 preservada).
-- Busca em texto completo segue fora de escopo (decisão da spec: índice leve).
-- RN-05 re-aplicada na nova superfície: rascunho fora do índice, testado.
+- happy-dom adicionado como devDependency para testar a lógica real de DOM do tema (não mocks).
+- Asserções de integração calibradas para o build minificado (aspas removidas em seletores, template literals no JS, CSS em asset externo) — lidas do HTML e dos assets reais do dist.
 
 ## Perguntas em aberto / pendências
 - Nenhuma.

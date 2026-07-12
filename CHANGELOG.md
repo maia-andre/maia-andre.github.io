@@ -7,6 +7,17 @@ e o versionamento segue o [SemVer](https://semver.org/lang/pt-BR/): cada
 incremento do [plano](docs/plan.md) entregue gera uma release `v0.x.0`, até a
 `v1.0.0` fechar o escopo da primeira versão.
 
+## [0.8.0] — 2026-07-12 · INC-08 — Tema claro/escuro
+
+Review APROVADO em 2026-07-12. Atende REQ-14, RNF-01; cobre CE-05.
+
+### Adicionado
+
+- Tema escuro: por padrão o site segue a preferência do sistema; o botão no
+  cabeçalho alterna e a escolha persiste entre visitas, sem flash ao carregar
+- Sem JavaScript o site continua totalmente legível e navegável — o botão de
+  tema só aparece quando há JS, e o tema segue o sistema via CSS puro
+
 ## [0.7.0] — 2026-07-12 · INC-07 — Busca
 
 Review APROVADO em 2026-07-12. Atende REQ-13; cobre CE-02.

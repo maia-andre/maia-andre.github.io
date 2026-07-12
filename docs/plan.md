@@ -1,6 +1,6 @@
 # Plan: Site pessoal — arquivo vivo (v1)
 Spec: docs/spec.md (Versão 1, aprovada) | Gerado: 2026-07-12
-Progresso: 7/10 incrementos concluídos
+Progresso: 8/10 incrementos concluídos
 
 Convenção de release (RN-06): cada incremento concluído via /ship gera a release `v0.<nº do incremento>.0`; o INC-10 fecha a `v1.0.0`.
 
@@ -49,7 +49,7 @@ Depende de: INC-03, INC-04
 Entrega verificável: `/busca/` encontra artigos e projetos por título, descrição, tag e categoria via Fuse.js sobre índice JSON gerado no build (sem rascunhos); termo inexistente mostra estado vazio; com JS desabilitado a página informa que a busca requer JavaScript.
 
 ### INC-08 — Tema claro/escuro
-Status: pendente
+Status: concluído (v0.8.0, 2026-07-12)
 Itens da spec: REQ-14 | RNF-01 | CE-05
 Depende de: INC-01
 Entrega verificável: tema padrão segue `prefers-color-scheme`; botão no cabeçalho alterna e persiste em `localStorage` sem flash ao recarregar; com `localStorage` indisponível não há erro; com JS desabilitado o site inteiro permanece legível e navegável (aprimoramento progressivo).
