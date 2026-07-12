@@ -1,31 +1,22 @@
-# Build report — 2026-07-12 (INC-02, rodada 2)
+# Build report — 2026-07-12 (INC-03)
 Spec: docs/spec.md (Versão 1, aprovada)
-Incremento: INC-02 — Coleção de artigos validada + página do artigo
-Rodada: correção (review de 2026-07-12)
-Testes: 64 passando / 64 total — `npm test`
-
-## Correções do review aplicadas
-1. [CE-06] `criarGeradorDeIds()` em `src/lib/conteudo.ts`: `generateId` customizado passado ao `glob()` em `src/content.config.ts` — slugifica (minúsculas, sem acentos, kebab), registra ids emitidos e lança erro nomeando **os dois arquivos** na colisão, antes da deduplicação silenciosa do loader. Idempotente para recargas do mesmo arquivo.
-2. [CE-06] Teste de integração `CE-06 — build falha com slugs colidentes` em `tests/artigos-build-invalido.test.ts`: cria `__ce01__colisao a.md` + `__ce01__colisao-a.md`, roda `astro build` real → exit ≠ 0 com os dois nomes na saída.
-3. [CE-06] Guarda morta `garantirSlugsUnicos()` removida de `src/pages/artigos/[slug].astro` e da lib; testes antigos substituídos pelos do gerador.
+Incremento: INC-03 — Listagens de artigos + rascunhos
+Rodada: construção
+Testes: 77 passando / 77 total — `npm test`
 
 ## Requisitos atendidos
-- **REQ-03** — Atendido — coleção `artigos` em `src/content.config.ts` com schema zod em `src/lib/conteudo.ts` (obrigatórios: titulo, descricao, data, categoria, tags≥1; opcionais: atualizado, rascunho default false); coberto por `tests/artigos-schema.test.ts` (obrigatórios um a um, datas válidas/inválidas, opcionais).
-- **REQ-04** — Atendido — `categoria` como z.enum das três da spec; valores fora da lista rejeitados; coberto por testes de aceite/rejeição por categoria + build real falhando (CE-01).
-- **REQ-06** — Atendido — `src/pages/artigos/[slug].astro` gera `/artigos/<slug>/` (slug = id do arquivo) com h1, data pt-BR em `<time datetime>`, nome de exibição da categoria, tags linkadas para `/tags/<tag>/` e corpo Markdown; coberto por `tests/artigos-pagina.test.ts` sobre o HTML real do dist.
+- **REQ-05** — Atendido — `/artigos/` (`src/pages/artigos/index.astro`) e `/artigos/<categoria>/` (`src/pages/artigos/[categoria].astro`) com o componente compartilhado `src/components/ListaArtigos.astro` exibindo título, descrição, data, categoria e tags; navegação entre categorias; estado vazio para categoria sem artigos. Coberto por `tests/artigos-listagem.test.ts` (existência das 4 páginas, conteúdo do item, filtro por categoria, tags na listagem, estado vazio).
+- **REQ-07** — Atendido — `getStaticPaths` de `[slug].astro` filtra rascunhos em produção via `ehPublicado()`; listagens usam `prepararListagem()`. Rascunho real (`controle-patrimonial-na-pratica.md`) atua como fixture permanente: testes provam ausência de página própria e de menção em qualquer listagem no dist de produção. No dev o autor pré-visualiza rascunhos (spec só exige exclusão em produção).
 
 ## Regras de negócio
-- **RN-01** — Atendido — `CATEGORIAS` mapeia exatamente os 3 slugs aos nomes de exibição; teste de igualdade estrita do mapa + exibição na página.
-- **RN-03** — Atendido — `PADRAO_TAG` (`^[a-z0-9]+(-[a-z0-9]+)*$`) no schema; testes com 5 tags válidas e 9 inválidas (acentos, maiúsculas, underscore, hífens nas bordas, espaço, vazia).
+- **RN-02** — Atendido — `ordenarArtigos()` (data desc, empate por título com colação pt-BR, sem mutação); testes unitários com datas distintas, empate com acentos/maiúsculas e imutabilidade. Nota honesta: com apenas 1 artigo publicado, a ordenação ainda não é observável no dist — está garantida pela função pura usada pelas páginas e será exercitada naturalmente quando houver mais conteúdo (INC-10).
+- **RN-05** — Atendido — mesma mecânica do REQ-07: rascunho fora de página própria e listagens; superfícies futuras (tags INC-06, busca INC-07) deverão reusar `ehPublicado`/`prepararListagem` — anotado para os próximos incrementos.
 
 ## Casos extremos cobertos
-- **CE-01** — `tests/artigos-build-invalido.test.ts`: escreve um artigo com data impossível + categoria inexistente + tag inválida + descricao ausente, roda `npx astro build` real (outDir isolado) e comprova exit ≠ 0 com o nome do arquivo na saída; try/finally remove o arquivo e o padrão `__ce01__*` está no .gitignore.
-- **CE-06** — detecção no `generateId` do loader (ponto anterior à deduplicação); teste unitário do gerador (colisão, idempotência, slugificação) + teste de integração com `astro build` real falhando com os dois arquivos na mensagem.
+Nenhum CE do plano pertence ao INC-03. Guardas adicionais desta rodada: slug de artigo colidindo com slug de categoria derruba o build (proteção da coexistência REQ-05×REQ-06 nas rotas `/artigos/*`); categoria sem artigos mostra estado vazio sem vazar conteúdo de outras.
 
-## Observações da rodada
-- Artigo semente real (`construindo-este-site.md`) — conta como 1 dos 2 artigos reais exigidos na definição de concluído; André pode editar à vontade.
-- Links de tags apontam para `/tags/<tag>/`, rota que nasce no INC-06 (mesmo padrão da navegação, aprovado no INC-01).
-- Comportamento de `rascunho: true` (exclusão de produção) é REQ-07/RN-05 → INC-03, fora desta rodada; o campo já existe no schema com default correto.
+## Descoberta técnica da rodada
+O Vitest injeta `PROD=""` (string vazia, falsy), `NODE_ENV=test`, `DEV=1`, `MODE=test` e `BASE_URL` no `process.env`; o build filho da suíte herdava essas variáveis e o Vite resolvia `import.meta.env.PROD=false`, vazando rascunhos só no dist da suíte (o build real estava correto). Corrigido em `tests/setup/build-site.ts` limpando `VARS_DO_VITEST` — o build da suíte agora espelha CI. Registrado na memória do projeto.
 
 ## Perguntas em aberto / pendências
 - Nenhuma.

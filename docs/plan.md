@@ -1,6 +1,6 @@
 # Plan: Site pessoal — arquivo vivo (v1)
 Spec: docs/spec.md (Versão 1, aprovada) | Gerado: 2026-07-12
-Progresso: 2/10 incrementos concluídos
+Progresso: 3/10 incrementos concluídos
 
 Convenção de release (RN-06): cada incremento concluído via /ship gera a release `v0.<nº do incremento>.0`; o INC-10 fecha a `v1.0.0`.
 
@@ -19,7 +19,7 @@ Depende de: INC-01
 Entrega verificável: um artigo Markdown de exemplo renderiza em `/artigos/<slug>/` com título, data, categoria e tags; testes provam que frontmatter inválido (categoria fora da lista, data malformada, campo ausente, tag fora do padrão kebab-case, slug duplicado) faz o build falhar apontando o arquivo.
 
 ### INC-03 — Listagens de artigos + rascunhos
-Status: pendente
+Status: concluído (v0.3.0, 2026-07-12)
 Itens da spec: REQ-05, REQ-07 | RN-02, RN-05
 Depende de: INC-02
 Entrega verificável: `/artigos/` e `/artigos/<categoria>/` listam artigos ordenados por data desc (empate por título); artigo com `rascunho: true` não tem página nem aparece em nenhuma listagem de produção.

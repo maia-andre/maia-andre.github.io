@@ -1,31 +1,29 @@
-# Review report — 2026-07-12 (INC-02, 2ª auditoria)
-Spec: docs/spec.md (Versão 1, aprovada) | Incremento: INC-02 — Coleção de artigos validada + página do artigo | Build report: 2026-07-12 (INC-02, rodada 2)
+# Review report — 2026-07-12 (INC-03)
+Spec: docs/spec.md (Versão 1, aprovada) | Incremento: INC-03 — Listagens de artigos + rascunhos | Build report: 2026-07-12 (INC-03)
 ## VEREDITO: APROVADO
 
-Suíte rodada pelo auditor: 64/64. As 3 correções do review anterior foram verificadas no código e dirigidas de verdade.
+Suíte rodada pelo auditor: 77/77. O item que o verify declarou "não observável" (RN-02 no HTML) foi **dirigido pelo auditor** com artigos temporários num build isolado — comprovado.
 
 ## Verificação requisito a requisito
 | Item | Status | Evidência / Falha |
 |------|--------|-------------------|
-| REQ-03 | Atendido | Inalterado desde a 1ª auditoria (schema campo a campo testado); regressão limpa. |
-| REQ-04 | Atendido | Inalterado; dirigido na 1ª rodada com categoria inválida → exit 1. |
-| REQ-06 | Atendido | Regressão dirigida: build válido pós-correção gera `3 page(s)` com slug `construindo-este-site` inalterado; suíte da página verde. |
-| RN-01 | Atendido | Inalterado. |
-| RN-03 | Atendido | Inalterado. |
-| CE-01 | Atendido | Teste de integração continua verde (build real, exit ≠ 0, arquivo nomeado). |
-| CE-06 | **Atendido** | Correção 1 verificada: `criarGeradorDeIds()` (`src/lib/conteudo.ts`) plugado como `generateId` do `glob()` (`src/content.config.ts`) — detecção ANTES da deduplicação do loader. Dirigido pelo auditor/verify: cenário exato da reprovação agora dá `exit: 1` com `Slug duplicado "ce01-colisao-ce06": os arquivos "__ce01__colisao ce06.md" e "__ce01__colisao-ce06.md" geram o mesmo endereço.` Correção 2 verificada: teste de integração com build real e asserção dos dois nomes. Correção 3 verificada: guarda morta removida da página e da lib. |
-| Regressão INC-01 | Limpa | Suíte de layout/docs verde na rodada do auditor. |
+| REQ-05 | Atendido | `/artigos/` servida com item completo (título/descrição/data/categoria/tags linkadas) e navegação das 3 categorias; categoria com artigo o lista; categoria vazia mostra "Nenhum artigo nesta categoria ainda." sem vazar conteúdo (verify via curl no preview). |
+| REQ-07 | Atendido | Rascunho real como fixture permanente: `HTTP 404` na rota própria, 0 menções em listagens (inclusive na categoria dele) no build de produção. |
+| RN-02 | Atendido | **Dirigido pelo auditor**: 3 artigos temporários (um mais novo + dois empatados na mesma data) em build isolado → ordem real no HTML: `Construindo… (07-12) → Mais novo (07-01) → Água → Zebra` (empate por colação pt-BR). Unitários cobrem imutabilidade e limites. |
+| RN-05 | Atendido | Mesma evidência do REQ-07; helpers `ehPublicado`/`prepararListagem` são a única via de listagem — INC-06/07 devem reusá-los (anotado no plano de cobertura). |
+| Regressão INC-01/02 | Limpa | 77/77 inclui layout, docs, schema, páginas e builds inválidos. |
 
 ## Qualidade dos testes (TDD)
-- O teste que na 1ª auditoria "testava o mock" foi substituído por: (a) unitários do gerador real (slugificação com acentos, idempotência para recarga, colisão com os dois nomes, não-colisão) e (b) integração que reproduz a reprovação no build real. Ciclo vermelho→verde documentado (5 falhas antes da correção).
-- Cobertura do incremento íntegra e sem testes triviais.
+- Ciclo vermelho→verde documentado (12 falhas antes da implementação; 3 permaneceram por causa real — ver Descoberta).
+- A investigação do vazamento de rascunhos foi exemplar: o bug estava no **harness** (Vitest injeta `PROD=""` falsy no process.env; o build filho herdava e virava não-produção). A correção em `tests/setup/build-site.ts` faz o build da suíte espelhar CI — sem ela, os testes de rascunho passariam por motivo errado no futuro ou falhariam para sempre.
+- Fixture de rascunho permanente é bom desenho: todo build futuro re-prova REQ-07/RN-05.
 
 ## Segurança
-- Nenhum achado. `npm audit`: 0 vulnerabilidades. A perda silenciosa de conteúdo apontada na 1ª auditoria está eliminada.
+- Nenhum achado. `npm audit` 0 vulnerabilidades; sem entradas de usuário; sem segredos.
 
-## Observações não bloqueantes (fora do escopo da spec)
-- Renomear um arquivo em sessão de dev longa pode acusar colisão falsa com o "fantasma" do nome antigo (estado do closure) — resolve com restart do dev server; o build de produção (processo novo) não é afetado.
-- Arquivo com nome patológico (ex.: `---.md`) slugificaria para string vazia; nenhum item da spec cobre isso. Sugestão de guarda `min-length` num incremento futuro, se incomodar.
+## Observações não bloqueantes
+- A guarda de slug reservado em `[slug].astro` usa `artigo.id in CATEGORIAS` — o operador `in` consulta a cadeia de protótipos, então um arquivo hipotético `constructor.md` causaria falso positivo. Trocar por `Object.hasOwn(CATEGORIAS, artigo.id)` na próxima rodada de build (é código extra-spec, não bloqueia).
+- `--outDir` em `/tmp` cruza filesystems e falha no `rename` de assets do Astro (EXDEV) quando o build chega à fase final; os testes CE-01/CE-06 não são afetados (falham antes, e a asserção do nome do arquivo impede aprovação por falha de motivo errado). Auditorias futuras devem usar outDir dentro do projeto.
 
 ## Correções necessárias (para o /build)
 Nenhuma. Próximo passo: `/ship`.

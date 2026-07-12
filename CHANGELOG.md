@@ -7,6 +7,28 @@ e o versionamento segue o [SemVer](https://semver.org/lang/pt-BR/): cada
 incremento do [plano](docs/plan.md) entregue gera uma release `v0.x.0`, até a
 `v1.0.0` fechar o escopo da primeira versão.
 
+## [0.3.0] — 2026-07-12 · INC-03 — Listagens de artigos e rascunhos
+
+Review APROVADO em 2026-07-12. Atende REQ-05, REQ-07, RN-02, RN-05.
+
+### Adicionado
+
+- Página `/artigos/` com todos os artigos publicados (título, descrição, data,
+  categoria e tags) e navegação por categoria
+- Páginas por categoria (`/artigos/computacao/`, `/artigos/gestao-publica/`,
+  `/artigos/reflexoes/`) com estado vazio quando não há conteúdo
+- Ordenação por data decrescente com desempate alfabético (colação pt-BR)
+- Artigos com `rascunho: true` somem por completo do site publicado (sem
+  página própria e fora de todas as listagens); no `astro dev` o autor
+  continua pré-visualizando
+- Rascunho real "Controle patrimonial na prática" (fixture permanente da
+  garantia de rascunhos)
+
+### Corrigido
+
+- Suíte de testes não herda mais as variáveis de ambiente do Vitest
+  (`PROD=""` falsy vazava rascunhos para o build interno da suíte)
+
 ## [0.2.0] — 2026-07-12 · INC-02 — Sistema de artigos
 
 Review APROVADO na 2ª auditoria de 2026-07-12 (1ª reprovou o CE-06, corrigido).
