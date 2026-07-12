@@ -47,6 +47,25 @@ describe('v1.0.0 — os 4 projetos reais', () => {
   });
 });
 
+describe('v1.0.0 — dois artigos reais publicados', () => {
+  it('o segundo artigo (derivado do Matrix) existe com categoria reflexoes', () => {
+    expect(pageExists('artigos/a-regua-que-desbota/index.html')).toBe(true);
+    const main = parsePage('artigos/a-regua-que-desbota/index.html').querySelector('main')!;
+    expect(main.querySelector('h1')?.text).toContain('régua');
+    expect(main.text).toContain('Reflexões');
+  });
+
+  it('a listagem mostra os 2 publicados na ordem da RN-02 (empate → alfabético)', () => {
+    const titulos = parsePage('artigos/index.html')
+      .querySelectorAll('main .item-titulo a')
+      .map((a) => a.text.trim());
+    expect(titulos).toHaveLength(2);
+    // mesmas datas (2026-07-12): desempate alfabético pt-BR
+    expect(titulos[0]).toMatch(/^A régua/);
+    expect(titulos[1]).toMatch(/^Construindo/);
+  });
+});
+
 describe('v1.0.0 — botão de tema com estado acessível (nota do review INC-08)', () => {
   it('o script atualiza aria-pressed ao revelar e ao alternar', () => {
     const html = readFileSync(distFile('index.html'), 'utf-8');
