@@ -1,21 +1,23 @@
-# Verify report — 2026-07-12 (INC-06)
-Incremento: INC-06 — Tags | Build report: 2026-07-12 (INC-06)
-Como rodei: `npm run build` + `npx astro preview --port 4399 --host 127.0.0.1`
-Suíte de testes: 110 passando / 110 total (`npm test`)
+# Verify report — 2026-07-12 (INC-07)
+Incremento: INC-07 — Busca | Build report: 2026-07-12 (INC-07)
+Como rodei: `npm run build` + `npx astro preview --port 4399`; lógica de busca dirigida com `node` importando `src/lib/busca.ts` contra o índice REAL servido
+Suíte de testes: 122 passando / 122 total (`npm test`)
 
 ## Fluxos dirigidos
 | Item | Fluxo exercitado | Evidência (comando → saída) | Resultado |
 |------|------------------|-----------------------------|-----------|
-| REQ-11 | `/tags/` com contagens | `HTTP 200`; `#astro (2)`, `#engenharia-de-software (2)`, `#meta (1)`, `#typescript (1)` — todas linkadas | FUNCIONA |
-| REQ-11 | Tag compartilhada une artigo e projeto | `/tags/astro/` → seções `Artigos` e `Projetos` com `href` do artigo E do projeto | FUNCIONA |
-| REQ-11 | Fluxo completo de clique | Página do artigo contém `href="/tags/meta/"` → `curl /tags/meta/` → `HTTP 200` | FUNCIONA |
-| CE-03 | Tag exclusiva de rascunho em produção | `/tags/patrimonio/` → `HTTP 404`; 0 menções a `patrimonio` em `/tags/` | FUNCIONA |
-| Regressão | Suíte completa (todas as superfícies anteriores) | 110/110 | FUNCIONA |
+| REQ-13 | Índice JSON servido | `curl /busca-indice.json` → `HTTP 200`, JSON com artigo (categoria `computacao`) e projeto; campos exatos da spec | FUNCIONA |
+| RN-05 | Rascunho fora do índice | 0 ocorrências de "Controle patrimonial" no JSON servido | FUNCIONA |
+| REQ-13 | Busca real (mesma lib da página) sobre o índice servido | `buscar('astro')` → artigo E projeto; união entre coleções confirmada | FUNCIONA |
+| CE-02 | Termo inexistente | `buscar('qwzxinexistente')` → 0 resultados (a página renderiza "Nenhum resultado" nesse caso, mesma condição `length === 0`) | FUNCIONA |
+| CE-02 | Sem JavaScript | `/busca/` servida contém `<noscript>` com aviso e alternativas de navegação | FUNCIONA |
+| REQ-13 | Página com campo rotulado e região viva | `<label for="campo-busca">`, `<input type="search" id="campo-busca"`, `aria-live="polite"` no HTML servido | FUNCIONA |
+| Regressão | Suíte completa | 122/122 | FUNCIONA |
 
 ## Falhas encontradas (para o /build)
 Nenhuma.
 
 ## Não verificável de ponta a ponta
-- Nada nesta rodada.
+- **Interação digitar→ver resultados no navegador**: sem navegador headless na máquina. Mitigação: a função `criarBusca` importada pela página é exatamente a que foi dirigida acima com o índice real; o wiring do evento `input` e a renderização são código declarativo curto, revisáveis. Verificação visual plena fica para o INC-10 (auditoria com navegador).
 
 Ambiente limpo: preview derrubado, scratch removido.

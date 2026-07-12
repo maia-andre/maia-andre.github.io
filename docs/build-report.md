@@ -1,18 +1,20 @@
-# Build report — 2026-07-12 (INC-06)
+# Build report — 2026-07-12 (INC-07)
 Spec: docs/spec.md (Versão 1, aprovada)
-Incremento: INC-06 — Tags
+Incremento: INC-07 — Busca
 Rodada: construção
-Testes: 110 passando / 110 total — `npm test`
+Testes: 122 passando / 122 total — `npm test`
 
 ## Requisitos atendidos
-- **REQ-11** — Atendido — `colecionarTags()` em `src/lib/conteudo.ts` une tags de artigos e projetos publicados (ordem alfabética pt-BR); `/tags/` (`src/pages/tags/index.astro`) lista cada tag com contagem total (artigos + projetos); `/tags/<tag>/` (`[tag].astro`) lista artigos (ordenados por RN-02) e projetos (por nome) da tag, em seções separadas omitidas quando vazias. Tags exibidas em artigos, projetos e listagens já eram links desde os INC-02/04. Coberto por `tests/tags.test.ts`: unitários da união/contagem/ordem + asserções no dist (tag compartilhada `astro` lista artigo E projeto; `typescript` só projeto).
+- **REQ-13** — Atendido — índice em `src/pages/busca-indice.json.ts` (endpoint estático → `dist/busca-indice.json`) com exatamente os campos da spec (título, descrição, tags, categoria) + url, de artigos e projetos publicados; página `/busca/` (`src/pages/busca.astro`) com campo rotulado que consulta via Fuse.js no cliente. A lógica de busca vive em `src/lib/busca.ts` e é a MESMA importada pela página e pelos testes — comportamento unitariamente testado (por título, tag, categoria; termo vazio; termo inexistente). Resultados renderizados com DOM APIs (`textContent`), sem `innerHTML`, em região `aria-live`.
+- Cobertura: `tests/busca.test.ts` — índice real do dist (campos, artigo com categoria, projeto com categoria null, rascunho ausente), comportamento do Fuse, página (input+label, noscript, aria-live).
 
 ## Casos extremos cobertos
-- **CE-03** — três níveis: unitário (`exclusiva-de-rascunho` fora do mapa em produção, dentro no dev); dist sem `tags/patrimonio/index.html` (tag existe apenas no rascunho real de controle patrimonial); `/tags/` sem menção a `patrimonio`.
+- **CE-02** — termo inexistente → `[]` (unitário) e mensagem "Nenhum resultado" (código da página); `<noscript>` com aviso de JavaScript e alternativas de navegação (asserção no dist). Falha de rede do índice → mensagem de erro amigável (try/catch).
 
 ## Observações
-- Só existem páginas para tags efetivamente usadas por conteúdo publicado — o `getStaticPaths` deriva do mesmo mapa da listagem, então não há como divergirem.
-- Rascunhos seguem visíveis no `astro dev` (decisão registrada no INC-03), inclusive nas tags.
+- `fuse.js` entra como dependência bundlada pelo Vite — nenhum CDN externo (RNF-02 preservada).
+- Busca em texto completo segue fora de escopo (decisão da spec: índice leve).
+- RN-05 re-aplicada na nova superfície: rascunho fora do índice, testado.
 
 ## Perguntas em aberto / pendências
 - Nenhuma.

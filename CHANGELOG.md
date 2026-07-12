@@ -7,6 +7,18 @@ e o versionamento segue o [SemVer](https://semver.org/lang/pt-BR/): cada
 incremento do [plano](docs/plan.md) entregue gera uma release `v0.x.0`, até a
 `v1.0.0` fechar o escopo da primeira versão.
 
+## [0.7.0] — 2026-07-12 · INC-07 — Busca
+
+Review APROVADO em 2026-07-12. Atende REQ-13; cobre CE-02.
+
+### Adicionado
+
+- Página `/busca/` com busca instantânea no navegador (Fuse.js, sem serviços
+  externos) por título, descrição, tag e categoria de artigos e projetos
+- Índice JSON leve gerado no build, sem rascunhos
+- Estado vazio para buscas sem resultado e aviso quando JavaScript está
+  desabilitado
+
 ## [0.6.0] — 2026-07-12 · INC-06 — Tags
 
 Review APROVADO em 2026-07-12. Atende REQ-11; cobre CE-03.
