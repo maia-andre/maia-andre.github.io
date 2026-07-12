@@ -2,8 +2,8 @@ import { describe, expect, it } from 'vitest';
 import {
   CATEGORIAS,
   PADRAO_TAG,
+  criarGeradorDeIds,
   esquemaArtigo,
-  garantirSlugsUnicos,
 } from '../src/lib/conteudo';
 
 // REQ-03 — frontmatter validado (obrigatórios e opcionais)
@@ -103,14 +103,30 @@ describe('RN-03 — formato das tags', () => {
   });
 });
 
-describe('CE-06 — slugs duplicados', () => {
-  it('deixa passar slugs únicos', () => {
-    expect(() => garantirSlugsUnicos(['a', 'b', 'c'])).not.toThrow();
+describe('CE-06 — gerador de ids detecta colisão antes da deduplicação do loader', () => {
+  it('slugifica o nome do arquivo (minúsculas, sem acentos, kebab)', () => {
+    const gerarId = criarGeradorDeIds();
+    expect(gerarId({ entry: 'construindo-este-site.md' })).toBe('construindo-este-site');
+    expect(gerarId({ entry: 'Meu Artigo Ção.md' })).toBe('meu-artigo-cao');
   });
 
-  it('derruba o build apontando o slug duplicado', () => {
-    expect(() => garantirSlugsUnicos(['meu-artigo', 'outro', 'meu-artigo'])).toThrow(
-      /meu-artigo/,
+  it('é idempotente para o mesmo arquivo (recarga do dev server)', () => {
+    const gerarId = criarGeradorDeIds();
+    expect(gerarId({ entry: 'a.md' })).toBe('a');
+    expect(() => gerarId({ entry: 'a.md' })).not.toThrow();
+  });
+
+  it('lança erro nomeando os dois arquivos quando slugs colidem', () => {
+    const gerarId = criarGeradorDeIds();
+    gerarId({ entry: 'meu artigo.md' });
+    expect(() => gerarId({ entry: 'meu-artigo.md' })).toThrow(
+      /meu artigo\.md.*meu-artigo\.md|meu-artigo\.md.*meu artigo\.md/s,
     );
+  });
+
+  it('não confunde arquivos diferentes com slugs diferentes', () => {
+    const gerarId = criarGeradorDeIds();
+    gerarId({ entry: 'primeiro.md' });
+    expect(() => gerarId({ entry: 'segundo.md' })).not.toThrow();
   });
 });
