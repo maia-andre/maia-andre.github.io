@@ -1,0 +1,61 @@
+---
+import { getCollection, render } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import {
+  CATEGORIAS,
+  dataISO,
+  formatarData,
+  garantirSlugsUnicos,
+} from '../../lib/conteudo';
+
+export async function getStaticPaths() {
+  const artigos = await getCollection('artigos');
+  garantirSlugsUnicos(artigos.map((artigo) => artigo.id));
+  return artigos.map((artigo) => ({
+    params: { slug: artigo.id },
+    props: { artigo },
+  }));
+}
+
+const { artigo } = Astro.props;
+const { Content } = await render(artigo);
+const { titulo, descricao, data, atualizado, categoria, tags } = artigo.data;
+---
+
+<Base titulo={titulo} descricao={descricao}>
+  <article>
+    <header class="artigo-cabecalho">
+      <p class="registro artigo-meta">
+        <time datetime={dataISO(data)}>{formatarData(data)}</time>
+        <span aria-hidden="true">·</span>
+        <span>{CATEGORIAS[categoria]}</span>
+        {
+          atualizado && (
+            <>
+              <span aria-hidden="true">·</span>
+              <span>
+                atualizado em <time datetime={dataISO(atualizado)}>{formatarData(atualizado)}</time>
+              </span>
+            </>
+          )
+        }
+      </p>
+      <h1>{titulo}</h1>
+      <p class="artigo-descricao">{descricao}</p>
+    </header>
+    <div class="prosa">
+      <Content />
+    </div>
+    <footer class="artigo-rodape">
+      <ul class="lista-tags registro" aria-label="Tags do artigo">
+        {
+          tags.map((tag) => (
+            <li>
+              <a href={`/tags/${tag}/`}>#{tag}</a>
+            </li>
+          ))
+        }
+      </ul>
+    </footer>
+  </article>
+</Base>

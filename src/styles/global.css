@@ -199,6 +199,83 @@ main {
   color: var(--carimbo);
 }
 
+/* Artigo: a "ficha de registro" do conteúdo */
+.artigo-cabecalho {
+  margin-bottom: 2.5rem;
+}
+
+.artigo-meta {
+  margin: 0 0 0.75rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 0.5rem;
+}
+
+.artigo-descricao {
+  color: var(--grafite);
+  font-size: 1.125rem;
+  margin: 0;
+}
+
+.prosa h2 {
+  margin-top: 2.25em;
+}
+
+.prosa blockquote {
+  margin: 1.5em 0;
+  padding-left: 1.25rem;
+  border-left: 2px solid var(--carimbo);
+  color: var(--grafite);
+}
+
+.prosa pre {
+  font-family: var(--fonte-registro);
+  font-size: 0.875rem;
+  line-height: 1.6;
+  background: var(--superficie);
+  border: 1px solid var(--linha);
+  border-radius: 4px;
+  padding: 1rem 1.25rem;
+  overflow-x: auto;
+}
+
+.prosa code {
+  font-family: var(--fonte-registro);
+  font-size: 0.9em;
+  background: var(--superficie);
+  padding: 0.1em 0.35em;
+  border-radius: 3px;
+}
+
+.prosa pre code {
+  background: none;
+  padding: 0;
+}
+
+.artigo-rodape {
+  margin-top: 3rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--linha);
+}
+
+.lista-tags {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 1rem;
+}
+
+.lista-tags a {
+  color: var(--grafite);
+  text-decoration: none;
+}
+
+.lista-tags a:hover {
+  color: var(--carimbo);
+}
+
 @media (prefers-reduced-motion: no-preference) {
   a {
     transition: color 120ms ease, text-decoration-thickness 120ms ease;
