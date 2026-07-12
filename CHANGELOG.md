@@ -7,6 +7,23 @@ e o versionamento segue o [SemVer](https://semver.org/lang/pt-BR/): cada
 incremento do [plano](docs/plan.md) entregue gera uma release `v0.x.0`, até a
 `v1.0.0` fechar o escopo da primeira versão.
 
+## [0.2.0] — 2026-07-12 · INC-02 — Sistema de artigos
+
+Review APROVADO na 2ª auditoria de 2026-07-12 (1ª reprovou o CE-06, corrigido).
+Atende REQ-03, REQ-04, REQ-06, RN-01, RN-03, CE-01, CE-06.
+
+### Adicionado
+
+- Coleção de artigos em Markdown com frontmatter validado no build: título,
+  descrição, data, categoria (Computação | Gestão Pública | Reflexões) e tags
+  kebab-case obrigatórias; `atualizado` e `rascunho` opcionais
+- Página do artigo em `/artigos/<slug>/` com data por extenso, categoria,
+  tags linkadas e corpo Markdown com estilos de leitura
+- Primeiro artigo real do arquivo: "Construindo este site como um projeto de software"
+- Conteúdo inválido derruba o build apontando o arquivo — inclusive dois
+  arquivos que gerariam o mesmo endereço (detecção de colisão de slugs no
+  carregador, antes da deduplicação silenciosa)
+
 ## [0.1.0] — 2026-07-12 · INC-01 — Esqueleto executável
 
 Review APROVADO em 2026-07-12. Atende REQ-01, REQ-16, RNF-04, RNF-05, RN-06.

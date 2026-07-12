@@ -1,6 +1,6 @@
 # Plan: Site pessoal — arquivo vivo (v1)
 Spec: docs/spec.md (Versão 1, aprovada) | Gerado: 2026-07-12
-Progresso: 1/10 incrementos concluídos
+Progresso: 2/10 incrementos concluídos
 
 Convenção de release (RN-06): cada incremento concluído via /ship gera a release `v0.<nº do incremento>.0`; o INC-10 fecha a `v1.0.0`.
 
@@ -13,7 +13,7 @@ Depende de: —
 Entrega verificável: `npm run dev` sobe o site com layout base (cabeçalho com navegação completa, rodapé, `lang="pt-BR"`, responsivo sem scroll horizontal) e página 404; `npm run build` e a suíte de testes rodam verdes; `README.md`, `ROADMAP.md` e `CHANGELOG.md` presentes e preenchidos.
 
 ### INC-02 — Coleção de artigos validada + página do artigo
-Status: pendente
+Status: concluído (v0.2.0, 2026-07-12)
 Itens da spec: REQ-03, REQ-04, REQ-06 | RN-01, RN-03 | CE-01, CE-06
 Depende de: INC-01
 Entrega verificável: um artigo Markdown de exemplo renderiza em `/artigos/<slug>/` com título, data, categoria e tags; testes provam que frontmatter inválido (categoria fora da lista, data malformada, campo ausente, tag fora do padrão kebab-case, slug duplicado) faz o build falhar apontando o arquivo.
