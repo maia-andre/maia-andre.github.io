@@ -199,6 +199,67 @@ main {
   color: var(--carimbo);
 }
 
+/* Listagem de artigos */
+.filtro-categorias {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 1.25rem;
+  margin-bottom: 2.5rem;
+}
+
+.filtro-categorias a {
+  color: var(--grafite);
+  text-decoration: none;
+}
+
+.filtro-categorias a:hover {
+  color: var(--carimbo);
+}
+
+.lista-artigos {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.item-artigo {
+  padding-block: 1.75rem;
+  border-top: 1px solid var(--linha);
+}
+
+.item-artigo:last-child {
+  border-bottom: 1px solid var(--linha);
+}
+
+.item-titulo {
+  font-size: 1.25rem;
+  margin: 0.25rem 0;
+}
+
+.item-titulo a {
+  color: var(--tinta);
+  text-decoration: none;
+}
+
+.item-titulo a:hover {
+  color: var(--carimbo);
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 0.2em;
+}
+
+.item-descricao {
+  color: var(--grafite);
+  margin: 0 0 0.5rem;
+}
+
+.estado-vazio {
+  color: var(--grafite);
+  font-style: italic;
+  padding-block: 1.5rem;
+  border-top: 1px solid var(--linha);
+}
+
 /* Artigo: a "ficha de registro" do conteúdo */
 .artigo-cabecalho {
   margin-bottom: 2.5rem;
