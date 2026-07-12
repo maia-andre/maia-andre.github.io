@@ -11,7 +11,7 @@ import {
 export async function getStaticPaths() {
   const artigos = await getCollection('artigos');
   // Slugs iguais aos das categorias colidiriam com /artigos/<categoria>/
-  const reservados = artigos.filter((artigo) => artigo.id in CATEGORIAS);
+  const reservados = artigos.filter((artigo) => Object.hasOwn(CATEGORIAS, artigo.id));
   if (reservados.length > 0) {
     throw new Error(
       `Slug de artigo reservado para categoria: ${reservados.map((a) => a.id).join(', ')}. Renomeie o arquivo.`,
