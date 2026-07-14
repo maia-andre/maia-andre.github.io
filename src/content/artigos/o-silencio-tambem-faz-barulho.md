@@ -18,11 +18,11 @@ nunca desliga.
 Eu trabalho. Entrego projetos. Resolvo problemas. Construo sistemas. Escrevo
 código. Organizo ideias. Planejo o futuro.
 
-Mas, às vezes, tudo isso parece não atravessar a porta da sala. O que faço
-parece não fazer diferença para quem decide. É como construir pontes durante
-anos e descobrir que ninguém percebeu que existia um rio.
+Mas, às vezes, tudo isso parece não ir além de mim. O que faço parece nunca
+chegar ao outro lado. É como construir pontes durante anos e descobrir que
+ninguém percebeu que existia um rio.
 
-Quando o expediente acaba, sobra um silêncio estranho.
+Quando o dia acaba, sobra um silêncio estranho.
 
 As pessoas costumam dizer que ninguém é uma ilha. Talvez estejam certas. O
 problema é que algumas ilhas ficam longe demais do continente.
