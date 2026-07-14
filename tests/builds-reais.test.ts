@@ -3,6 +3,7 @@ import {
   mkdirSync,
   mkdtempSync,
   readFileSync,
+  renameSync,
   rmSync,
   unlinkSync,
   writeFileSync,
@@ -88,6 +89,49 @@ describe('CE-06 — build falha com slugs colidentes', () => {
     } finally {
       unlinkSync(COLISAO_A);
       unlinkSync(COLISAO_B);
+      rmSync(outDir, { recursive: true, force: true });
+    }
+  }, 150_000);
+});
+
+// CE-E01 (INC-12) — o frame do Matrix é asset obrigatório: build sem ele (ou
+// com ele vazio) falha apontando o arquivo. Usa renomeio temporário + restore.
+const FRAME = join(process.cwd(), 'src/assets', 'matrix-frame.txt');
+const FRAME_GUARDADO = `${FRAME}.guardado`;
+
+describe('CE-E01 — build falha sem o asset do frame do Matrix', () => {
+  it('asset ausente: astro build sai com erro que aponta matrix-frame', () => {
+    const outDir = mkdtempSync(join(tmpdir(), 'dist-cee01a-'));
+    renameSync(FRAME, FRAME_GUARDADO);
+    try {
+      const r = spawnSync('npx', ['astro', 'build', '--outDir', outDir], {
+        cwd: process.cwd(),
+        encoding: 'utf-8',
+        timeout: 120_000,
+      });
+      expect(r.status, 'build deveria falhar sem o asset').not.toBe(0);
+      expect(`${r.stdout}\n${r.stderr}`).toContain('matrix-frame');
+    } finally {
+      renameSync(FRAME_GUARDADO, FRAME);
+      rmSync(outDir, { recursive: true, force: true });
+    }
+  }, 150_000);
+
+  it('asset vazio: astro build sai com erro que aponta matrix-frame', () => {
+    const outDir = mkdtempSync(join(tmpdir(), 'dist-cee01b-'));
+    renameSync(FRAME, FRAME_GUARDADO);
+    writeFileSync(FRAME, '\n\n');
+    try {
+      const r = spawnSync('npx', ['astro', 'build', '--outDir', outDir], {
+        cwd: process.cwd(),
+        encoding: 'utf-8',
+        timeout: 120_000,
+      });
+      expect(r.status, 'build deveria falhar com o asset vazio').not.toBe(0);
+      expect(`${r.stdout}\n${r.stderr}`).toContain('matrix-frame');
+    } finally {
+      unlinkSync(FRAME);
+      renameSync(FRAME_GUARDADO, FRAME);
       rmSync(outDir, { recursive: true, force: true });
     }
   }, 150_000);
