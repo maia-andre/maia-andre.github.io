@@ -37,6 +37,15 @@ const atual = (href: string) =>
     <meta name="generator" content={Astro.generator} />
     <meta name="description" content={descricao} />
     <title>{tituloPagina}</title>
+    <!-- REQ-E03: preload só do que aparece acima da dobra (corpo + navegação) -->
+    <link rel="preload" href="/fontes/lora-var.woff2" as="font" type="font/woff2" crossorigin />
+    <link
+      rel="preload"
+      href="/fontes/plex-mono-400.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
     <script is:inline>
       // REQ-14: aplica o tema salvo ANTES da pintura para não haver flash.
       // CE-05: localStorage indisponível cai no tema do sistema, sem erro.
