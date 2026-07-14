@@ -47,7 +47,7 @@ describe('v1.0.0 — os 4 projetos reais', () => {
   });
 });
 
-describe('conteúdo real — três artigos publicados', () => {
+describe('conteúdo real — quatro artigos publicados', () => {
   it('o segundo artigo (derivado do Matrix) existe com categoria reflexoes', () => {
     expect(pageExists('artigos/a-regua-que-desbota/index.html')).toBe(true);
     const main = parsePage('artigos/a-regua-que-desbota/index.html').querySelector('main')!;
@@ -64,15 +64,25 @@ describe('conteúdo real — três artigos publicados', () => {
     expect(main.text).toContain('Reflexões');
   });
 
-  it('a listagem mostra os 3 publicados na ordem da RN-02 (data desc; empate → alfabético)', () => {
+  it('o quarto artigo (parábola) existe com categoria reflexoes', () => {
+    expect(pageExists('artigos/o-jardineiro-e-as-sementes-de-inverno/index.html')).toBe(true);
+    const main = parsePage(
+      'artigos/o-jardineiro-e-as-sementes-de-inverno/index.html',
+    ).querySelector('main')!;
+    expect(main.querySelector('h1')?.text).toContain('jardineiro');
+    expect(main.text).toContain('Reflexões');
+  });
+
+  it('a listagem mostra os 4 publicados na ordem da RN-02 (data desc; empate → alfabético)', () => {
     const titulos = parsePage('artigos/index.html')
       .querySelectorAll('main .item-titulo a')
       .map((a) => a.text.trim());
-    expect(titulos).toHaveLength(3);
-    // 2026-07-13 vem primeiro; empate em 2026-07-12: desempate alfabético pt-BR
-    expect(titulos[0]).toMatch(/^O silêncio/);
-    expect(titulos[1]).toMatch(/^A régua/);
-    expect(titulos[2]).toMatch(/^Construindo/);
+    expect(titulos).toHaveLength(4);
+    // empates (2026-07-13 e 2026-07-12): desempate alfabético pt-BR
+    expect(titulos[0]).toMatch(/^O jardineiro/);
+    expect(titulos[1]).toMatch(/^O silêncio/);
+    expect(titulos[2]).toMatch(/^A régua/);
+    expect(titulos[3]).toMatch(/^Construindo/);
   });
 });
 
