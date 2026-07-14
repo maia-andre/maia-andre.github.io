@@ -128,14 +128,15 @@ describe('REQ-E03/CE-E04 — swap, preload seletivo e fallback métrico', () => 
     }
   });
 
-  it('o fallback tem face itálica própria e candidatos local() multiplataforma', () => {
+  it('o fallback tem faces itálica e bold próprias e candidatos local() multiplataforma', () => {
     const blocos = cssDaPagina()
       .split('@font-face')
       .slice(1)
       .map((b) => b.slice(0, b.indexOf('}')))
       .filter((b) => b.includes('Lora Fallback'));
-    expect(blocos.length, 'faces normal e itálica do Lora Fallback').toBe(2);
+    expect(blocos.length, 'faces normal, itálica e bold do Lora Fallback').toBe(3);
     expect(blocos.some((b) => /font-style:\s*italic/.test(b))).toBe(true);
+    expect(blocos.some((b) => /font-weight:\s*550 900/.test(b))).toBe(true);
     for (const bloco of blocos) {
       const candidatos = bloco.match(/local\(/g) ?? [];
       expect(candidatos.length, 'cada face precisa de 2+ candidatos local()').toBeGreaterThanOrEqual(
