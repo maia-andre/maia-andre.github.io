@@ -1,42 +1,51 @@
-# Build report — 2026-07-14
+# Build report — 2026-07-14 (correção)
 Spec: docs/specs/direcao-estetica.md (Versão 1, aprovada)
 Incremento: INC-11 — Tipografia própria: Lora + IBM Plex Mono self-hosted
-Rodada: construção
-Testes: 165 passando / 165 total — `npm test` (vitest run, inclui build real do Astro)
+Rodada: correção (verify de 2026-07-14 — FALHA no REQ-E03: CLS 0,1025 no artigo, 0,0325 na Home)
+Testes: 166 passando / 166 total — `npm test`
 
 ## Requisitos atendidos
 
-- **REQ-E01** — Atendido — 4 woff2 latinos em `public/fontes/` (Lora variável
-  400–700 normal e itálico; IBM Plex Mono 400 e 600), servidos do próprio
-  domínio; `@font-face` em `src/styles/global.css`; licenças OFL commitadas ao
-  lado das fontes. Coberto por `tests/tipografia.test.ts` ("todos os woff2 de
-  dist são exatamente os 4 esperados", "nenhum HTML ou CSS gerado referencia
-  serviço de fontes de terceiros").
-- **REQ-E02** — Atendido — troca feita nos tokens: `--fonte-corpo` e
-  `--fonte-titulo` → Lora; `--fonte-registro` → IBM Plex Mono. Corpo, h1–h4,
-  `.registro` (datas, categoria, tags, tecnologias) e `.navegacao a` já
-  consumiam os tokens — verificado por teste de CSS e por teste de markup nas
-  páginas de artigo e projeto. Ajuste óptico: tracking dos títulos de -0.02em
-  para -0.01em (serifada em corpo grande).
-- **REQ-E03** — Atendido — `font-display: swap` nas 4 faces; preload de
-  exatamente 2 arquivos acima da dobra (Lora normal + Plex Mono 400, com
-  `crossorigin`) em `src/layouts/Base.astro`; fallbacks métricos
-  `Lora Fallback` (Georgia, size-adjust 104.98%) e `IBM Plex Mono Fallback`
-  (Courier New, size-adjust 99.98%) com ascent/descent/line-gap overrides
-  calculados das métricas reais via capsize. Coberto pelos três testes de
-  swap/preload/fallback.
-- **RNF-E02** — Atendido — 4 arquivos woff2 somando 108.888 bytes (≈ 106 KB ≤
-  160 KB), subset latino (cobre pt-BR). Coberto pelo teste de orçamento.
+- **REQ-E01** — Atendido — inalterado da rodada anterior (4 woff2 em
+  `public/fontes/`, licenças OFL, zero terceiros), agora com **subset pt-BR**
+  (Latin-1 + travessões/aspas/reticências/setas presentes no conteúdo): soma
+  caiu de 108.888 para **95.084 bytes**. Cobertura de teste inalterada.
+- **REQ-E02** — Atendido — tokens e seletores inalterados; famílias computadas
+  verificadas em navegador na rodada anterior do verify.
+- **REQ-E03** — Atendido (era a FALHA) — causa-raiz dupla encontrada e
+  corrigida: (1) `local('Georgia')`/`local('Courier New')` **não resolvem** no
+  Linux da auditoria — `local()` não passa pela substituição do fontconfig —
+  então os overrides métricos nunca se aplicavam; (2) o `size-adjust` de
+  tabela (capsize × Georgia real) errava ~10% contra a face efetivamente
+  usada. Correção: cadeias `local('Liberation Serif'), local('Times New
+  Roman')` (métrica-compatíveis entre si — um único size-adjust vale para
+  Linux e Windows/macOS) e **calibração empírica no Chrome da auditoria**
+  medindo blocos reais das páginas: roman **117,3%**, itálico **113%** (face
+  própria; o itálico da Lora é mais estreito) e **face bold nova a 106%**
+  (`local('Liberation Serif Bold')`, peso 550–900 — a Lora 650 dos títulos é
+  bem mais larga que bold sintetizado). Itálico da Lora entrou no preload
+  (3 faces acima da dobra: aparece na apresentação da Home e no primeiro
+  parágrafo de artigos). **Resultado no instrumento do contrato (Lighthouse
+  mobile, mediana de 3 execuções): Performance 100, Accessibility 100 e CLS
+  0 nas quatro páginas auditadas** (Home, artigo, projeto Matrix, busca).
+- **RNF-E02** — Atendido — 4 arquivos, 95.084 bytes (≤ 160 KB), com margem
+  maior após o subset.
 
 ## Casos extremos cobertos
 
-- **CE-E04** — Pilhas de fonte terminam em genérica (`serif` / `monospace`)
-  com Georgia e ui-monospace/Menlo como degraus intermediários; com as fontes
-  indisponíveis o texto renderiza no fallback métrico sem conteúdo invisível
-  (`swap`). Coberto por "as pilhas terminam em família genérica".
+- **CE-E04** — Inalterado e re-testado: pilhas terminam em genérica; teste novo
+  garante 2+ candidatos `local()` por face de fallback e as faces
+  itálica/bold próprias (`tests/tipografia.test.ts`).
 
 ## Perguntas em aberto / pendências
 
-- Nenhuma. Os pacotes fontsource/capsize usados para extrair arquivos e
-  métricas foram instalados com `--no-save` (não são dependências do projeto;
-  os valores estão hard-coded no CSS com comentário de proveniência).
+- Honestidade de medição: sob throttling *real* de 4G lento (rede e CPU de
+  verdade, mais duro que o modo simulado do Lighthouse), o h1 longo do artigo
+  ainda pode deslocar ~1 linha se a fonte perder a corrida do primeiro paint —
+  títulos curtos e longos têm demandas de `size-adjust` conflitantes (residual
+  de 34px no melhor compromisso). O instrumento definido pela spec (auditoria
+  Lighthouse, RNF-E01) mede CLS = 0; registro o residual para o
+  /review-and-security julgar com contexto completo.
+- Ferramentas de calibração foram scripts descartáveis (removidos); os valores
+  finais estão hard-coded no `global.css` com comentário de proveniência.
+  Recalibrar exige repetir a medição empírica (documentado no comentário).
