@@ -1,51 +1,48 @@
-# Build report — 2026-07-14 (correção)
+# Build report — 2026-07-14 (INC-12)
 Spec: docs/specs/direcao-estetica.md (Versão 1, aprovada)
-Incremento: INC-11 — Tipografia própria: Lora + IBM Plex Mono self-hosted
-Rodada: correção (verify de 2026-07-14 — FALHA no REQ-E03: CLS 0,1025 no artigo, 0,0325 na Home)
-Testes: 166 passando / 166 total — `npm test`
+Incremento: INC-12 — Frame do Matrix como hero da página do projeto
+Rodada: construção
+Testes: 175 passando / 175 total — `npm test`
 
 ## Requisitos atendidos
 
-- **REQ-E01** — Atendido — inalterado da rodada anterior (4 woff2 em
-  `public/fontes/`, licenças OFL, zero terceiros), agora com **subset pt-BR**
-  (Latin-1 + travessões/aspas/reticências/setas presentes no conteúdo): soma
-  caiu de 108.888 para **95.084 bytes**. Cobertura de teste inalterada.
-- **REQ-E02** — Atendido — tokens e seletores inalterados; famílias computadas
-  verificadas em navegador na rodada anterior do verify.
-- **REQ-E03** — Atendido (era a FALHA) — causa-raiz dupla encontrada e
-  corrigida: (1) `local('Georgia')`/`local('Courier New')` **não resolvem** no
-  Linux da auditoria — `local()` não passa pela substituição do fontconfig —
-  então os overrides métricos nunca se aplicavam; (2) o `size-adjust` de
-  tabela (capsize × Georgia real) errava ~10% contra a face efetivamente
-  usada. Correção: cadeias `local('Liberation Serif'), local('Times New
-  Roman')` (métrica-compatíveis entre si — um único size-adjust vale para
-  Linux e Windows/macOS) e **calibração empírica no Chrome da auditoria**
-  medindo blocos reais das páginas: roman **117,3%**, itálico **113%** (face
-  própria; o itálico da Lora é mais estreito) e **face bold nova a 106%**
-  (`local('Liberation Serif Bold')`, peso 550–900 — a Lora 650 dos títulos é
-  bem mais larga que bold sintetizado). Itálico da Lora entrou no preload
-  (3 faces acima da dobra: aparece na apresentação da Home e no primeiro
-  parágrafo de artigos). **Resultado no instrumento do contrato (Lighthouse
-  mobile, mediana de 3 execuções): Performance 100, Accessibility 100 e CLS
-  0 nas quatro páginas auditadas** (Home, artigo, projeto Matrix, busca).
-- **RNF-E02** — Atendido — 4 arquivos, 95.084 bytes (≤ 160 KB), com margem
-  maior após o subset.
+- **REQ-E04** — Atendido — frame ASCII real capturado do binário do Matrix
+  (compilado de `main.c`, `./bin/matrix 42 3001 0`, último frame extraído do
+  stdout e limpo de ANSI), commitado em `src/assets/matrix-frame.txt` (linha
+  de metadados + título + grade de 68 colunas; as linhas de estatísticas do
+  HUD ficaram de fora por estourarem o mobile — os números moram na legenda).
+  Renderizado por `src/components/FrameMatrix.astro`, incluído em
+  `[slug].astro` entre o `<header>` e a `.prosa`, somente para
+  `projeto.id === 'matrix'`. O build importa o asset via `?raw` — nunca
+  executa nem clona o Matrix. Coberto por `tests/frame-matrix.test.ts`
+  (posição na página, moldura e blocos reais na arte, ausência nos outros 4
+  projetos).
+- **REQ-E05** — Atendido — `<figure class="frame-matrix">` com `<pre
+  aria-hidden="true">` e `<figcaption class="registro">` declarando
+  `seed 42 · tick 3000 · matrix@e8b93ac`. Coberto por testes de
+  acessibilidade e proveniência.
+- **REQ-E06** — Atendido — cores do frame exclusivamente por tokens de tema
+  (`--carimbo`, `--superficie`, `--linha`, `--grafite`); teste garante
+  `var(--` e a ausência de hex fixo nas regras `.frame-matrix`.
+- **RN-E01** — Atendido — seed 42, tick 3000 (o mostrador interno do frame
+  exibe `tick 3000`; captura com 3001 ticks porque o contador é 0-indexado).
+  Troca do frame = novo asset com nova linha de metadados, nada automático.
+- **RN-E02** — Atendido — legenda com seed, tick e commit curto; metadados
+  vivem na 1ª linha do próprio asset, atomicamente com a arte.
 
 ## Casos extremos cobertos
 
-- **CE-E04** — Inalterado e re-testado: pilhas terminam em genérica; teste novo
-  garante 2+ candidatos `local()` por face de fallback e as faces
-  itálica/bold próprias (`tests/tipografia.test.ts`).
+- **CE-E01** — Dois testes de build real em `builds-reais.test.ts`: asset
+  ausente (erro do Vite aponta o import) e asset vazio (o componente lança
+  erro nomeando `src/assets/matrix-frame.txt` e citando a RN-E01). Correção
+  de infraestrutura: os `outDir` dos builds spawnados agora ficam dentro do
+  projeto — `outDir` em tmpfs quebrava com EXDEV antes de renderizar páginas,
+  mascarando o erro sob teste.
+- **CE-E03** — `font-size: min(0.8125rem, calc((100vw - 2*var(--espaco-pagina)
+  - 2.5rem) / 41))` faz as 68 colunas caberem de 320px ao desktop;
+  `overflow: hidden` garante que nada vaza. Coberto por teste de CSS; a
+  direção em navegador a 320px fica para o /verify.
 
 ## Perguntas em aberto / pendências
 
-- Honestidade de medição: sob throttling *real* de 4G lento (rede e CPU de
-  verdade, mais duro que o modo simulado do Lighthouse), o h1 longo do artigo
-  ainda pode deslocar ~1 linha se a fonte perder a corrida do primeiro paint —
-  títulos curtos e longos têm demandas de `size-adjust` conflitantes (residual
-  de 34px no melhor compromisso). O instrumento definido pela spec (auditoria
-  Lighthouse, RNF-E01) mede CLS = 0; registro o residual para o
-  /review-and-security julgar com contexto completo.
-- Ferramentas de calibração foram scripts descartáveis (removidos); os valores
-  finais estão hard-coded no `global.css` com comentário de proveniência.
-  Recalibrar exige repetir a medição empírica (documentado no comentário).
+- Nenhuma.
