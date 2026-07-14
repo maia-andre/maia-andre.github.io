@@ -86,6 +86,46 @@ describe('conteúdo real — quatro artigos publicados', () => {
   });
 });
 
+// Diário de pesquisa do Matrix — as notas de laboratório vivem no repositório
+// do projeto (papers/notes/, amarradas a commits); o site só as divulga e linka.
+const NOTAS_DO_DIARIO = [
+  '01-quatro-modos-de-errar',
+  '02-o-teto-de-nascimentos',
+  '03-a-evolucao-extingue-a-agencia',
+  '04-o-automodelo-era-um-modelo-do-outro',
+  '05-phi-media-o-segundo-motivo',
+  '06-o-interprete-leigo',
+  '07-o-dedo-do-espectador',
+  '08-o-sinal-e-a-mentira',
+  '09-o-self-ja-estava-la',
+] as const;
+
+describe('página do Matrix — diário de pesquisa', () => {
+  it('tem a seção com as 9 notas na ordem, cada uma linkando o arquivo no repositório', () => {
+    const main = parsePage('projetos/matrix/index.html').querySelector('main')!;
+    expect(main.querySelectorAll('h2').map((h) => h.text.trim())).toContain(
+      'Diário de pesquisa',
+    );
+    const notas = main
+      .querySelectorAll('a')
+      .map((a) => a.getAttribute('href'))
+      .filter((href) => href?.includes('/matrix/blob/'));
+    expect(notas).toEqual(
+      NOTAS_DO_DIARIO.map(
+        (nota) => `https://github.com/maia-andre/matrix/blob/main/papers/notes/${nota}.md`,
+      ),
+    );
+  });
+
+  it('fecha o ciclo nota → artigo: o diário linka o artigo destilado', () => {
+    const hrefs = parsePage('projetos/matrix/index.html')
+      .querySelector('main')!
+      .querySelectorAll('a')
+      .map((a) => a.getAttribute('href'));
+    expect(hrefs).toContain('/artigos/a-regua-que-desbota/');
+  });
+});
+
 describe('v1.0.0 — botão de tema com estado acessível (nota do review INC-08)', () => {
   it('o script atualiza aria-pressed ao revelar e ao alternar', () => {
     const html = readFileSync(distFile('index.html'), 'utf-8');
