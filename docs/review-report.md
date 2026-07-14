@@ -1,37 +1,56 @@
-# Review report — 2026-07-12 (INC-10, auditoria final)
-Spec: docs/spec.md (Versão 1, aprovada) | Incremento: INC-10 — Conteúdo real + qualidade final (v1.0.0) | Build report: 2026-07-12 (INC-10)
+# Review report — 2026-07-14 (INC-11)
+Spec: docs/specs/direcao-estetica.md (Versão 1, aprovada) | Incremento: INC-11 — Tipografia própria | Build report: 2026-07-14 (correção)
 ## VEREDITO: APROVADO
 
-Suíte rodada pelo auditor: 150/150. Verify sem FALHAs. Auditor reexecutou Lighthouse de forma independente numa página que o verify não cobriu (`/busca/`, a mais pesada em JS): **Performance 100 | Accessibility 100**.
+Suíte rodada pelo auditor: **166/166**. Verify sem FALHAs em aberto (a FALHA de
+CLS da primeira rodada foi corrigida e re-verificada com 12 execuções de
+Lighthouse a 0,0000). Auditor conferiu independentemente: dist com as 7 faces
+(4 web + 3 fallbacks métricos) e descritores corretos; `npm audit --omit=dev`
+com 0 vulnerabilidades; `package.json` sem nenhuma dependência nova desde a
+v1.0.0.
 
 ## Verificação requisito a requisito
-| Item | Status | Evidência / Falha |
-|------|--------|-------------------|
-| RNF-02 | Atendido | Lighthouse mobile: 100 na Home, no artigo novo, na página do Matrix (verify) e na busca (auditor) — meta ≥95 com folga máxima. Sem fontes/scripts de terceiros. |
-| RNF-03 | Atendido | Accessibility 100 nas 4 páginas auditadas; `aria-pressed` no bundle servido; navegação por teclado com skip-link e foco visível; contraste AA nos dois temas (tokens verificados). |
-| Regressão INC-01–09 | Limpa | 150/150; produção do INC-09 intacta; nova superfície (2º artigo) presente em listagem, categoria, tags e busca via os mesmos mecanismos testados. |
 
-## Definição de concluído da spec — item a item
-- ✅ Site publicado em `https://maia-andre.github.io` via GitHub Actions (INC-09, dirigido em produção). Conteúdo do INC-10 sobe no push do `/ship` pelo pipeline já verificado (portão de testes no CI re-roda os 150).
-- ✅ 2 artigos reais ("A régua que desbota" reflexoes + "Construindo este site" computacao) e 4 projetos reais no build final, dirigidos no preview.
-- ✅ Artigo novo aparece na Home, `/artigos/`, categoria, tags e busca (dirigido: listagem, índice de busca; mecanismo coberto por testes desde INC-03/06/07).
-- ✅ Rascunho invisível em produção (dirigido em produção real no INC-09; fixture permanente na suíte).
-- ✅ Tema persiste após recarregar (INC-08, script real executado em DOM real).
-- ✅ Busca por tag existente retorna conteúdo; termo inexistente → estado vazio (INC-07, dirigido com índice real).
-- ✅ Frontmatter inválido derruba o build — teste automatizado com `astro build` real (CE-01) e dirigido em CI de verdade (INC-09).
-- ✅ Lighthouse ≥95 (100 em tudo que foi medido).
-- ✅ README, ROADMAP e CHANGELOG presentes e mantidos (CHANGELOG recebe a entrada v1.0.0 no `/ship`).
-- ✅ Todos os testes automatizados passam (150/150, auditor).
+| Item | Status | Evidência |
+|------|--------|-----------|
+| REQ-E01 | Atendido | 4 woff2 em `public/fontes/` (95.084 B), `@font-face` em `src/styles/global.css`; licenças OFL ao lado; teste varre dist inteiro por woff2 extras e por domínios de terceiros (`tests/tipografia.test.ts`) |
+| REQ-E02 | Atendido | Tokens `--fonte-corpo/-titulo` → Lora e `--fonte-registro` → IBM Plex Mono (`global.css`); consumo verificado por teste de CSS + markup; famílias computadas confirmadas em navegador no verify (`getComputedStyle` + `document.fonts.check`, incluindo itálico e peso 650) |
+| REQ-E03 | Atendido | `font-display: swap` nas 4 faces servidas (as faces de fallback usam só `local()`, sem fase de download — swap não se aplica a elas); preload exatamente das 3 faces acima da dobra; fallbacks com métricas calibradas empiricamente (roman 117,3%, itálico 113%, bold 106%); resultado no instrumento da spec: CLS 0,0000 em 12/12 execuções, Performance 100, Accessibility 100 nas 4 páginas |
+| RNF-E02 | Atendido | 4 arquivos, 95.084 B ≤ 163.840 B; subset cobre pt-BR + travessões/aspas/setas usados no conteúdo (auditor conferiu a varredura de codepoints do dist) |
+| CE-E04 | Atendido | Dirigido de verdade no verify (interceptação abortando `/fontes/*` → página íntegra no fallback); pilhas terminam em genérica, coberto por teste |
+
+Violações de escopo: nenhuma. O ajuste de tracking dos títulos (-0.02em →
+-0.01em) e o subsetting são partes legítimas do requisito tipográfico e do
+orçamento; nenhum arquivo fora do tema foi tocado; nenhuma dependência entrou.
 
 ## Qualidade dos testes (TDD)
-- Vermelho documentado nas duas frentes novas (8 falhas de conteúdo; teste do 2º artigo antes do artigo existir).
-- RN-02 saiu de "só unitário" para observável no HTML servido (empate real de datas, desempate alfabético asserido) — dívida do INC-03 quitada com dado real.
-- **Fidelidade do artigo derivado**: auditor cruzou as afirmações do texto com as notas-fonte — nota 1,000 p/ agente sem modelo (nota 01), reflexo fixa em ~6k ticks (nota 03), eremita mudo κ≈0,005 (nota 06), ~25% sobrescritos e detecção sem atribuição (nota 07), ~10% de blefe estável (nota 08). Sem invenções. A voz é aproximada — revisão do André recomendada (registrada como pendência não bloqueante no build-report).
+
+- Todos os 11 testes de `tipografia.test.ts` nasceram vermelhos nas rodadas
+  respectivas (6 na construção, 2 na correção) — histórico nos commits.
+- Inversão mental: cada mecanismo quebrável tem teste que ficaria vermelho
+  (fonte extra no dist, orçamento estourado, terceiro injetado, token trocado,
+  preload removido, face de fallback apagada, pilha sem genérica).
+- **Observação (não vinculante, endereçada ao INC-15)**: os *valores* de
+  size-adjust calibrados não estão pinados em teste — uma regressão neles
+  passaria na suíte e só seria pega pela auditoria Lighthouse. O INC-15
+  (RNF-E01) deve transformar a auditoria 100/100 + CLS = 0 em verificação
+  executável do ciclo, fechando essa lacuna por definição.
 
 ## Segurança
-- **Média (dev-only, não bloqueante)**: `npm audit` acusa 17 vulnerabilidades *moderate*, todas na cadeia `lighthouse → @sentry/node → @opentelemetry/*` — devDependency de auditoria local; nada disso entra no site estático publicado (dist contém apenas HTML/CSS/JS do Astro + Fuse bundlado). Mitigação futura sugerida: remover `lighthouse`/`puppeteer` do package.json e rodá-los via `npx` sob demanda, ou aguardar patch upstream.
-- **Baixa (consentimento, registrado)**: a página do CLM descreve um estudo interno da Prefeitura em avaliação. O material foi fornecido pelo próprio André para publicação (pasta docs/material) e o resumo omite dados operacionais (sem endereços, tokens ou planilhas), mas cabe a ele confirmar que a divulgação institucional é adequada.
-- Sem segredos novos; conteúdo autoral; links validados http(s).
+
+- **Baixa** — Fontes subsetadas mantêm o nome interno "Lora", que é Reserved
+  Font Name sob OFL; subsetting é tecnicamente uma modificação. É a mesma
+  prática do ecossistema (os arquivos do fontsource já eram subsets com o
+  mesmo nome) e o `font-family` do CSS não é afetado pela cláusula; licenças
+  OFL acompanham os arquivos. Sem ação exigida; registrado por transparência.
+- **Média (ferramentas de dev, não embarcadas)** — `npm audit` completo acusa
+  17 moderadas, todas em dependências de desenvolvimento (cadeias de
+  lighthouse/puppeteer/vitest); `--omit=dev` = 0. Nada disso é servido ao
+  usuário. Recomendação de manutenção: atualizar as devDependencies quando o
+  ciclo estético fechar.
+- Entradas do usuário: inalteradas neste incremento (site estático; busca já
+  auditada na v1). Sem segredos em código ou commits. Sem dados pessoais novos.
 
 ## Correções necessárias (para o /build)
-Nenhuma. Próximo passo: `/ship` — fechar o INC-10 como **v1.0.0**, com push e confirmação das URLs novas em produção.
+
+Nenhuma. Próximo passo: `/ship` para fechar o INC-11 (release v1.1.0).
