@@ -83,6 +83,9 @@ Notas, Currículo, Laboratório, Arquivo, RSS, sitemap, SEO avançado, índice a
 ## Perguntas em aberto
 - Foto na Home (o documento de visão diz "opcional") — decisão adiada para quando o conteúdo real for escrito (definido em 2026-07-12).
 
+## Specs de funcionalidades pós-v1
+- [Direção estética — identidade tipográfica e frame do Matrix](specs/direcao-estetica.md) (2026-07-14, aprovada) — não altera nenhum requisito desta spec; códigos com prefixo `E`.
+
 ## Decisões registradas
 - Usuário do GitHub: `maia-andre` ⇒ repositório `maia-andre.github.io`, publicado em `https://maia-andre.github.io` (2026-07-12).
 - Os 4 projetos da v1 são os do material real fornecido pelo André em 2026-07-12: Matrix, Centro Logístico Municipal (SJC), Conferidor de Encargos em COBOL (frank_cobol) e Observatório de Oportunidades — substituindo a lista provisória do documento de visão (LicitaDocs e Transporte SJC ficam para depois, como conteúdo novo sem mudança de código).
