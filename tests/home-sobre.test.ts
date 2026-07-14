@@ -53,7 +53,7 @@ describe('REQ-02 — Home', () => {
   it('apresenta a mensagem principal no conteúdo (não só no rodapé)', () => {
     const main = parsePage('index.html').querySelector('main')!;
     expect(main.text).toContain(
-      'Entre código, gestão pública e as coisas que ainda estou tentando entender',
+      'Entre código, gestão pública e as coisas que escrevo para conseguir carregar',
     );
   });
 
