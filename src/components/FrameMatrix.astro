@@ -1,0 +1,29 @@
+---
+import conteudoBruto from '../assets/matrix-frame.txt?raw';
+
+// Frame real da simulação (REQ-E04): pré-gerado e commitado — o build do site
+// nunca executa o Matrix. Trocar o frame é decisão editorial (RN-E01): novo
+// asset, nova legenda, capturados juntos (a 1ª linha do asset carrega os
+// metadados de proveniência).
+const [linhaMeta, ...linhasArte] = conteudoBruto.split('\n');
+const meta = Object.fromEntries(
+  [...linhaMeta.matchAll(/(\w+)=([\w.]+)/g)].map(([, chave, valor]) => [chave, valor]),
+);
+const arte = linhasArte.join('\n').replace(/^\n+/, '').trimEnd();
+
+// CE-E01: asset vazio ou sem proveniência derruba o build apontando o arquivo
+if (!arte || !meta.seed || !meta.tick || !meta.commit) {
+  throw new Error(
+    'src/assets/matrix-frame.txt está vazio ou sem a linha de metadados ' +
+      '(# seed=.. tick=.. commit=..). Recapture o frame conforme a RN-E01.',
+  );
+}
+---
+
+<figure class="frame-matrix">
+  <pre aria-hidden="true">{arte}</pre>
+  <figcaption class="registro">
+    seed {meta.seed} · tick {meta.tick} · matrix@{meta.commit} — f(seed): a mesma semente
+    reproduz este mundo, sempre
+  </figcaption>
+</figure>
