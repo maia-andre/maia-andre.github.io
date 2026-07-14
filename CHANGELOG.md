@@ -8,6 +8,21 @@ incremento do [plano](docs/plan.md) entregue gera uma release `v0.x.0`, até a
 `v1.0.0` fechar o escopo da primeira versão. Pós-v1, cada incremento da
 [direção estética](docs/specs/direcao-estetica.md) gera `v1.x.0`.
 
+## [1.2.0] — 2026-07-14 · INC-12 — Frame do Matrix
+
+Review APROVADO em 2026-07-14. Atende REQ-E04, REQ-E05 e REQ-E06; cobre
+CE-E01 e CE-E03; cumpre RN-E01 e RN-E02.
+
+### Adicionado
+
+- A página do projeto Matrix abre com um **frame real da simulação** — um
+  tick de verdade (seed 42, tick 3000, `matrix@e8b93ac`), capturado do
+  binário e commitado como asset; a legenda registra a proveniência no
+  espírito f(seed), e a reprodutibilidade foi auditada por recaptura idêntica
+- A arte respeita os dois temas, fica oculta de leitores de tela (legenda
+  acessível no lugar) e escala de 320px ao desktop sem scroll horizontal;
+  build sem o asset falha em vez de publicar a página sem o frame
+
 ## [1.1.0] — 2026-07-14 · INC-11 — Tipografia própria
 
 Review APROVADO em 2026-07-14. Atende REQ-E01, REQ-E02, REQ-E03 e RNF-E02;

@@ -1,6 +1,6 @@
 # Plan: Site pessoal — arquivo vivo
 Spec: docs/spec.md (Versão 1, aprovada) + docs/specs/direcao-estetica.md (Versão 1, aprovada) | Gerado: 2026-07-12 | Estendido: 2026-07-14 (direção estética, INC-11–15)
-Progresso: 11/15 incrementos concluídos — v1 encerrada (v1.0.0); direção estética em andamento
+Progresso: 12/15 incrementos concluídos — v1 encerrada (v1.0.0); direção estética em andamento
 
 Convenção de release (RN-06): cada incremento concluído via /ship gera uma release. Na v1: `v0.<nº do incremento>.0`, com o INC-10 fechando a `v1.0.0`. Pós-v1 (direção estética): INC-11→`v1.1.0` … INC-15→`v1.5.0`.
 
@@ -73,7 +73,7 @@ Depende de: —
 Entrega verificável: o site builda servindo Lora (corpo e títulos) e IBM Plex Mono (datas, categoria, tags, tecnologias, navegação) em woff2 locais — no máximo 4 arquivos somando ≤ 160 KB, nenhuma referência a domínio de terceiros; `font-display: swap`, preload do que aparece acima da dobra e fallback com métricas ajustadas mantêm o texto legível sem as fontes; tudo provado por testes sobre o HTML/CSS gerados em `dist/`.
 
 ### INC-12 — Frame do Matrix como hero da página do projeto
-Status: pendente
+Status: concluído (v1.2.0, 2026-07-14)
 Itens da spec: REQ-E04, REQ-E05, REQ-E06 | RN-E01, RN-E02 | CE-E01, CE-E03
 Depende de: INC-11
 Entrega verificável: `/projetos/matrix/` exibe entre o cabeçalho e o corpo um frame ASCII real (seed 42, tick 3000), commitado como asset de texto, em `<figure>` com arte `aria-hidden="true"` e `<figcaption>` registrando seed, tick e commit do Matrix; cores derivadas das variáveis dos dois temas; contido sem scroll horizontal da página em telas estreitas; build sem o asset (ou com asset vazio) falha apontando o arquivo — provado por teste.
