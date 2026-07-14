@@ -2,7 +2,7 @@
 titulo: Apresentação
 ---
 
-Entre código, gestão pública e as coisas que ainda estou tentando entender.
+Entre código, gestão pública e as coisas que escrevo para conseguir carregar.
 
 Sou o André. Este site é o meu **arquivo vivo**: aqui registro projetos de
 software, estudos, artigos sobre computação e gestão pública, e as reflexões
