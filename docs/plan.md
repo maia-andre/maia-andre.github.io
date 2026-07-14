@@ -67,7 +67,7 @@ Depende de: INC-01–INC-09
 Entrega verificável: 2 artigos reais e as páginas dos 4 projetos reais (LicitaDocs, Matrix, Observatório de Oportunidades, Transporte SJC) publicados em produção; Lighthouse (mobile) ≥ 95 em Performance e Accessibility na Home e em um artigo; navegação completa por teclado e contraste AA nos dois temas. Requer material de conteúdo fornecido pelo André.
 
 ### INC-11 — Tipografia própria: Lora + IBM Plex Mono self-hosted
-Status: pendente
+Status: em construção
 Itens da spec: REQ-E01, REQ-E02, REQ-E03 | RNF-E02 | CE-E04
 Depende de: —
 Entrega verificável: o site builda servindo Lora (corpo e títulos) e IBM Plex Mono (datas, categoria, tags, tecnologias, navegação) em woff2 locais — no máximo 4 arquivos somando ≤ 160 KB, nenhuma referência a domínio de terceiros; `font-display: swap`, preload do que aparece acima da dobra e fallback com métricas ajustadas mantêm o texto legível sem as fontes; tudo provado por testes sobre o HTML/CSS gerados em `dist/`.
