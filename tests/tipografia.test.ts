@@ -98,12 +98,16 @@ describe('REQ-E03/CE-E04 — swap, preload seletivo e fallback métrico', () => 
     for (const bloco of blocos) expect(bloco).toMatch(/font-display:\s*swap/);
   });
 
-  it('preload de no máximo 2 fontes (acima da dobra), apontando para arquivos que existem', () => {
+  it('preload das 3 faces acima da dobra (corpo, itálico da apresentação, mono da navegação)', () => {
     const preloads = parsePage('index.html')
       .querySelectorAll('link[rel="preload"]')
       .filter((l) => l.getAttribute('as') === 'font');
-    expect(preloads.length).toBeGreaterThan(0);
-    expect(preloads.length).toBeLessThanOrEqual(2);
+    const hrefs = preloads.map((l) => l.getAttribute('href'));
+    expect(hrefs.sort()).toEqual([
+      '/fontes/lora-var-italico.woff2',
+      '/fontes/lora-var.woff2',
+      '/fontes/plex-mono-400.woff2',
+    ]);
     for (const link of preloads) {
       const href = link.getAttribute('href')!;
       expect(pageExists(href.replace(/^\//, '')), href).toBe(true);
@@ -121,6 +125,22 @@ describe('REQ-E03/CE-E04 — swap, preload seletivo e fallback métrico', () => 
       expect(bloco, `@font-face de "${familia}" ausente`).toBeDefined();
       expect(bloco).toMatch(/size-adjust:\s*[\d.]+%/);
       expect(bloco).toMatch(/ascent-override:\s*[\d.]+%/);
+    }
+  });
+
+  it('o fallback tem face itálica própria e candidatos local() multiplataforma', () => {
+    const blocos = cssDaPagina()
+      .split('@font-face')
+      .slice(1)
+      .map((b) => b.slice(0, b.indexOf('}')))
+      .filter((b) => b.includes('Lora Fallback'));
+    expect(blocos.length, 'faces normal e itálica do Lora Fallback').toBe(2);
+    expect(blocos.some((b) => /font-style:\s*italic/.test(b))).toBe(true);
+    for (const bloco of blocos) {
+      const candidatos = bloco.match(/local\(/g) ?? [];
+      expect(candidatos.length, 'cada face precisa de 2+ candidatos local()').toBeGreaterThanOrEqual(
+        2,
+      );
     }
   });
 
