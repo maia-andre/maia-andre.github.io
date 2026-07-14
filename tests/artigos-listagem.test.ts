@@ -61,7 +61,8 @@ describe('REQ-05 — página de listagem /artigos/', () => {
     expect(link, 'link do artigo ausente na listagem').toBeDefined();
     expect(main.text).toContain('Construindo este site como um projeto de software');
     expect(main.text).toContain('spec, backlog de incrementos, TDD');
-    expect(main.querySelector('time')?.getAttribute('datetime')).toBe('2026-07-12');
+    const datas = main.querySelectorAll('time').map((t) => t.getAttribute('datetime'));
+    expect(datas, 'data do artigo ausente na listagem').toContain('2026-07-12');
     expect(main.text).toContain('Computação');
     const hrefs = main.querySelectorAll('a').map((a) => a.getAttribute('href'));
     expect(hrefs, 'tags do artigo ausentes na listagem').toContain('/tags/astro/');
