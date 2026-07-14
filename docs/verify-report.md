@@ -1,39 +1,29 @@
-# Verify report — 2026-07-14
-Incremento: INC-11 — Tipografia própria: Lora + IBM Plex Mono self-hosted | Build report: 2026-07-14
-Como rodei: `npm run build` + `npm run preview -- --port 4333`; navegador real via puppeteer (script descartável, removido); Lighthouse mobile com Chrome for Testing headless (`CHROME_PATH=~/.cache/puppeteer/chrome/linux-150.0.7871.24/chrome-linux64/chrome`)
-Suíte de testes: 165 passando / 165 total (`npm test`)
+# Verify report — 2026-07-14 (re-verificação pós-correção)
+Incremento: INC-11 — Tipografia própria: Lora + IBM Plex Mono self-hosted | Build report: 2026-07-14 (correção)
+Como rodei: `npm run build` + `npm run preview -- --port 4336`; navegador real via puppeteer (script descartável, removido); Lighthouse mobile ×3 por página com Chrome for Testing headless (`CHROME_PATH` do cache do puppeteer)
+Suíte de testes: 166 passando / 166 total (`npm test`)
 
 ## Fluxos dirigidos
 
 | Item | Fluxo exercitado | Evidência (comando → saída) | Resultado |
 |------|------------------|-----------------------------|-----------|
-| REQ-E01 | GET de cada um dos 4 woff2 servidos pelo preview | `curl -sI /fontes/lora-var.woff2` (e demais) → `HTTP/1.1 200 OK` nos 4 | FUNCIONA |
-| REQ-E01 | Procura por serviços de fonte de terceiros no HTML e CSS servidos | `curl / e /_astro/Base.CpKaQQJ_.css \| grep -ciE "googleapis\|gstatic\|typekit"` → `0 referências` | FUNCIONA |
-| REQ-E02 | Página real de artigo aberta em Chrome headless; `getComputedStyle` de body, h1, navegação, meta e tags; `document.fonts.check` | body/h1 → `Lora, "Lora Fallback", Georgia, serif`; navegação/meta/tags → `"IBM Plex Mono", …, monospace`; `loraCarregada: true`, `plexCarregada: true` | FUNCIONA |
-| REQ-E03 (swap/preload) | Inspeção do CSS e do HTML servidos | `grep -o "font-display:swap" \| wc -l` → `4`; Home tem exatamente 2 `<link rel="preload" as="font" … crossorigin>` (lora-var + plex-mono-400) | FUNCIONA |
-| REQ-E03 (CLS = 0) | Lighthouse mobile na Home e no artigo | Home: perf 100, a11y 100, **CLS 0,0325**; artigo: **perf 97**, a11y 100, **CLS 0,1025**; audit `layout-shifts`: maior shift (0,070) é um `<p>` com causa **"Web font loaded"** | **FALHA** — spec exige troca sem deslocamento perceptível (CLS = 0) |
-| RNF-E02 | Contagem e soma dos woff2 no dist servido | `du -cb public/fontes/*.woff2` → `108888 total` (≈106 KB ≤ 160 KB), 4 arquivos | FUNCIONA |
-| CE-E04 | Chrome com interceptação abortando `/fontes/*`; página carregada sem nenhuma fonte própria | `loraCarregada: false`, `caracteresVisiveis: 2865`, `alturaH1: 43.2px` — texto integral legível na pilha de fallback | FUNCIONA |
+| REQ-E01 | GET dos 4 woff2 subsetados | `curl -w "%{http_code} %{size_download}B"` → 200 nos 4: 33.104 + 35.996 + 12.516 + 13.468 = 95.084 B | FUNCIONA |
+| REQ-E02 | `getComputedStyle` + `document.fonts.check` em página real de artigo, incluindo as variantes | body/h1 → `Lora`; nav/meta → `IBM Plex Mono`; check: `lora: true, loraItalico: true, lora650: true, plex: true` | FUNCIONA |
+| REQ-E03 (swap/preload) | Inspeção do HTML/CSS servidos | 3 preloads `as="font"` (lora-var, lora-var-italico, plex-mono-400); `font-display:swap` ×4; 3 faces `Lora Fallback` (normal/itálica/bold) + 1 `IBM Plex Mono Fallback` | FUNCIONA |
+| REQ-E03 (CLS = 0) | Lighthouse mobile, 3 execuções em cada uma das 4 páginas auditadas | **CLS 0,0000 nas 12 execuções**; Performance 100 e Accessibility 100 em todas (Home, artigo, projeto Matrix, busca) | FUNCIONA |
+| RNF-E02 | Soma dos woff2 servidos | 95.084 B ≈ 93 KB ≤ 160 KB, 4 arquivos | FUNCIONA |
+| CE-E04 | Chrome com `/fontes/*` abortado por interceptação | `lora: false`, `caracteresVisiveis: 2865`, h2 renderizado a 28,8px — página íntegra no fallback | FUNCIONA |
 
 ## Falhas encontradas (para o /build)
 
-1. **[REQ-E03]** CLS diferente de zero causado pela chegada da webfont: artigo
-   `a-regua-que-desbota` com CLS **0,1025** (shift de 0,070 num `<p>` com causa
-   "Web font loaded" + 0,0325 no `<main>`) e Home com CLS **0,0325** — a spec
-   pede "troca sem deslocamento de layout perceptível (CLS = 0 nas auditorias)",
-   e o Performance do artigo caiu para **97** (a v1.0.0 tinha 100, e a RNF-E01
-   exigirá 100). Reproduzir: `npm run build && npm run preview -- --port 4333`,
-   depois `CHROME_PATH=<chrome do puppeteer> npx lighthouse
-   http://localhost:4333/artigos/a-regua-que-desbota/
-   --only-categories=performance,accessibility --chrome-flags="--headless=new"`.
-   Pistas colhidas (não implementadas, papel do /build): o itálico da Lora
-   aparece acima da dobra na Home (parágrafo de apresentação) e não é
-   pré-carregado; o match métrico médio do `size-adjust` não segura cada quebra
-   de linha — o par swap+fallback precisa ficar mais justo (ou o preload mais
-   completo) até o CLS zerar nas duas páginas.
+Nenhuma. A FALHA da rodada anterior (REQ-E03, CLS 0,1025 no artigo) está
+corrigida no instrumento definido pela spec.
 
 ## Não verificável de ponta a ponta
 
-- Nada. Todos os itens do incremento foram dirigidos em navegador ou HTTP reais.
-- Ambiente: servidor de preview derrubado ao final; script puppeteer descartável
-  removido; JSONs do Lighthouse ficaram no scratchpad da sessão (fora do repo).
+- Sob throttling **real** de rede/CPU (mais duro que o modo simulado do
+  Lighthouse), o build-report registra residual possível de ~1 linha no h1
+  longo do artigo se a fonte perder a corrida do primeiro paint. Não é
+  mensurável pelo instrumento do contrato (RNF-E01 = Lighthouse), que mede 0;
+  fica registrado como observação honesta para o review.
+- Ambiente limpo: preview derrubado, script descartável removido.
