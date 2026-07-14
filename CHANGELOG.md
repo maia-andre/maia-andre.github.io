@@ -5,7 +5,29 @@ Todas as mudanças relevantes deste projeto são registradas aqui.
 O formato segue o [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/)
 e o versionamento segue o [SemVer](https://semver.org/lang/pt-BR/): cada
 incremento do [plano](docs/plan.md) entregue gera uma release `v0.x.0`, até a
-`v1.0.0` fechar o escopo da primeira versão.
+`v1.0.0` fechar o escopo da primeira versão. Pós-v1, cada incremento da
+[direção estética](docs/specs/direcao-estetica.md) gera `v1.x.0`.
+
+## [1.1.0] — 2026-07-14 · INC-11 — Tipografia própria
+
+Review APROVADO em 2026-07-14. Atende REQ-E01, REQ-E02, REQ-E03 e RNF-E02;
+cobre CE-E04. Primeiro incremento da direção estética "híbrido código+letra".
+
+### Adicionado
+
+- Identidade tipográfica própria: **Lora** (serifada variável, com itálico)
+  no corpo e nos títulos, **IBM Plex Mono** (400/600) na camada de registro —
+  datas, categoria, tags, tecnologias e navegação
+- Fontes self-hosted em 4 woff2 subsetados para pt-BR (95 KB no total, zero
+  serviços de terceiros), com licenças OFL no repositório
+
+### Qualidade
+
+- Troca de fonte sem deslocamento de layout: fallbacks com métricas calibradas
+  empiricamente (faces romana, itálica e bold próprias), preload das 3 faces
+  acima da dobra e `font-display: swap` — Lighthouse mobile com **CLS 0,0000
+  em 12/12 execuções, Performance 100 e Accessibility 100** nas quatro
+  páginas auditadas
 
 ## [1.0.0] — 2026-07-12 · INC-10 — Conteúdo real e qualidade final
 
