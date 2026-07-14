@@ -101,7 +101,8 @@ const FRAME_GUARDADO = `${FRAME}.guardado`;
 
 describe('CE-E01 — build falha sem o asset do frame do Matrix', () => {
   it('asset ausente: astro build sai com erro que aponta matrix-frame', () => {
-    const outDir = mkdtempSync(join(tmpdir(), 'dist-cee01a-'));
+    mkdirSync(join(process.cwd(), '.astro'), { recursive: true });
+    const outDir = mkdtempSync(join(process.cwd(), '.astro', 'dist-cee01a-'));
     renameSync(FRAME, FRAME_GUARDADO);
     try {
       const r = spawnSync('npx', ['astro', 'build', '--outDir', outDir], {
@@ -118,7 +119,7 @@ describe('CE-E01 — build falha sem o asset do frame do Matrix', () => {
   }, 150_000);
 
   it('asset vazio: astro build sai com erro que aponta matrix-frame', () => {
-    const outDir = mkdtempSync(join(tmpdir(), 'dist-cee01b-'));
+    const outDir = mkdtempSync(join(process.cwd(), '.astro', 'dist-cee01b-'));
     renameSync(FRAME, FRAME_GUARDADO);
     writeFileSync(FRAME, '\n\n');
     try {

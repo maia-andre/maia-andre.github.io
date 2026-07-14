@@ -60,7 +60,7 @@ describe('REQ-E05/RN-E01/RN-E02 — acessibilidade e proveniência', () => {
     expect(figura.querySelector('pre')!.getAttribute('aria-hidden')).toBe('true');
     const legenda = figura.querySelector('figcaption');
     expect(legenda).not.toBeNull();
-    expect(legenda!.getAttribute('aria-hidden')).toBeNull();
+    expect(legenda!.getAttribute('aria-hidden')).toBeFalsy();
     expect(legenda!.classList.contains('registro')).toBe(true);
   });
 

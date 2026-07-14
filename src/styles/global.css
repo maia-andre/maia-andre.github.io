@@ -489,6 +489,30 @@ main {
   margin-bottom: 2rem;
 }
 
+/* Frame do Matrix (REQ-E04/E05/E06): um tick real da simulação como hero.
+   Cores só por tokens de tema; a fonte escala com a página para as 68 colunas
+   caberem de 320px ao desktop sem scroll horizontal (CE-E03). */
+.frame-matrix {
+  margin: 0 0 2.5rem;
+}
+
+.frame-matrix pre {
+  font-family: var(--fonte-registro);
+  font-size: min(0.8125rem, calc((100vw - 2 * var(--espaco-pagina) - 2.5rem) / 41));
+  line-height: 1.3;
+  color: var(--carimbo);
+  background: var(--superficie);
+  border: 1px solid var(--linha);
+  border-radius: 4px;
+  padding: 1rem 1.25rem;
+  overflow: hidden;
+  margin: 0 0 0.5rem;
+}
+
+.frame-matrix figcaption {
+  color: var(--grafite);
+}
+
 .links-projeto {
   display: flex;
   flex-wrap: wrap;
