@@ -1,29 +1,28 @@
-# Verify report — 2026-07-14 (re-verificação pós-correção)
-Incremento: INC-11 — Tipografia própria: Lora + IBM Plex Mono self-hosted | Build report: 2026-07-14 (correção)
-Como rodei: `npm run build` + `npm run preview -- --port 4336`; navegador real via puppeteer (script descartável, removido); Lighthouse mobile ×3 por página com Chrome for Testing headless (`CHROME_PATH` do cache do puppeteer)
-Suíte de testes: 166 passando / 166 total (`npm test`)
+# Verify report — 2026-07-14 (INC-12)
+Incremento: INC-12 — Frame do Matrix como hero da página do projeto | Build report: 2026-07-14 (INC-12)
+Como rodei: `npm run build` + `npm run preview -- --port 4337`; navegador real via puppeteer (script descartável, removido); build real spawnado para o CE-E01; Lighthouse mobile ×3 com Chrome for Testing headless
+Suíte de testes: 175 passando / 175 total (`npm test`)
 
 ## Fluxos dirigidos
 
 | Item | Fluxo exercitado | Evidência (comando → saída) | Resultado |
 |------|------------------|-----------------------------|-----------|
-| REQ-E01 | GET dos 4 woff2 subsetados | `curl -w "%{http_code} %{size_download}B"` → 200 nos 4: 33.104 + 35.996 + 12.516 + 13.468 = 95.084 B | FUNCIONA |
-| REQ-E02 | `getComputedStyle` + `document.fonts.check` em página real de artigo, incluindo as variantes | body/h1 → `Lora`; nav/meta → `IBM Plex Mono`; check: `lora: true, loraItalico: true, lora650: true, plex: true` | FUNCIONA |
-| REQ-E03 (swap/preload) | Inspeção do HTML/CSS servidos | 3 preloads `as="font"` (lora-var, lora-var-italico, plex-mono-400); `font-display:swap` ×4; 3 faces `Lora Fallback` (normal/itálica/bold) + 1 `IBM Plex Mono Fallback` | FUNCIONA |
-| REQ-E03 (CLS = 0) | Lighthouse mobile, 3 execuções em cada uma das 4 páginas auditadas | **CLS 0,0000 nas 12 execuções**; Performance 100 e Accessibility 100 em todas (Home, artigo, projeto Matrix, busca) | FUNCIONA |
-| RNF-E02 | Soma dos woff2 servidos | 95.084 B ≈ 93 KB ≤ 160 KB, 4 arquivos | FUNCIONA |
-| CE-E04 | Chrome com `/fontes/*` abortado por interceptação | `lora: false`, `caracteresVisiveis: 2865`, h2 renderizado a 28,8px — página íntegra no fallback | FUNCIONA |
+| REQ-E04 | GET em `/projetos/matrix/` e num segundo projeto | ordem no HTML: `artigo-cabecalho` → `figure class="frame-matrix"` → `pre aria-hidden` → `class="prosa"`; página do Conferidor COBOL → `grep -c frame-matrix` = 0 | FUNCIONA |
+| REQ-E05 | Extração da legenda renderizada | `<figcaption class="registro">` → "seed 42 · tick 3000 · matrix@e8b93ac — f(seed): a mesma semente reproduz este mundo, sempre"; arte em `<pre aria-hidden="true">` | FUNCIONA |
+| REQ-E06 | Chrome headless: `getComputedStyle` do frame, alternando `data-tema` | claro: cor `rgb(41,70,190)` (--carimbo) sobre `rgb(242,242,238)` (--superficie); escuro: `rgb(143,163,255)` sobre `rgb(31,33,39)` — valores exatos dos tokens dos dois temas | FUNCIONA |
+| RN-E01/RN-E02 | Conferência da proveniência de ponta a ponta | 1ª linha do asset: `# seed=42 tick=3000 commit=e8b93ac`; legenda declara os três; o mostrador interno do frame (capturado do binário real) exibe `tick 3000` | FUNCIONA |
+| CE-E01 | Build real com o asset renomeado para fora | `npx astro build` → exit 1, erro aponta `'../assets/matrix-frame.txt?raw'` (asset restaurado em seguida) | FUNCIONA |
+| CE-E03 | Chrome a 320×700 na página do Matrix | `scrollWidth` da página = 320 = viewport (sem scroll horizontal); frame visível (altura > 50px), contido no contêiner, fonte auto-escalada a 5,85px | FUNCIONA |
+| RNF (regressão) | Lighthouse mobile ×3 em `/projetos/matrix/` com o frame novo | perf 100, a11y 100, CLS 0,0000 nas 3 execuções | FUNCIONA |
 
 ## Falhas encontradas (para o /build)
 
-Nenhuma. A FALHA da rodada anterior (REQ-E03, CLS 0,1025 no artigo) está
-corrigida no instrumento definido pela spec.
+Nenhuma.
 
 ## Não verificável de ponta a ponta
 
-- Sob throttling **real** de rede/CPU (mais duro que o modo simulado do
-  Lighthouse), o build-report registra residual possível de ~1 linha no h1
-  longo do artigo se a fonte perder a corrida do primeiro paint. Não é
-  mensurável pelo instrumento do contrato (RNF-E01 = Lighthouse), que mede 0;
-  fica registrado como observação honesta para o review.
-- Ambiente limpo: preview derrubado, script descartável removido.
+- Nada pendente. Observação de honestidade: a 320px a arte fica minúscula
+  (5,85px) — legível só em zoom, mas é elemento decorativo (`aria-hidden`),
+  permanece contida e o CE-E03 pede exatamente contenção sem scroll da página.
+- Ambiente limpo: preview derrubado, script descartável removido, asset
+  restaurado após o drive do CE-E01.
