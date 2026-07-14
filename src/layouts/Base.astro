@@ -37,8 +37,16 @@ const atual = (href: string) =>
     <meta name="generator" content={Astro.generator} />
     <meta name="description" content={descricao} />
     <title>{tituloPagina}</title>
-    <!-- REQ-E03: preload só do que aparece acima da dobra (corpo + navegação) -->
+    <!-- REQ-E03: preload só do que aparece acima da dobra — corpo, itálico da
+         apresentação/primeiro parágrafo e mono da navegação -->
     <link rel="preload" href="/fontes/lora-var.woff2" as="font" type="font/woff2" crossorigin />
+    <link
+      rel="preload"
+      href="/fontes/lora-var-italico.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
     <link
       rel="preload"
       href="/fontes/plex-mono-400.woff2"

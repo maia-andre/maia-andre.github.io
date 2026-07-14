@@ -37,23 +37,48 @@
 
 /* Fallbacks métricos (REQ-E03, CE-E04): a fonte do sistema ocupa o mesmo espaço
    que a fonte própria ocupará, e a troca do swap não desloca o layout.
-   Valores calculados das métricas reais (capsize): Lora × Georgia e
-   IBM Plex Mono × Courier New. */
+   Valores CALIBRADOS EMPIRICAMENTE no Chrome headless da auditoria (largura de
+   amostra pt-BR real, Lora ÷ face resolvida), com face itálica própria — o
+   itálico da Lora é mais estreito que o romano. Vertical: métricas capsize da
+   Lora/Plex divididas pelo size-adjust. Plataformas sem essas fontes locais
+   seguem para Georgia/monospace da pilha, sem override. */
 @font-face {
   font-family: 'Lora Fallback';
-  src: local('Georgia');
-  size-adjust: 104.98%;
-  ascent-override: 95.83%;
-  descent-override: 26.1%;
+  src: local('Liberation Serif'), local('Times New Roman');
+  font-style: normal;
+  size-adjust: 117.3%;
+  ascent-override: 85.76%;
+  descent-override: 23.36%;
+  line-gap-override: 0%;
+}
+
+@font-face {
+  font-family: 'Lora Fallback';
+  src: local('Liberation Serif'), local('Times New Roman');
+  font-style: italic;
+  size-adjust: 113%;
+  ascent-override: 89.03%;
+  descent-override: 24.25%;
+  line-gap-override: 0%;
+}
+
+@font-face {
+  font-family: 'Lora Fallback';
+  src: local('Liberation Serif Bold'), local('Times New Roman Bold');
+  font-weight: 550 900;
+  font-style: normal;
+  size-adjust: 106%;
+  ascent-override: 94.91%;
+  descent-override: 25.85%;
   line-gap-override: 0%;
 }
 
 @font-face {
   font-family: 'IBM Plex Mono Fallback';
-  src: local('Courier New');
+  src: local('Liberation Mono'), local('Courier New');
   size-adjust: 99.98%;
   ascent-override: 102.52%;
-  descent-override: 27.5%;
+  descent-override: 27.49%;
   line-gap-override: 0%;
 }
 
