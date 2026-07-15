@@ -32,6 +32,19 @@ export const esquemaArtigo = z.object({
   rascunho: z.boolean().default(false),
 });
 
+// REQ-E08/CE-E02 — a capitular só existe quando o primeiro parágrafo começa
+// com letra de verdade: descartados os marcadores de ênfase do Markdown
+// (*, _, `), travessão/aspas/número no primeiro caractere ⇒ sem capitular.
+export function temCapitular(corpo: string): boolean {
+  const primeiraLinha = corpo
+    .split('\n')
+    .map((linha) => linha.trim())
+    .find((linha) => linha !== '');
+  if (!primeiraLinha) return false;
+  const semMarcadores = primeiraLinha.replace(/^[*_`]+/, '');
+  return /^\p{L}/u.test(semMarcadores);
+}
+
 // REQ-08 — frontmatter do projeto; corpo Markdown livre (objetivos, roadmap, changelog)
 export const esquemaProjeto = z.object({
   nome: z.string().min(1, 'nome é obrigatório'),
