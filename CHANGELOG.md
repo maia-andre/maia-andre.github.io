@@ -8,6 +8,26 @@ incremento do [plano](docs/plan.md) entregue gera uma release `v0.x.0`, até a
 `v1.0.0` fechar o escopo da primeira versão. Pós-v1, cada incremento da
 [direção estética](docs/specs/direcao-estetica.md) gera `v1.x.0`.
 
+## [1.5.0] — 2026-07-14 · INC-15 — Auditoria estética executável
+
+Review APROVADO em 2026-07-14. Atende RNF-E01 e RNF-E04 — **e fecha o
+backlog da direção estética** (INC-11 a INC-15).
+
+### Adicionado
+
+- `npm run auditoria`: o portão de qualidade virou comando — constrói o
+  site, roda Lighthouse mobile 3× em cada uma das 4 páginas da spec (exige
+  mediana Performance 100, Accessibility 100 e CLS 0) e confere que nenhuma
+  página alterada vaza na horizontal a 320px; reprova nomeando página e valor
+- O detector de 320px foi provado por sabotagem controlada nas duas direções
+  (reprova quando deve, aprova quando deve) — o verify pegou e a correção
+  eliminou um falso-aprovador
+
+### Corrigido
+
+- Versão do pacote acertada (o rodapé exibe a versão real; os fechamentos
+  v1.1–v1.4 não haviam atualizado o `package.json`)
+
 ## [1.4.0] — 2026-07-14 · INC-14 — Linha do tempo e transições de página
 
 Review APROVADO em 2026-07-14. Atende REQ-E09, REQ-E10 e RNF-E03; cobre
