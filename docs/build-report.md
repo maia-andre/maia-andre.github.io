@@ -1,44 +1,46 @@
-# Build report — 2026-07-14 (INC-13)
+# Build report — 2026-07-14 (INC-14)
 Spec: docs/specs/direcao-estetica.md (Versão 1, aprovada)
-Incremento: INC-13 — Cards de projetos + letra capitular nas reflexões
+Incremento: INC-14 — Linha do tempo em /artigos/ + transições de página
 Rodada: construção
-Testes: 183 passando / 183 total — `npm test`
+Testes: 191 passando / 191 total — `npm test`
 
 ## Requisitos atendidos
 
-- **REQ-E07** — Atendido — `/projetos/` e os destaques da Home renderizam cada
-  projeto como `li.cartao-projeto` dentro de `ol.grade-projetos` (1 coluna no
-  celular, 2 a partir de 40rem), com contorno `var(--linha)`, fundo
-  `var(--superficie)` e hover `var(--carimbo)` — nenhum hex fixo. A informação
-  é exatamente a de antes: nome linkado, descrição, tecnologias na camada mono
-  (`.registro .tecnologia`) e tags. Coberto por `tests/cards-capitular.test.ts`
-  (5 cards em /projetos/, 4 na Home, campos presentes em cada card, regra CSS
-  por tokens) e pelos testes v1 de conteúdo que seguem verdes.
-- **REQ-E08** — Atendido — `div.prosa` ganha a classe `prosa-capitular` em
-  `artigos/[slug].astro` somente quando `categoria === 'reflexoes'` **e**
-  `temCapitular(body)`; o efeito é
-  `.prosa-capitular > p:first-of-type::first-letter` (float, 3.1em, cor
-  `--carimbo`). Artigos fora de reflexões não têm a classe (teste com
-  `construindo-este-site`, categoria computacao).
+- **REQ-E09** — Atendido — `ListaArtigos.astro` ganhou a prop `linhaDoTempo`;
+  só `/artigos/` a usa (Home e páginas de categoria seguem como estavam — a
+  spec nomeia `/artigos/`; interpretação registrada abaixo). CSS: linha
+  vertical contínua (`var(--linha)`) e marcador circular por item
+  (`var(--carimbo)` com anel `var(--papel)`), substituindo as réguas
+  horizontais na variante. Ordem RN-02 e dados por item intocados — o teste
+  v1 da listagem passa sem nenhuma mudança de expectativa. Coberto por
+  `tests/linha-tempo-transicoes.test.ts`.
+- **REQ-E10** — Atendido — `<ClientRouter />` no `Base.astro` (meta
+  `astro-view-transitions-enabled` presente em todas as páginas, coberto por
+  teste). Aprimoramento progressivo: navegação segue por `<a href>` puro
+  (teste), sem JS o site funciona como sempre (RNF-01 v1). **Resiliência dos
+  scripts v1 às trocas de página** (parte necessária do requisito — sem ela,
+  tema e busca regrediriam): tema reaplicado em `astro:after-swap` (o roteador
+  substitui os atributos do `<html>`), botão de tema religado em
+  `astro:page-load`, busca religada por troca com índice baixado uma vez por
+  sessão (falha de rede permite nova tentativa). Presença dos hooks nos
+  bundles coberta por teste; comportamento dinâmico fica para o /verify em
+  navegador.
 
-## Regras de negócio
+## Requisitos não-funcionais
 
-- **RN-E03** — Atendida — efeito 100% CSS: o Markdown-fonte não muda, o HTML
-  do parágrafo não ganha nenhuma marcação extra (teste verifica que o `<p>`
-  não contém `<span>` e que o texto começa íntegro), e leitores de tela
-  recebem o parágrafo normal (::first-letter é invisível à árvore de
-  acessibilidade).
+- **RNF-E03** — Atendido — bloco `@media (prefers-reduced-motion: reduce)`
+  anula as animações de `::view-transition-*`; a transição de cor dos links
+  da v1 continua atrás do portão `no-preference`. Ambos cobertos por teste.
 
 ## Casos extremos cobertos
 
-- **CE-E02** — `temCapitular()` em `src/lib/conteudo.ts`: descarta marcadores
-  de ênfase do Markdown (`*`, `_`, `` ` ``) e exige `\p{L}` no primeiro
-  caractere. Coberto em dois níveis: teste unitário com os limites (letra,
-  ênfase, acentuada, travessão, aspas retas/curvas, número, vazio, só
-  whitespace) e build real com fixture de reflexões começando com travessão —
-  a página gerada não contém `prosa-capitular` (`builds-reais.test.ts`).
+- **CE-E05** — Navegador sem suporte à View Transitions API: o roteador do
+  Astro degrada com fallback próprio e a navegação por `<a>` continua íntegra
+  (teste estático dos links; drive real de console limpo fica para o /verify).
 
 ## Perguntas em aberto / pendências
 
-- Nota de teste: o minificador CSS normaliza `::first-letter` para
-  `:first-letter`; o teste aceita as duas grafias.
+- Interpretação registrada: REQ-E09 nomeia a listagem `/artigos/`; as páginas
+  de categoria (`/artigos/<categoria>/`) mantiveram a listagem simples. Se a
+  intenção era estender a variante a elas, é mudança de uma linha por página +
+  teste — decidir no review ou como refinamento editorial.
