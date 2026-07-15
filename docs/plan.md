@@ -1,6 +1,6 @@
 # Plan: Site pessoal — arquivo vivo
 Spec: docs/spec.md (Versão 1, aprovada) + docs/specs/direcao-estetica.md (Versão 1, aprovada) | Gerado: 2026-07-12 | Estendido: 2026-07-14 (direção estética, INC-11–15)
-Progresso: 12/15 incrementos concluídos — v1 encerrada (v1.0.0); direção estética em andamento
+Progresso: 13/15 incrementos concluídos — v1 encerrada (v1.0.0); direção estética em andamento
 
 Convenção de release (RN-06): cada incremento concluído via /ship gera uma release. Na v1: `v0.<nº do incremento>.0`, com o INC-10 fechando a `v1.0.0`. Pós-v1 (direção estética): INC-11→`v1.1.0` … INC-15→`v1.5.0`.
 
@@ -79,7 +79,7 @@ Depende de: INC-11
 Entrega verificável: `/projetos/matrix/` exibe entre o cabeçalho e o corpo um frame ASCII real (seed 42, tick 3000), commitado como asset de texto, em `<figure>` com arte `aria-hidden="true"` e `<figcaption>` registrando seed, tick e commit do Matrix; cores derivadas das variáveis dos dois temas; contido sem scroll horizontal da página em telas estreitas; build sem o asset (ou com asset vazio) falha apontando o arquivo — provado por teste.
 
 ### INC-13 — Cards de projetos + letra capitular nas reflexões
-Status: pendente
+Status: concluído (v1.3.0, 2026-07-14)
 Itens da spec: REQ-E07, REQ-E08 | RN-E03 | CE-E02
 Depende de: INC-11
 Entrega verificável: `/projetos/` e os destaques da Home renderizam cada projeto como card (nome, descrição, tecnologias em mono — mesmos dados de hoje, nenhum teste de conteúdo regride); artigo de `reflexoes` abre com capitular via CSS no primeiro parágrafo apenas quando este começa com letra (travessão/aspas/número ⇒ sem capitular), demais categorias sem capitular; o Markdown-fonte não muda.

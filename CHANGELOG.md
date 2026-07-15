@@ -8,6 +8,20 @@ incremento do [plano](docs/plan.md) entregue gera uma release `v0.x.0`, até a
 `v1.0.0` fechar o escopo da primeira versão. Pós-v1, cada incremento da
 [direção estética](docs/specs/direcao-estetica.md) gera `v1.x.0`.
 
+## [1.3.0] — 2026-07-14 · INC-13 — Cards de projetos e letra capitular
+
+Review APROVADO em 2026-07-14. Atende REQ-E07 e REQ-E08; cobre CE-E02;
+cumpre RN-E03.
+
+### Adicionado
+
+- Projetos apresentados como **cards** com contorno sutil em `/projetos/` e
+  nos destaques da Home — grade de 1 coluna no celular e 2 no desktop, com as
+  mesmas informações de sempre (tecnologias na camada mono)
+- As reflexões abrem com **letra capitular** — efeito 100% CSS que não altera
+  o texto nem o que leitores de tela leem, e que se recusa educadamente
+  quando o parágrafo começa com travessão, aspas ou número
+
 ## [1.2.0] — 2026-07-14 · INC-12 — Frame do Matrix
 
 Review APROVADO em 2026-07-14. Atende REQ-E04, REQ-E05 e REQ-E06; cobre
