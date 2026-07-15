@@ -138,6 +138,49 @@ describe('CE-E01 — build falha sem o asset do frame do Matrix', () => {
   }, 150_000);
 });
 
+// CE-E02 (INC-13) — reflexões cujo primeiro parágrafo começa com não-letra
+// renderiza SEM a capitular (build real, fixture temporária).
+const ARTIGO_TRAVESSAO = join(process.cwd(), 'src/content/artigos', '__cee02__travessao.md');
+
+describe('CE-E02 — reflexões começando com travessão renderiza sem capitular', () => {
+  it('build real gera a página sem a classe prosa-capitular', () => {
+    mkdirSync(join(process.cwd(), '.astro'), { recursive: true });
+    const outDir = mkdtempSync(join(process.cwd(), '.astro', 'dist-cee02-'));
+    writeFileSync(
+      ARTIGO_TRAVESSAO,
+      `---
+titulo: Travessão de teste
+descricao: fixture do CE-E02 — primeiro parágrafo começa com travessão
+data: 2026-07-14
+categoria: reflexoes
+tags:
+  - escrita
+---
+
+— Primeiro veio o travessão, depois a fala.
+`,
+    );
+    try {
+      const env = { ...process.env };
+      for (const k of ['NODE_ENV', 'PROD', 'DEV', 'MODE', 'BASE_URL', 'TEST', 'VITEST', 'SSR'])
+        delete env[k];
+      const r = spawnSync('npx', ['astro', 'build', '--outDir', outDir], {
+        cwd: process.cwd(),
+        encoding: 'utf-8',
+        timeout: 120_000,
+        env,
+      });
+      expect(r.status, `build deveria passar: ${r.stdout}\n${r.stderr}`).toBe(0);
+      const html = readFileSync(join(outDir, 'artigos/cee02-travessao/index.html'), 'utf-8');
+      expect(html).toContain('class="prosa"');
+      expect(html).not.toContain('prosa-capitular');
+    } finally {
+      unlinkSync(ARTIGO_TRAVESSAO);
+      rmSync(outDir, { recursive: true, force: true });
+    }
+  }, 150_000);
+});
+
 // CE-07 — projeto só com campos obrigatórios renderiza sem seções opcionais
 const PROJETO_MINIMO = join(process.cwd(), 'src/content/projetos', '__ce01__minimo.md');
 
