@@ -23,6 +23,7 @@ npm run dev       # servidor de desenvolvimento em http://localhost:4321
 npm run build     # build estático em dist/
 npm run preview   # serve o build local
 npm test          # constrói o site e roda a suíte de testes
+npm run auditoria # Lighthouse ×3 nas 4 páginas (100/100, CLS 0) + 320px sem scroll
 ```
 
 ## Como o projeto evolui
