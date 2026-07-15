@@ -1,52 +1,43 @@
-# Review report — 2026-07-14 (INC-14)
-Spec: docs/specs/direcao-estetica.md (Versão 1, aprovada) | Incremento: INC-14 — Linha do tempo + transições de página | Build report: 2026-07-14 (correção)
+# Review report — 2026-07-14 (INC-15, auditoria final da direção estética)
+Spec: docs/specs/direcao-estetica.md (Versão 1, aprovada) | Incremento: INC-15 — Auditoria final | Build report: 2026-07-14 (correção)
 ## VEREDITO: APROVADO
 
-Suíte rodada pelo auditor: **192/192**. Verify sem FALHAs (a regressão de CLS
-na busca foi corrigida e re-medida: 0,0000 em 12/12). Auditoria extra: o
-auditor dirigiu o **CE-E05 de verdade** — Chrome com `startViewTransition`
-removido antes do load — e a navegação funcionou por inteiro com zero erros do
-roteador (o único erro de console é o 404 pré-existente de favicon, sem
-relação com a spec).
+Suíte rodada pelo auditor: **198/198**. `npm run auditoria` executada pelo
+auditor de forma independente: **APROVADA** — perf 100, a11y 100 e CLS 0,0000
+nas 4 páginas, 320px contidos nas 6. Verify sem FALHAs, com o detector de
+320px provado nas duas direções (sabotagem → REPROVADA com 6 páginas
+nomeadas; reversão → APROVADA).
 
 ## Verificação requisito a requisito
 
 | Item | Status | Evidência |
 |------|--------|-----------|
-| REQ-E09 | Atendido | Prop `linhaDoTempo` no `ListaArtigos.astro`, usada só em `/artigos/`; linha e marcadores por tokens (testes de CSS); ordem RN-02 e dados intocados — o teste v1 da listagem passou sem mudança de expectativa, que era o critério da spec |
-| REQ-E10 | Atendido | `<ClientRouter />` no Base (meta em todas as páginas, teste); troca client-side comprovada (marcador em `window` sobrevive); navegação por `<a>` puro sem JS (teste + drive); tema e busca religados por `astro:page-load`/`after-swap` (drive real: alternar → navegar → persistir → alternar; buscar → sair → voltar → buscar) |
-| RNF-E03 | Atendido | Bloco `reduce` anulando `::view-transition-*` (teste); navegação sob `prefers-reduced-motion: reduce` dirigida sem erro |
-| CE-E05 | Atendido | Drive do auditor sem a API: navegação completa, 5 títulos renderizados, zero erros do roteador |
-| Regressão | Limpa | CLS 0,0000 em 12/12 nas 4 páginas auditadas; suíte inteira verde incluindo v1 (tema, busca, RNF-01) e INC-11–13 |
+| RNF-E01 | Atendido | `tools/auditoria.mjs` + `auditoria-nucleo.mjs`: Lighthouse ×3, decisão por mediana exigindo 100/100 e CLS 0, reprovação nomeando página e valor; núcleo com 6 testes unitários red-first; execução real aprovada por builder, verifier e auditor separadamente |
+| RNF-E04 | Atendido | Medição a 320px contra a constante configurada (o falso-aprovador via `innerWidth` foi pego por sabotagem no verify e corrigido); 6 páginas alteradas cobertas; procedimento de aceitação bidirecional documentado e re-dirigido |
+| Regressão (spec inteira) | Limpa | A auditoria executável é, por construção, o teste de regressão da spec: cobre tipografia (CLS/perf), frame, cards, capitular, linha do tempo e transições nas páginas reais; suíte v1+estética 198/198 |
 
-Interpretação validada: REQ-E09 nomeia a listagem `/artigos/`; as páginas de
-categoria mantêm a listagem simples — conforme a letra da spec e a entrega
-verificável do plano. Estender às categorias, se desejado, é refinamento
-editorial pós-spec.
-
-Violação de escopo: nenhuma. A correção `.botao-tema[hidden]` é mínima e
-amarrada à falha do verify; RNF-01 da v1 preservada (botão invisível e
-não-interativo sem JS, agora com caixa reservada — drive confirmou 28×26px
-invisível).
+Violações de escopo: nenhuma. O `chore(release)` que acerta a versão do
+pacote (1.0.0 → 1.4.0) corrige um lapso de processo dos ships anteriores
+(o rodapé exibe `v{pkg.version}`, convenção RN-06 da v1) — registrado no
+build-report, sem tocar em comportamento.
 
 ## Qualidade dos testes (TDD)
 
-- 5 testes nasceram vermelhos na construção + 1 na correção (histórico nos
-  commits); 3 guardas de comportamento existente documentados.
-- Inversão mental: remover o `ClientRouter`, os hooks `astro:*`, a variante da
-  listagem, o bloco reduce ou a reserva da caixa do botão deixa testes
-  vermelhos.
-- O comportamento dinâmico (religação pós-swap) é coberto por verificação
-  objetiva de navegador no verify — o registro está no relatório com evidência
-  literal.
+- Núcleo de decisão puro com testes red-first cobrindo mediana com outlier e
+  reprovações por perf/a11y/CLS/320 nomeando página e valor.
+- A parte browser-dependente (coleta) tem aceitação por sabotagem controlada
+  — dirigida três vezes (build, verify, e a reversão limpa) — e o
+  procedimento está documentado nos relatórios para repetição futura.
+- A observação do review do INC-11 (valores de size-adjust sem pino) está
+  encerrada: regressão neles agora reprova `npm run auditoria`.
 
 ## Segurança
 
-- Nenhuma dependência nova (`package.json` idêntico ao da v1.3.0);
-  `npm audit --omit=dev` = 0. O roteador não adiciona requisições externas
-  nem prefetch. Sem novos vetores de entrada; busca continua com o mesmo
-  escape de DOM da v1 (textContent, nunca innerHTML).
+- Nenhuma dependência nova; `npm audit --omit=dev` = 0. O script da auditoria
+  só spawna processos locais (astro, lighthouse, chrome do puppeteer), mata o
+  próprio grupo ao final e não expõe nada em rede além do preview local.
 
 ## Correções necessárias (para o /build)
 
-Nenhuma. Próximo passo: `/ship` para fechar o INC-14 (release v1.4.0).
+Nenhuma. Próximo passo: `/ship` para fechar o INC-15 (release v1.5.0) — e,
+com ele, **o backlog inteiro da direção estética**.
