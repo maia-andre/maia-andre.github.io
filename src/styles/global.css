@@ -426,6 +426,44 @@ main {
   border-top: 1px solid var(--linha);
 }
 
+/* Linha do tempo (REQ-E09): /artigos/ como diário — linha vertical contínua e
+   um marcador por item; a linha substitui as réguas horizontais da variante. */
+.lista-linha-tempo {
+  position: relative;
+  padding-left: 1.625rem;
+}
+
+.lista-linha-tempo::before {
+  content: '';
+  position: absolute;
+  top: 0.75rem;
+  bottom: 0.75rem;
+  left: 4px;
+  width: 2px;
+  background: var(--linha);
+}
+
+.lista-linha-tempo > .item-artigo {
+  position: relative;
+  border-top: none;
+}
+
+.lista-linha-tempo > .item-artigo:last-child {
+  border-bottom: none;
+}
+
+.lista-linha-tempo > .item-artigo::before {
+  content: '';
+  position: absolute;
+  left: -1.625rem;
+  top: 2.1rem;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--carimbo);
+  border: 2px solid var(--papel);
+}
+
 /* Busca */
 .form-busca {
   margin-bottom: 2rem;
@@ -650,5 +688,15 @@ main {
 @media (prefers-reduced-motion: no-preference) {
   a {
     transition: color 120ms ease, text-decoration-thickness 120ms ease;
+  }
+}
+
+/* RNF-E03: sob movimento reduzido, as View Transitions (REQ-E10) não animam —
+   a troca de página é instantânea. */
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none !important;
   }
 }
