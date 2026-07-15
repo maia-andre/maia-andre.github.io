@@ -295,6 +295,15 @@ img {
   border-color: var(--carimbo);
 }
 
+/* Correção INC-14: o botão nasce [hidden] e é revelado pelo JS (RNF-01), mas
+   sob o roteador o unhide acontece após o primeiro paint — a caixa fica
+   reservada para a revelação não deslocar o cabeçalho (CLS 0). Invisível e
+   não-interativo enquanto oculto. */
+.botao-tema[hidden] {
+  display: inline-block;
+  visibility: hidden;
+}
+
 main {
   flex: 1;
   padding-block: clamp(2.5rem, 7vw, 4.5rem);
