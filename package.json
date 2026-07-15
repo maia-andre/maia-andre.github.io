@@ -9,6 +9,7 @@
     "build": "astro build",
     "preview": "astro preview",
     "test": "vitest run",
+    "auditoria": "node tools/auditoria.mjs",
     "astro": "astro"
   },
   "dependencies": {
