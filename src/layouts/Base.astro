@@ -1,4 +1,5 @@
 ---
+import { ClientRouter } from 'astro:transitions';
 import pkg from '../../package.json';
 import '../styles/global.css';
 
@@ -54,15 +55,26 @@ const atual = (href: string) =>
       type="font/woff2"
       crossorigin
     />
+    <ClientRouter />
     <script is:inline>
       // REQ-14: aplica o tema salvo ANTES da pintura para não haver flash.
       // CE-05: localStorage indisponível cai no tema do sistema, sem erro.
-      try {
-        var temaSalvo = localStorage.getItem('tema');
-        if (temaSalvo === 'claro' || temaSalvo === 'escuro') {
-          document.documentElement.dataset.tema = temaSalvo;
+      // REQ-E10: a troca de página do roteador substitui os atributos do
+      // <html> — reaplica o tema em astro:after-swap (o listener sobrevive às
+      // trocas porque vive no document, e este script inline idêntico não é
+      // reexecutado pelo roteador).
+      (function () {
+        function aplicarTemaSalvo() {
+          try {
+            var temaSalvo = localStorage.getItem('tema');
+            if (temaSalvo === 'claro' || temaSalvo === 'escuro') {
+              document.documentElement.dataset.tema = temaSalvo;
+            }
+          } catch (erro) {}
         }
-      } catch (erro) {}
+        aplicarTemaSalvo();
+        document.addEventListener('astro:after-swap', aplicarTemaSalvo);
+      })();
     </script>
   </head>
   <body>
@@ -109,28 +121,35 @@ const atual = (href: string) =>
     <script>
       import { alternarTema, temaEfetivo } from '../lib/tema';
 
-      const botao = document.getElementById('alternar-tema');
-      if (botao) {
+      // REQ-14 sob o roteador (REQ-E10): o botão é recriado a cada troca de
+      // página — religa em astro:page-load (que também dispara no load
+      // inicial). O listener de preferência do sistema é único e aponta
+      // sempre para o botão atual.
+      const preferencia = window.matchMedia('(prefers-color-scheme: dark)');
+      let storage: Storage | null = null;
+      try {
+        storage = window.localStorage;
+      } catch {
+        storage = null;
+      }
+      let botao: HTMLElement | null = null;
+      const refletirEstado = () => {
+        if (!botao) return;
+        const escuroAtivo = temaEfetivo(document, preferencia.matches) === 'escuro';
+        botao.setAttribute('aria-pressed', String(escuroAtivo));
+      };
+      preferencia.addEventListener('change', refletirEstado);
+      document.addEventListener('astro:page-load', () => {
+        botao = document.getElementById('alternar-tema');
+        if (!botao) return;
         // RNF-01: sem JavaScript o botão permanece oculto — nada de controle morto
         botao.removeAttribute('hidden');
-        const preferencia = window.matchMedia('(prefers-color-scheme: dark)');
-        let storage: Storage | null = null;
-        try {
-          storage = window.localStorage;
-        } catch {
-          storage = null;
-        }
-        const refletirEstado = () => {
-          const escuroAtivo = temaEfetivo(document, preferencia.matches) === 'escuro';
-          botao.setAttribute('aria-pressed', String(escuroAtivo));
-        };
         refletirEstado();
-        preferencia.addEventListener('change', refletirEstado);
         botao.addEventListener('click', () => {
           alternarTema(document, storage, preferencia.matches);
           refletirEstado();
         });
-      }
+      });
     </script>
   </body>
 </html>

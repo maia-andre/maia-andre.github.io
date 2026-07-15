@@ -5,16 +5,18 @@ import { CATEGORIAS, dataISO, formatarData } from '../lib/conteudo';
 interface Props {
   artigos: CollectionEntry<'artigos'>[];
   mensagemVazia: string;
+  /** REQ-E09: variante linha do tempo (usada em /artigos/) */
+  linhaDoTempo?: boolean;
 }
 
-const { artigos, mensagemVazia } = Astro.props;
+const { artigos, mensagemVazia, linhaDoTempo = false } = Astro.props;
 ---
 
 {
   artigos.length === 0 ? (
     <p class="estado-vazio">{mensagemVazia}</p>
   ) : (
-    <ol class="lista-artigos">
+    <ol class:list={['lista-artigos', linhaDoTempo && 'lista-linha-tempo']}>
       {artigos.map(({ id, data: artigo }) => (
         <li class="item-artigo">
           <p class="registro artigo-meta">
