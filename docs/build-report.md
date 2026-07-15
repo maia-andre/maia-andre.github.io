@@ -1,57 +1,43 @@
-# Build report — 2026-07-14 (INC-14, correção)
+# Build report — 2026-07-14 (INC-15)
 Spec: docs/specs/direcao-estetica.md (Versão 1, aprovada)
-Incremento: INC-14 — Linha do tempo em /artigos/ + transições de página
-Rodada: correção (verify de 2026-07-14 — CLS 0,0247 em /busca/)
-Testes: 192 passando / 192 total — `npm test`
-
-## Correção aplicada
-
-- **[REQ-E10 → RNF-E01]** O botão de tema nasce `[hidden]` e era revelado no
-  `astro:page-load` — pós-paint sob o roteador, o que crescia o cabeçalho e
-  empurrava o `main` (CLS 0,0247 na busca). Correção mínima em CSS:
-  `.botao-tema[hidden] { display: inline-block; visibility: hidden; }` — caixa
-  reservada, invisível e não-interativo sem JS (RNF-01 preservada). Lighthouse
-  na busca após a correção: CLS **0,0000 em 3/3**, perf 100, a11y 100.
-  Coberto por teste novo em `linha-tempo-transicoes.test.ts` (nasceu
-  vermelho).
+Incremento: INC-15 — Auditoria final da direção estética (v1.5.0)
+Rodada: construção
+Testes: 198 passando / 198 total — `npm test`
 
 ## Requisitos atendidos
 
-- **REQ-E09** — Atendido — `ListaArtigos.astro` ganhou a prop `linhaDoTempo`;
-  só `/artigos/` a usa (Home e páginas de categoria seguem como estavam — a
-  spec nomeia `/artigos/`; interpretação registrada abaixo). CSS: linha
-  vertical contínua (`var(--linha)`) e marcador circular por item
-  (`var(--carimbo)` com anel `var(--papel)`), substituindo as réguas
-  horizontais na variante. Ordem RN-02 e dados por item intocados — o teste
-  v1 da listagem passa sem nenhuma mudança de expectativa. Coberto por
-  `tests/linha-tempo-transicoes.test.ts`.
-- **REQ-E10** — Atendido — `<ClientRouter />` no `Base.astro` (meta
-  `astro-view-transitions-enabled` presente em todas as páginas, coberto por
-  teste). Aprimoramento progressivo: navegação segue por `<a href>` puro
-  (teste), sem JS o site funciona como sempre (RNF-01 v1). **Resiliência dos
-  scripts v1 às trocas de página** (parte necessária do requisito — sem ela,
-  tema e busca regrediriam): tema reaplicado em `astro:after-swap` (o roteador
-  substitui os atributos do `<html>`), botão de tema religado em
-  `astro:page-load`, busca religada por troca com índice baixado uma vez por
-  sessão (falha de rede permite nova tentativa). Presença dos hooks nos
-  bundles coberta por teste; comportamento dinâmico fica para o /verify em
-  navegador.
-
-## Requisitos não-funcionais
-
-- **RNF-E03** — Atendido — bloco `@media (prefers-reduced-motion: reduce)`
-  anula as animações de `::view-transition-*`; a transição de cor dos links
-  da v1 continua atrás do portão `no-preference`. Ambos cobertos por teste.
+- **RNF-E01** — Atendido — auditoria virou comando executável do ciclo:
+  `npm run auditoria` (`tools/auditoria.mjs`) constrói o site, serve o build
+  (espera ativa, falha alto se a porta estiver ocupada, mata o grupo de
+  processos ao final) e roda Lighthouse mobile **×3** em cada uma das 4
+  páginas da spec, decidindo por **mediana**: Performance = 100,
+  Accessibility = 100 e CLS = 0, com reprovação nomeando página e valor.
+  Núcleo de decisão puro (`tools/auditoria-nucleo.mjs`) coberto por 6 testes
+  unitários (medianas com outlier, reprovações por perf/a11y/CLS/320px).
+  **Execução real desta rodada: APROVADA** — 100/100 e CLS 0,0000 nas 4
+  páginas. Fecha a lacuna registrada no review do INC-11 (valores de
+  size-adjust sem pino: agora qualquer regressão neles reprova a auditoria
+  executável).
+- **RNF-E04** — Atendido — o mesmo comando mede `scrollWidth × viewport` a
+  320px em 6 páginas alteradas pela direção estética (Home, /artigos/,
+  /projetos/, projeto Matrix, artigo com capitular, busca); vazamento
+  horizontal reprova nomeando a página. Execução real: todas contidas.
 
 ## Casos extremos cobertos
 
-- **CE-E05** — Navegador sem suporte à View Transitions API: o roteador do
-  Astro degrada com fallback próprio e a navegação por `<a>` continua íntegra
-  (teste estático dos links; drive real de console limpo fica para o /verify).
+- Porta ocupada / servidor que não sobe ⇒ o script falha alto com instrução
+  (`fuser -k`), sem medir contra um servidor fantasma (foi bug real
+  encontrado e corrigido durante a construção: preview órfão segurando a
+  porta mascarava o erro).
+- Outlier de medição ⇒ absorvido pela mediana (teste unitário com 97 entre
+  dois 100).
 
 ## Perguntas em aberto / pendências
 
-- Interpretação registrada: REQ-E09 nomeia a listagem `/artigos/`; as páginas
-  de categoria (`/artigos/<categoria>/`) mantiveram a listagem simples. Se a
-  intenção era estender a variante a elas, é mudança de uma linha por página +
-  teste — decidir no review ou como refinamento editorial.
+- Registro de processo: os ships v1.1.0–v1.4.0 não bumparam a versão do
+  `package.json` (o rodapé exibe `v{pkg.version}`); corrigido em
+  `chore(release)` para 1.4.0 nesta rodada — nada havia sido publicado com a
+  versão defasada. O ship do INC-15 deve bumpar para **1.5.0**.
+- A auditoria fica fora do `npm test` de propósito (12 execuções de
+  Lighthouse ≈ minutos por rodada tornariam o TDD do ciclo inviável); ela é o
+  portão de qualidade de verify/review/ship e está documentada no README.
