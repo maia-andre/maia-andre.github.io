@@ -1,6 +1,6 @@
 # Plan: Site pessoal — arquivo vivo
 Spec: docs/spec.md (Versão 1, aprovada) + docs/specs/direcao-estetica.md (Versão 1, aprovada) | Gerado: 2026-07-12 | Estendido: 2026-07-14 (direção estética, INC-11–15)
-Progresso: 13/15 incrementos concluídos — v1 encerrada (v1.0.0); direção estética em andamento
+Progresso: 14/15 incrementos concluídos — v1 encerrada (v1.0.0); direção estética em andamento
 
 Convenção de release (RN-06): cada incremento concluído via /ship gera uma release. Na v1: `v0.<nº do incremento>.0`, com o INC-10 fechando a `v1.0.0`. Pós-v1 (direção estética): INC-11→`v1.1.0` … INC-15→`v1.5.0`.
 
@@ -85,7 +85,7 @@ Depende de: INC-11
 Entrega verificável: `/projetos/` e os destaques da Home renderizam cada projeto como card (nome, descrição, tecnologias em mono — mesmos dados de hoje, nenhum teste de conteúdo regride); artigo de `reflexoes` abre com capitular via CSS no primeiro parágrafo apenas quando este começa com letra (travessão/aspas/número ⇒ sem capitular), demais categorias sem capitular; o Markdown-fonte não muda.
 
 ### INC-14 — Linha do tempo em /artigos/ + transições de página
-Status: pendente
+Status: concluído (v1.4.0, 2026-07-14)
 Itens da spec: REQ-E09, REQ-E10 | RNF-E03 | CE-E05
 Depende de: INC-11
 Entrega verificável: `/artigos/` apresenta os artigos ao longo de linha vertical com marcadores, mantendo ordem RN-02 e dados atuais (expectativas dos testes existentes inalteradas); `<ClientRouter />` no layout base dá transições suaves, com navegação tradicional íntegra sem JS, sem erro em navegador sem suporte, e animações desativadas sob `prefers-reduced-motion: reduce`.
