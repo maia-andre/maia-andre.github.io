@@ -1,6 +1,6 @@
 # Plan: Site pessoal — arquivo vivo
 Spec: docs/spec.md (Versão 1, aprovada) + docs/specs/direcao-estetica.md (Versão 1, aprovada) | Gerado: 2026-07-12 | Estendido: 2026-07-14 (direção estética, INC-11–15)
-Progresso: 14/15 incrementos concluídos — v1 encerrada (v1.0.0); direção estética em andamento
+Progresso: 15/15 incrementos concluídos — backlog encerrado (v1.0.0 + direção estética v1.5.0)
 
 Convenção de release (RN-06): cada incremento concluído via /ship gera uma release. Na v1: `v0.<nº do incremento>.0`, com o INC-10 fechando a `v1.0.0`. Pós-v1 (direção estética): INC-11→`v1.1.0` … INC-15→`v1.5.0`.
 
@@ -91,7 +91,7 @@ Depende de: INC-11
 Entrega verificável: `/artigos/` apresenta os artigos ao longo de linha vertical com marcadores, mantendo ordem RN-02 e dados atuais (expectativas dos testes existentes inalteradas); `<ClientRouter />` no layout base dá transições suaves, com navegação tradicional íntegra sem JS, sem erro em navegador sem suporte, e animações desativadas sob `prefers-reduced-motion: reduce`.
 
 ### INC-15 — Auditoria final da direção estética (v1.5.0)
-Status: em correção
+Status: concluído (v1.5.0, 2026-07-14)
 Itens da spec: RNF-E01 | RNF-E04
 Depende de: INC-11, INC-12, INC-13, INC-14
 Entrega verificável: Lighthouse mobile com Performance = 100 e Accessibility = 100 (mediana de 3 execuções por página) na Home, num artigo, em `/projetos/matrix/` e na busca; viewport de 320px sem scroll horizontal nas páginas alteradas; todos os itens da definição de concluído da spec estética checados.
