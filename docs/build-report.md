@@ -1,8 +1,19 @@
-# Build report — 2026-07-14 (INC-14)
+# Build report — 2026-07-14 (INC-14, correção)
 Spec: docs/specs/direcao-estetica.md (Versão 1, aprovada)
 Incremento: INC-14 — Linha do tempo em /artigos/ + transições de página
-Rodada: construção
-Testes: 191 passando / 191 total — `npm test`
+Rodada: correção (verify de 2026-07-14 — CLS 0,0247 em /busca/)
+Testes: 192 passando / 192 total — `npm test`
+
+## Correção aplicada
+
+- **[REQ-E10 → RNF-E01]** O botão de tema nasce `[hidden]` e era revelado no
+  `astro:page-load` — pós-paint sob o roteador, o que crescia o cabeçalho e
+  empurrava o `main` (CLS 0,0247 na busca). Correção mínima em CSS:
+  `.botao-tema[hidden] { display: inline-block; visibility: hidden; }` — caixa
+  reservada, invisível e não-interativo sem JS (RNF-01 preservada). Lighthouse
+  na busca após a correção: CLS **0,0000 em 3/3**, perf 100, a11y 100.
+  Coberto por teste novo em `linha-tempo-transicoes.test.ts` (nasceu
+  vermelho).
 
 ## Requisitos atendidos
 
