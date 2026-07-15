@@ -91,7 +91,7 @@ Depende de: INC-11
 Entrega verificável: `/artigos/` apresenta os artigos ao longo de linha vertical com marcadores, mantendo ordem RN-02 e dados atuais (expectativas dos testes existentes inalteradas); `<ClientRouter />` no layout base dá transições suaves, com navegação tradicional íntegra sem JS, sem erro em navegador sem suporte, e animações desativadas sob `prefers-reduced-motion: reduce`.
 
 ### INC-15 — Auditoria final da direção estética (v1.5.0)
-Status: pendente
+Status: em correção
 Itens da spec: RNF-E01 | RNF-E04
 Depende de: INC-11, INC-12, INC-13, INC-14
 Entrega verificável: Lighthouse mobile com Performance = 100 e Accessibility = 100 (mediana de 3 execuções por página) na Home, num artigo, em `/projetos/matrix/` e na busca; viewport de 320px sem scroll horizontal nas páginas alteradas; todos os itens da definição de concluído da spec estética checados.

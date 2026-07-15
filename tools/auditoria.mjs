@@ -56,18 +56,18 @@ if (!noAr) {
 
 let saida = 1;
 try {
-  // RNF-E04 — 320px sem scroll horizontal
+  // RNF-E04 — 320px sem scroll horizontal. A referência é a CONSTANTE 320:
+  // na emulação mobile o window.innerWidth infla junto com conteúdo que vaza
+  // (o verify provou por sabotagem), então comparar contra ele nunca reprova.
+  const LARGURA_ESTREITA = 320;
   const browser = await puppeteer.launch({ headless: true });
   const scroll320 = [];
   for (const [nome, caminho] of PAGINAS_320) {
     const page = await browser.newPage();
-    await page.setViewport({ width: 320, height: 700, isMobile: true });
+    await page.setViewport({ width: LARGURA_ESTREITA, height: 700, isMobile: true });
     await page.goto(BASE + caminho, { waitUntil: 'networkidle0' });
-    const medida = await page.evaluate(() => ({
-      scrollWidth: document.documentElement.scrollWidth,
-      viewport: window.innerWidth,
-    }));
-    scroll320.push({ nome, ...medida });
+    const scrollWidth = await page.evaluate(() => document.documentElement.scrollWidth);
+    scroll320.push({ nome, scrollWidth, viewport: LARGURA_ESTREITA });
     await page.close();
   }
   const chromePath = String(await puppeteer.executablePath());
