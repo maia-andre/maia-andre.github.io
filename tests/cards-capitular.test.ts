@@ -59,7 +59,7 @@ describe('REQ-E08/RN-E03 — capitular nas reflexões, efeito puramente visual',
 
   it('a capitular é ::first-letter do primeiro parágrafo; o texto segue íntegro, sem marcação extra', () => {
     expect(cssDoSite('artigos/a-cidade-nao-percebe-quando-alguem-desaba/index.html')).toMatch(
-      /\.prosa-capitular\s*>?\s*p:first-of-type::first-letter/,
+      /\.prosa-capitular\s*>?\s*p:first-of-type::?first-letter/,
     );
     const p = parsePage('artigos/a-cidade-nao-percebe-quando-alguem-desaba/index.html')
       .querySelector('.prosa p')!;

@@ -13,9 +13,9 @@ const projetos = (await getCollection('projetos')).sort((a, b) =>
     projetos.length === 0 ? (
       <p class="estado-vazio">Nenhum projeto publicado ainda.</p>
     ) : (
-      <ol class="lista-artigos">
+      <ol class="grade-projetos">
         {projetos.map(({ id, data: projeto }) => (
-          <li class="item-artigo">
+          <li class="cartao-projeto">
             <p class="registro artigo-meta">
               {projeto.tecnologias.map((tecnologia) => (
                 <span class="tecnologia">{tecnologia}</span>

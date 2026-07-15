@@ -6,6 +6,7 @@ import {
   dataISO,
   ehPublicado,
   formatarData,
+  temCapitular,
 } from '../../lib/conteudo';
 
 export async function getStaticPaths() {
@@ -28,6 +29,8 @@ export async function getStaticPaths() {
 const { artigo } = Astro.props;
 const { Content } = await render(artigo);
 const { titulo, descricao, data, atualizado, categoria, tags } = artigo.data;
+// REQ-E08/CE-E02: capitular só nas reflexões e só quando o texto abre com letra
+const capitular = categoria === 'reflexoes' && temCapitular(artigo.body ?? '');
 ---
 
 <Base titulo={titulo} descricao={descricao}>
@@ -51,7 +54,7 @@ const { titulo, descricao, data, atualizado, categoria, tags } = artigo.data;
       <h1>{titulo}</h1>
       <p class="artigo-descricao">{descricao}</p>
     </header>
-    <div class="prosa">
+    <div class:list={['prosa', capitular && 'prosa-capitular']}>
       <Content />
     </div>
     <footer class="artigo-rodape">

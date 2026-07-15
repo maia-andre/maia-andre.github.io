@@ -42,9 +42,9 @@ const destaques = projetosEmDestaque(await getCollection('projetos'));
             todos os projetos →
           </a>
         </div>
-        <ol class="lista-artigos">
+        <ol class="grade-projetos">
           {destaques.map(({ id, data: projeto }) => (
-            <li class="item-artigo">
+            <li class="cartao-projeto">
               <p class="registro artigo-meta">
                 {projeto.tecnologias.map((tecnologia) => (
                   <span class="tecnologia">{tecnologia}</span>

@@ -483,6 +483,56 @@ main {
   color: var(--grafite);
 }
 
+/* Cards de projetos (REQ-E07): mesma informação de sempre, com contorno sutil.
+   Grade responsiva: 1 coluna no celular, 2 a partir de ~40rem. */
+.grade-projetos {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+}
+
+@media (min-width: 40rem) {
+  .grade-projetos {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.cartao-projeto {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--linha);
+  border-radius: 6px;
+  background: var(--superficie);
+  padding: 1.25rem 1.25rem 1rem;
+}
+
+.cartao-projeto:hover {
+  border-color: var(--carimbo);
+}
+
+.cartao-projeto .item-titulo {
+  margin-top: 0.375rem;
+}
+
+.cartao-projeto .item-descricao {
+  flex: 1;
+}
+
+/* Letra capitular das reflexões (REQ-E08, RN-E03): efeito 100% CSS sobre o
+   primeiro parágrafo — o Markdown e o texto lido por leitores de tela não
+   mudam. A classe só é aplicada quando o texto abre com letra (CE-E02). */
+.prosa-capitular > p:first-of-type::first-letter {
+  float: left;
+  font-size: 3.1em;
+  line-height: 0.85;
+  font-weight: 650;
+  color: var(--carimbo);
+  padding: 0.04em 0.12em 0 0;
+}
+
 .capa-projeto {
   border: 1px solid var(--linha);
   border-radius: 4px;
