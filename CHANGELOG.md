@@ -8,6 +8,26 @@ incremento do [plano](docs/plan.md) entregue gera uma release `v0.x.0`, até a
 `v1.0.0` fechar o escopo da primeira versão. Pós-v1, cada incremento da
 [direção estética](docs/specs/direcao-estetica.md) gera `v1.x.0`.
 
+## [1.4.0] — 2026-07-14 · INC-14 — Linha do tempo e transições de página
+
+Review APROVADO em 2026-07-14. Atende REQ-E09, REQ-E10 e RNF-E03; cobre
+CE-E05.
+
+### Adicionado
+
+- `/artigos/` virou um **diário com linha do tempo**: linha vertical contínua
+  e um marcador por texto, mantendo a mesma ordem e informações
+- **Transições suaves entre páginas** (View Transitions): a navegação flui
+  sem recarregar, o tema escolhido persiste através das trocas e a busca
+  continua funcionando ao entrar, sair e voltar; sem JavaScript tudo segue
+  como navegação tradicional, e quem prefere movimento reduzido navega sem
+  nenhuma animação
+
+### Corrigido
+
+- O botão de tema agora reserva seu espaço desde o primeiro paint — a
+  revelação tardia não desloca mais o layout (CLS de volta a zero na busca)
+
 ## [1.3.0] — 2026-07-14 · INC-13 — Cards de projetos e letra capitular
 
 Review APROVADO em 2026-07-14. Atende REQ-E07 e REQ-E08; cobre CE-E02;
