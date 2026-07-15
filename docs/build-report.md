@@ -1,8 +1,17 @@
-# Build report — 2026-07-14 (INC-15)
+# Build report — 2026-07-14 (INC-15, correção)
 Spec: docs/specs/direcao-estetica.md (Versão 1, aprovada)
 Incremento: INC-15 — Auditoria final da direção estética (v1.5.0)
-Rodada: construção
+Rodada: correção (verify de 2026-07-14 — falso-aprovado no detector de 320px)
 Testes: 198 passando / 198 total — `npm test`
+
+## Correção aplicada
+
+- **[RNF-E04]** O detector de 320px comparava `scrollWidth` contra
+  `window.innerWidth`, que infla junto com o conteúdo na emulação mobile —
+  nunca reprovava. Agora compara contra a **constante 320** configurada.
+  Aceitação dirigida nas duas direções: sabotagem `main { min-width: 400px }`
+  → **REPROVADA** com as 6 páginas nomeadas e exit 1; reversão → **APROVADA**
+  com exit 0.
 
 ## Requisitos atendidos
 
