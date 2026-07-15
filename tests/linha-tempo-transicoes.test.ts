@@ -92,6 +92,15 @@ describe('REQ-E10 — View Transitions com aprimoramento progressivo', () => {
   });
 });
 
+describe('correção do verify — o botão de tema não desloca layout ao ser revelado', () => {
+  it('o espaço do botão é reservado mesmo com [hidden] (unhide pós-paint sem CLS)', () => {
+    const bloco = cssDoSite('index.html').match(/\.botao-tema\[hidden\]\s*{[^}]*}/)?.[0];
+    expect(bloco, 'regra .botao-tema[hidden] ausente').toBeDefined();
+    expect(bloco).toMatch(/visibility:\s*hidden/);
+    expect(bloco).toMatch(/display:\s*(inline-block|block|inline-flex|flex)/);
+  });
+});
+
 describe('RNF-E03 — animações desligadas sob prefers-reduced-motion', () => {
   it('as transições de view transition são anuladas no modo reduzido', () => {
     const css = cssDoSite('index.html');
