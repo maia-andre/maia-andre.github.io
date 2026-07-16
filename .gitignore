@@ -12,6 +12,9 @@ npm-debug.log*
 .env
 .env.production
 
+# material bruto — nunca versionar (repositório é público)
+docs/material/
+
 # sistema
 .DS_Store
 __ce01__*
