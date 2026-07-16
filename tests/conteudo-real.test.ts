@@ -47,7 +47,7 @@ describe('v1.0.0 — os 4 projetos reais', () => {
   });
 });
 
-describe('conteúdo real — sete artigos publicados', () => {
+describe('conteúdo real — oito artigos publicados', () => {
   it('o segundo artigo (derivado do Matrix) existe com categoria reflexoes', () => {
     expect(pageExists('artigos/a-regua-que-desbota/index.html')).toBe(true);
     const main = parsePage('artigos/a-regua-que-desbota/index.html').querySelector('main')!;
@@ -98,20 +98,31 @@ describe('conteúdo real — sete artigos publicados', () => {
     expect(main.text).toContain('Reflexões');
   });
 
-  it('a listagem mostra os 7 publicados na ordem da RN-02 (data desc; empate → alfabético)', () => {
+  it('o oitavo artigo (ensaio pessoal) existe, com categoria reflexoes e o link da régua', () => {
+    expect(pageExists('artigos/a-memoria-que-nao-desbota/index.html')).toBe(true);
+    const main = parsePage('artigos/a-memoria-que-nao-desbota/index.html').querySelector('main')!;
+    expect(main.querySelector('h1')?.text).toContain('memória');
+    expect(main.text).toContain('Reflexões');
+    // a peça inversa linka a peça original
+    const hrefs = main.querySelectorAll('a').map((a) => a.getAttribute('href'));
+    expect(hrefs).toContain('/artigos/a-regua-que-desbota/');
+  });
+
+  it('a listagem mostra os 8 publicados na ordem da RN-02 (data desc; empate → alfabético)', () => {
     const titulos = parsePage('artigos/index.html')
       .querySelectorAll('main .item-titulo a')
       .map((a) => a.text.trim());
-    expect(titulos).toHaveLength(7);
-    // 2026-07-15 (O menino) na frente; empate em 2026-07-14 (A cidade /
-    // O velório) e nos dias anteriores: desempate alfabético pt-BR
-    expect(titulos[0]).toMatch(/^O menino/);
-    expect(titulos[1]).toMatch(/^A cidade/);
-    expect(titulos[2]).toMatch(/^O velório/);
-    expect(titulos[3]).toMatch(/^O jardineiro/);
-    expect(titulos[4]).toMatch(/^O silêncio/);
-    expect(titulos[5]).toMatch(/^A régua/);
-    expect(titulos[6]).toMatch(/^Construindo/);
+    expect(titulos).toHaveLength(8);
+    // empate em 2026-07-15 (A memória / O menino) e em 2026-07-14 (A cidade /
+    // O velório); nos dias anteriores idem: desempate alfabético pt-BR
+    expect(titulos[0]).toMatch(/^A memória/);
+    expect(titulos[1]).toMatch(/^O menino/);
+    expect(titulos[2]).toMatch(/^A cidade/);
+    expect(titulos[3]).toMatch(/^O velório/);
+    expect(titulos[4]).toMatch(/^O jardineiro/);
+    expect(titulos[5]).toMatch(/^O silêncio/);
+    expect(titulos[6]).toMatch(/^A régua/);
+    expect(titulos[7]).toMatch(/^Construindo/);
   });
 });
 
