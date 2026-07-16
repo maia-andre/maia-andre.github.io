@@ -1,0 +1,155 @@
+---
+import { ClientRouter } from 'astro:transitions';
+import pkg from '../../package.json';
+import '../styles/global.css';
+
+interface Props {
+  titulo?: string;
+  descricao?: string;
+}
+
+const NOME_SITE = 'André Maia';
+const MENSAGEM = 'Entre código, gestão pública e as coisas que escrevo para conseguir carregar.';
+
+const { titulo, descricao = MENSAGEM } = Astro.props;
+const tituloPagina = titulo ? `${titulo} — ${NOME_SITE}` : NOME_SITE;
+
+const itensNavegacao = [
+  { rotulo: 'Início', href: '/' },
+  { rotulo: 'Artigos', href: '/artigos/' },
+  { rotulo: 'Projetos', href: '/projetos/' },
+  { rotulo: 'Tags', href: '/tags/' },
+  { rotulo: 'Sobre', href: '/sobre/' },
+  { rotulo: 'Busca', href: '/busca/' },
+];
+
+const caminhoAtual = Astro.url.pathname;
+const atual = (href: string) =>
+  href === caminhoAtual || (href !== '/' && caminhoAtual.startsWith(href))
+    ? 'page'
+    : undefined;
+---
+
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="generator" content={Astro.generator} />
+    <meta name="description" content={descricao} />
+    <title>{tituloPagina}</title>
+    <!-- REQ-E03: preload só do que aparece acima da dobra — corpo, itálico da
+         apresentação/primeiro parágrafo e mono da navegação -->
+    <link rel="preload" href="/fontes/lora-var.woff2" as="font" type="font/woff2" crossorigin />
+    <link
+      rel="preload"
+      href="/fontes/lora-var-italico.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+    <link
+      rel="preload"
+      href="/fontes/plex-mono-400.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+    <ClientRouter />
+    <script is:inline>
+      // REQ-14: aplica o tema salvo ANTES da pintura para não haver flash.
+      // CE-05: localStorage indisponível cai no tema do sistema, sem erro.
+      // REQ-E10: a troca de página do roteador substitui os atributos do
+      // <html> — reaplica o tema em astro:after-swap (o listener sobrevive às
+      // trocas porque vive no document, e este script inline idêntico não é
+      // reexecutado pelo roteador).
+      (function () {
+        function aplicarTemaSalvo() {
+          try {
+            var temaSalvo = localStorage.getItem('tema');
+            if (temaSalvo === 'claro' || temaSalvo === 'escuro') {
+              document.documentElement.dataset.tema = temaSalvo;
+            }
+          } catch (erro) {}
+        }
+        aplicarTemaSalvo();
+        document.addEventListener('astro:after-swap', aplicarTemaSalvo);
+      })();
+    </script>
+  </head>
+  <body>
+    <a class="salto-conteudo" href="#conteudo">Pular para o conteúdo</a>
+    <header class="cabecalho">
+      <div class="pagina cabecalho-conteudo">
+        <a class="marca" href="/">{NOME_SITE}</a>
+        <nav class="navegacao" aria-label="Navegação principal">
+          <ul>
+            {
+              itensNavegacao.map(({ rotulo, href }) => (
+                <li>
+                  <a href={href} aria-current={atual(href)}>
+                    {rotulo}
+                  </a>
+                </li>
+              ))
+            }
+          </ul>
+        </nav>
+        <button
+          id="alternar-tema"
+          class="botao-tema"
+          type="button"
+          aria-label="Alternar entre tema claro e escuro"
+          hidden>◐</button>
+      </div>
+    </header>
+    <main id="conteudo" class="pagina">
+      <slot />
+    </main>
+    <footer class="rodape">
+      <div class="pagina">
+        <p class="rodape-mensagem">{MENSAGEM}</p>
+        <p class="rodape-registro registro">
+          <span>v{pkg.version}</span>
+          <span aria-hidden="true">·</span>
+          <span>construído com Astro</span>
+          <span aria-hidden="true">·</span>
+          <a href="https://github.com/maia-andre/maia-andre.github.io">código-fonte</a>
+        </p>
+      </div>
+    </footer>
+    <script>
+      import { alternarTema, temaEfetivo } from '../lib/tema';
+
+      // REQ-14 sob o roteador (REQ-E10): o botão é recriado a cada troca de
+      // página — religa em astro:page-load (que também dispara no load
+      // inicial). O listener de preferência do sistema é único e aponta
+      // sempre para o botão atual.
+      const preferencia = window.matchMedia('(prefers-color-scheme: dark)');
+      let storage: Storage | null = null;
+      try {
+        storage = window.localStorage;
+      } catch {
+        storage = null;
+      }
+      let botao: HTMLElement | null = null;
+      const refletirEstado = () => {
+        if (!botao) return;
+        const escuroAtivo = temaEfetivo(document, preferencia.matches) === 'escuro';
+        botao.setAttribute('aria-pressed', String(escuroAtivo));
+      };
+      preferencia.addEventListener('change', refletirEstado);
+      document.addEventListener('astro:page-load', () => {
+        botao = document.getElementById('alternar-tema');
+        if (!botao) return;
+        // RNF-01: sem JavaScript o botão permanece oculto — nada de controle morto
+        botao.removeAttribute('hidden');
+        refletirEstado();
+        botao.addEventListener('click', () => {
+          alternarTema(document, storage, preferencia.matches);
+          refletirEstado();
+        });
+      });
+    </script>
+  </body>
+</html>

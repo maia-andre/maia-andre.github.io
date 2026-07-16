@@ -1,0 +1,42 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { CATEGORIAS, dataISO, formatarData } from '../lib/conteudo';
+
+interface Props {
+  artigos: CollectionEntry<'artigos'>[];
+  mensagemVazia: string;
+  /** REQ-E09: variante linha do tempo (usada em /artigos/) */
+  linhaDoTempo?: boolean;
+}
+
+const { artigos, mensagemVazia, linhaDoTempo = false } = Astro.props;
+---
+
+{
+  artigos.length === 0 ? (
+    <p class="estado-vazio">{mensagemVazia}</p>
+  ) : (
+    <ol class:list={['lista-artigos', linhaDoTempo && 'lista-linha-tempo']}>
+      {artigos.map(({ id, data: artigo }) => (
+        <li class="item-artigo">
+          <p class="registro artigo-meta">
+            <time datetime={dataISO(artigo.data)}>{formatarData(artigo.data)}</time>
+            <span aria-hidden="true">·</span>
+            <a href={`/artigos/${artigo.categoria}/`}>{CATEGORIAS[artigo.categoria]}</a>
+          </p>
+          <h2 class="item-titulo">
+            <a href={`/artigos/${id}/`}>{artigo.titulo}</a>
+          </h2>
+          <p class="item-descricao">{artigo.descricao}</p>
+          <ul class="lista-tags registro" aria-label="Tags do artigo">
+            {artigo.tags.map((tag) => (
+              <li>
+                <a href={`/tags/${tag}/`}>#{tag}</a>
+              </li>
+            ))}
+          </ul>
+        </li>
+      ))}
+    </ol>
+  )
+}

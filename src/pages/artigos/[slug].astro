@@ -1,0 +1,72 @@
+---
+import { getCollection, render } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import {
+  CATEGORIAS,
+  dataISO,
+  ehPublicado,
+  formatarData,
+  temCapitular,
+} from '../../lib/conteudo';
+
+export async function getStaticPaths() {
+  const artigos = await getCollection('artigos');
+  // Slugs iguais aos das categorias colidiriam com /artigos/<categoria>/
+  const reservados = artigos.filter((artigo) => Object.hasOwn(CATEGORIAS, artigo.id));
+  if (reservados.length > 0) {
+    throw new Error(
+      `Slug de artigo reservado para categoria: ${reservados.map((a) => a.id).join(', ')}. Renomeie o arquivo.`,
+    );
+  }
+  return artigos
+    .filter((artigo) => ehPublicado(artigo.data, import.meta.env.PROD))
+    .map((artigo) => ({
+      params: { slug: artigo.id },
+      props: { artigo },
+    }));
+}
+
+const { artigo } = Astro.props;
+const { Content } = await render(artigo);
+const { titulo, descricao, data, atualizado, categoria, tags } = artigo.data;
+// REQ-E08/CE-E02: capitular só nas reflexões e só quando o texto abre com letra
+const capitular = categoria === 'reflexoes' && temCapitular(artigo.body ?? '');
+---
+
+<Base titulo={titulo} descricao={descricao}>
+  <article>
+    <header class="artigo-cabecalho">
+      <p class="registro artigo-meta">
+        <time datetime={dataISO(data)}>{formatarData(data)}</time>
+        <span aria-hidden="true">·</span>
+        <span>{CATEGORIAS[categoria]}</span>
+        {
+          atualizado && (
+            <>
+              <span aria-hidden="true">·</span>
+              <span>
+                atualizado em <time datetime={dataISO(atualizado)}>{formatarData(atualizado)}</time>
+              </span>
+            </>
+          )
+        }
+      </p>
+      <h1>{titulo}</h1>
+      <p class="artigo-descricao">{descricao}</p>
+    </header>
+    <div class:list={['prosa', capitular && 'prosa-capitular']}>
+      <Content />
+    </div>
+    <footer class="artigo-rodape">
+      <ul class="lista-tags registro" aria-label="Tags do artigo">
+        {
+          tags.map((tag) => (
+            <li>
+              <a href={`/tags/${tag}/`}>#{tag}</a>
+            </li>
+          ))
+        }
+      </ul>
+    </footer>
+  </article>
+</Base>

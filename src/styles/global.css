@@ -1,0 +1,711 @@
+/* Identidade: "ficha de registro" — arquivo vivo com camada de metadados em mono.
+   Tokens em custom properties: o tema escuro (INC-08) troca apenas os valores. */
+
+/* Tipografia própria (REQ-E01): Lora para leitura e títulos, IBM Plex Mono para
+   a camada de registro — self-hosted em /fontes/, subset latino. */
+@font-face {
+  font-family: 'Lora';
+  src: url('/fontes/lora-var.woff2') format('woff2-variations');
+  font-weight: 400 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Lora';
+  src: url('/fontes/lora-var-italico.woff2') format('woff2-variations');
+  font-weight: 400 700;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'IBM Plex Mono';
+  src: url('/fontes/plex-mono-400.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'IBM Plex Mono';
+  src: url('/fontes/plex-mono-600.woff2') format('woff2');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Fallbacks métricos (REQ-E03, CE-E04): a fonte do sistema ocupa o mesmo espaço
+   que a fonte própria ocupará, e a troca do swap não desloca o layout.
+   Valores CALIBRADOS EMPIRICAMENTE no Chrome headless da auditoria (largura de
+   amostra pt-BR real, Lora ÷ face resolvida), com face itálica própria — o
+   itálico da Lora é mais estreito que o romano. Vertical: métricas capsize da
+   Lora/Plex divididas pelo size-adjust. Plataformas sem essas fontes locais
+   seguem para Georgia/monospace da pilha, sem override. */
+@font-face {
+  font-family: 'Lora Fallback';
+  src: local('Liberation Serif'), local('Times New Roman');
+  font-style: normal;
+  size-adjust: 117.3%;
+  ascent-override: 85.76%;
+  descent-override: 23.36%;
+  line-gap-override: 0%;
+}
+
+@font-face {
+  font-family: 'Lora Fallback';
+  src: local('Liberation Serif'), local('Times New Roman');
+  font-style: italic;
+  size-adjust: 113%;
+  ascent-override: 89.03%;
+  descent-override: 24.25%;
+  line-gap-override: 0%;
+}
+
+@font-face {
+  font-family: 'Lora Fallback';
+  src: local('Liberation Serif Bold'), local('Times New Roman Bold');
+  font-weight: 550 900;
+  font-style: normal;
+  size-adjust: 106%;
+  ascent-override: 94.91%;
+  descent-override: 25.85%;
+  line-gap-override: 0%;
+}
+
+@font-face {
+  font-family: 'IBM Plex Mono Fallback';
+  src: local('Liberation Mono'), local('Courier New');
+  size-adjust: 99.98%;
+  ascent-override: 102.52%;
+  descent-override: 27.49%;
+  line-gap-override: 0%;
+}
+
+:root {
+  --papel: #fbfbf9;
+  --tinta: #1c1e22;
+  --grafite: #62656d;
+  --carimbo: #2946be;
+  --linha: #e5e5e0;
+  --superficie: #f2f2ee;
+
+  --fonte-corpo: 'Lora', 'Lora Fallback', Georgia, serif;
+  --fonte-titulo: 'Lora', 'Lora Fallback', Georgia, serif;
+  --fonte-registro: 'IBM Plex Mono', 'IBM Plex Mono Fallback', ui-monospace, Menlo, monospace;
+
+  --medida: 44rem;
+  --espaco-pagina: clamp(1.25rem, 5vw, 2.5rem);
+}
+
+/* Tema escuro (REQ-14): escolha explícita vence; sem escolha, segue o sistema */
+:root[data-tema='escuro'] {
+  --papel: #17181c;
+  --tinta: #e6e6e2;
+  --grafite: #9a9da6;
+  --carimbo: #8fa3ff;
+  --linha: #2a2c33;
+  --superficie: #1f2127;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-tema='claro']) {
+    --papel: #17181c;
+    --tinta: #e6e6e2;
+    --grafite: #9a9da6;
+    --carimbo: #8fa3ff;
+    --linha: #2a2c33;
+    --superficie: #1f2127;
+  }
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  color-scheme: light;
+}
+
+:root[data-tema='escuro'] {
+  color-scheme: dark;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-tema='claro']) {
+    color-scheme: dark;
+  }
+}
+
+body {
+  margin: 0;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  background: var(--papel);
+  color: var(--tinta);
+  font-family: var(--fonte-corpo);
+  font-size: 1.0625rem;
+  line-height: 1.7;
+  -webkit-text-size-adjust: 100%;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--fonte-titulo);
+  font-weight: 650;
+  letter-spacing: -0.01em;
+  line-height: 1.2;
+  text-wrap: balance;
+  margin: 0 0 0.75em;
+}
+
+h1 {
+  font-size: clamp(1.75rem, 4.5vw, 2.5rem);
+}
+
+h2 {
+  font-size: clamp(1.25rem, 3vw, 1.5rem);
+}
+
+p {
+  margin: 0 0 1em;
+}
+
+a {
+  color: var(--carimbo);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.2em;
+}
+
+a:hover {
+  text-decoration-thickness: 2px;
+}
+
+:focus-visible {
+  outline: 2px solid var(--carimbo);
+  outline-offset: 2px;
+  border-radius: 1px;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Camada de registro: metadados em mono (datas, tags, versão, navegação) */
+.registro {
+  font-family: var(--fonte-registro);
+  font-size: 0.8125rem;
+  letter-spacing: 0.01em;
+  color: var(--grafite);
+}
+
+/* Estrutura da página */
+.pagina {
+  width: min(100% - 2 * var(--espaco-pagina), var(--medida));
+  margin-inline: auto;
+}
+
+.salto-conteudo {
+  position: absolute;
+  left: -999px;
+  top: 0;
+  background: var(--papel);
+  color: var(--carimbo);
+  padding: 0.5rem 1rem;
+  z-index: 10;
+}
+
+.salto-conteudo:focus {
+  left: 0;
+}
+
+.cabecalho {
+  border-bottom: 1px solid var(--linha);
+}
+
+.cabecalho-conteudo {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.5rem 1.5rem;
+  padding-block: 1.25rem;
+}
+
+.marca {
+  font-family: var(--fonte-titulo);
+  font-weight: 650;
+  letter-spacing: -0.01em;
+  font-size: 1.0625rem;
+  color: var(--tinta);
+  text-decoration: none;
+  margin-right: auto;
+}
+
+.marca:hover {
+  color: var(--carimbo);
+}
+
+.navegacao ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 1.125rem;
+}
+
+.navegacao a {
+  font-family: var(--fonte-registro);
+  font-size: 0.8125rem;
+  letter-spacing: 0.01em;
+  color: var(--grafite);
+  text-decoration: none;
+}
+
+.navegacao a:hover {
+  color: var(--carimbo);
+}
+
+.navegacao a[aria-current='page'] {
+  color: var(--carimbo);
+  text-decoration: underline;
+  text-underline-offset: 0.35em;
+}
+
+.botao-tema {
+  font-family: var(--fonte-registro);
+  font-size: 1rem;
+  line-height: 1;
+  color: var(--grafite);
+  background: none;
+  border: 1px solid var(--linha);
+  border-radius: 4px;
+  padding: 0.25rem 0.5rem;
+  cursor: pointer;
+}
+
+.botao-tema:hover {
+  color: var(--carimbo);
+  border-color: var(--carimbo);
+}
+
+/* Correção INC-14: o botão nasce [hidden] e é revelado pelo JS (RNF-01), mas
+   sob o roteador o unhide acontece após o primeiro paint — a caixa fica
+   reservada para a revelação não deslocar o cabeçalho (CLS 0). Invisível e
+   não-interativo enquanto oculto. */
+.botao-tema[hidden] {
+  display: inline-block;
+  visibility: hidden;
+}
+
+main {
+  flex: 1;
+  padding-block: clamp(2.5rem, 7vw, 4.5rem);
+}
+
+/* Rodapé-carimbo: a assinatura do site */
+.rodape {
+  border-top: 1px solid var(--linha);
+  padding-block: 2rem 2.5rem;
+}
+
+.rodape-mensagem {
+  font-style: italic;
+  color: var(--grafite);
+  max-width: 34rem;
+  margin: 0 0 1rem;
+}
+
+.rodape-registro {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 0.75rem;
+  margin: 0;
+}
+
+.rodape-registro a {
+  color: inherit;
+}
+
+.rodape-registro a:hover {
+  color: var(--carimbo);
+}
+
+/* Home */
+.apresentacao {
+  margin-bottom: 3.5rem;
+}
+
+.apresentacao p:first-of-type {
+  font-size: 1.1875rem;
+  color: var(--grafite);
+  font-style: italic;
+}
+
+.secao-home {
+  margin-top: 3.5rem;
+}
+
+.secao-cabecalho {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.25rem 1rem;
+  margin-bottom: 0.75rem;
+}
+
+.secao-cabecalho h2 {
+  margin: 0;
+}
+
+.secao-cabecalho a {
+  color: var(--grafite);
+  text-decoration: none;
+}
+
+.secao-cabecalho a:hover {
+  color: var(--carimbo);
+}
+
+/* Listagem de artigos */
+.filtro-categorias {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 1.25rem;
+  margin-bottom: 2.5rem;
+}
+
+.filtro-categorias a {
+  color: var(--grafite);
+  text-decoration: none;
+}
+
+.filtro-categorias a:hover {
+  color: var(--carimbo);
+}
+
+.lista-artigos {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.item-artigo {
+  padding-block: 1.75rem;
+  border-top: 1px solid var(--linha);
+}
+
+.item-artigo:last-child {
+  border-bottom: 1px solid var(--linha);
+}
+
+.item-titulo {
+  font-size: 1.25rem;
+  margin: 0.25rem 0;
+}
+
+.item-titulo a {
+  color: var(--tinta);
+  text-decoration: none;
+}
+
+.item-titulo a:hover {
+  color: var(--carimbo);
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 0.2em;
+}
+
+.item-descricao {
+  color: var(--grafite);
+  margin: 0 0 0.5rem;
+}
+
+.estado-vazio {
+  color: var(--grafite);
+  font-style: italic;
+  padding-block: 1.5rem;
+  border-top: 1px solid var(--linha);
+}
+
+/* Linha do tempo (REQ-E09): /artigos/ como diário — linha vertical contínua e
+   um marcador por item; a linha substitui as réguas horizontais da variante. */
+.lista-linha-tempo {
+  position: relative;
+  padding-left: 1.625rem;
+}
+
+.lista-linha-tempo::before {
+  content: '';
+  position: absolute;
+  top: 0.75rem;
+  bottom: 0.75rem;
+  left: 4px;
+  width: 2px;
+  background: var(--linha);
+}
+
+.lista-linha-tempo > .item-artigo {
+  position: relative;
+  border-top: none;
+}
+
+.lista-linha-tempo > .item-artigo:last-child {
+  border-bottom: none;
+}
+
+.lista-linha-tempo > .item-artigo::before {
+  content: '';
+  position: absolute;
+  left: -1.625rem;
+  top: 2.1rem;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--carimbo);
+  border: 2px solid var(--papel);
+}
+
+/* Busca */
+.form-busca {
+  margin-bottom: 2rem;
+}
+
+.form-busca label {
+  display: block;
+  font-family: var(--fonte-registro);
+  font-size: 0.8125rem;
+  color: var(--grafite);
+  margin-bottom: 0.5rem;
+}
+
+.form-busca input {
+  width: 100%;
+  font-family: var(--fonte-corpo);
+  font-size: 1.0625rem;
+  color: var(--tinta);
+  background: var(--papel);
+  border: 1px solid var(--linha);
+  border-radius: 4px;
+  padding: 0.625rem 0.875rem;
+}
+
+.form-busca input:focus-visible {
+  outline: 2px solid var(--carimbo);
+  outline-offset: 0;
+  border-color: var(--carimbo);
+}
+
+/* Tags */
+.nuvem-tags {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 1.5rem;
+  font-size: 0.9375rem;
+}
+
+.nuvem-tags a {
+  color: var(--grafite);
+  text-decoration: none;
+}
+
+.nuvem-tags a:hover {
+  color: var(--carimbo);
+  text-decoration: underline;
+}
+
+/* Projetos */
+.tecnologia + .tecnologia::before {
+  content: '· ';
+  color: var(--grafite);
+}
+
+/* Cards de projetos (REQ-E07): mesma informação de sempre, com contorno sutil.
+   Grade responsiva: 1 coluna no celular, 2 a partir de ~40rem. */
+.grade-projetos {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+}
+
+@media (min-width: 40rem) {
+  .grade-projetos {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.cartao-projeto {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--linha);
+  border-radius: 6px;
+  background: var(--superficie);
+  padding: 1.25rem 1.25rem 1rem;
+}
+
+.cartao-projeto:hover {
+  border-color: var(--carimbo);
+}
+
+.cartao-projeto .item-titulo {
+  margin-top: 0.375rem;
+}
+
+.cartao-projeto .item-descricao {
+  flex: 1;
+}
+
+/* Letra capitular das reflexões (REQ-E08, RN-E03): efeito 100% CSS sobre o
+   primeiro parágrafo — o Markdown e o texto lido por leitores de tela não
+   mudam. A classe só é aplicada quando o texto abre com letra (CE-E02). */
+.prosa-capitular > p:first-of-type::first-letter {
+  float: left;
+  font-size: 3.1em;
+  line-height: 0.85;
+  font-weight: 650;
+  color: var(--carimbo);
+  padding: 0.04em 0.12em 0 0;
+}
+
+.capa-projeto {
+  border: 1px solid var(--linha);
+  border-radius: 4px;
+  margin-bottom: 2rem;
+}
+
+/* Frame do Matrix (REQ-E04/E05/E06): um tick real da simulação como hero.
+   Cores só por tokens de tema; a fonte escala com a página para as 68 colunas
+   caberem de 320px ao desktop sem scroll horizontal (CE-E03). */
+.frame-matrix {
+  margin: 0 0 2.5rem;
+}
+
+.frame-matrix pre {
+  font-family: var(--fonte-registro);
+  font-size: min(0.8125rem, calc((100vw - 2 * var(--espaco-pagina) - 2.5rem) / 41));
+  line-height: 1.3;
+  color: var(--carimbo);
+  background: var(--superficie);
+  border: 1px solid var(--linha);
+  border-radius: 4px;
+  padding: 1rem 1.25rem;
+  overflow: hidden;
+  margin: 0 0 0.5rem;
+}
+
+.frame-matrix figcaption {
+  color: var(--grafite);
+}
+
+.links-projeto {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 1.25rem;
+  margin-top: 2rem;
+}
+
+/* Artigo: a "ficha de registro" do conteúdo */
+.artigo-cabecalho {
+  margin-bottom: 2.5rem;
+}
+
+.artigo-meta {
+  margin: 0 0 0.75rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 0.5rem;
+}
+
+.artigo-descricao {
+  color: var(--grafite);
+  font-size: 1.125rem;
+  margin: 0;
+}
+
+.prosa h2 {
+  margin-top: 2.25em;
+}
+
+.prosa blockquote {
+  margin: 1.5em 0;
+  padding-left: 1.25rem;
+  border-left: 2px solid var(--carimbo);
+  color: var(--grafite);
+}
+
+.prosa pre {
+  font-family: var(--fonte-registro);
+  font-size: 0.875rem;
+  line-height: 1.6;
+  background: var(--superficie);
+  border: 1px solid var(--linha);
+  border-radius: 4px;
+  padding: 1rem 1.25rem;
+  overflow-x: auto;
+}
+
+.prosa code {
+  font-family: var(--fonte-registro);
+  font-size: 0.9em;
+  background: var(--superficie);
+  padding: 0.1em 0.35em;
+  border-radius: 3px;
+}
+
+.prosa pre code {
+  background: none;
+  padding: 0;
+}
+
+.artigo-rodape {
+  margin-top: 3rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--linha);
+}
+
+.lista-tags {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 1rem;
+}
+
+.lista-tags a {
+  color: var(--grafite);
+  text-decoration: none;
+}
+
+.lista-tags a:hover {
+  color: var(--carimbo);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  a {
+    transition: color 120ms ease, text-decoration-thickness 120ms ease;
+  }
+}
+
+/* RNF-E03: sob movimento reduzido, as View Transitions (REQ-E10) não animam —
+   a troca de página é instantânea. */
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none !important;
+  }
+}

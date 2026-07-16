@@ -1,0 +1,20 @@
+---
+import { getCollection } from 'astro:content';
+import ListaArtigos from '../../components/ListaArtigos.astro';
+import Base from '../../layouts/Base.astro';
+import { CATEGORIAS, prepararListagem } from '../../lib/conteudo';
+
+const artigos = prepararListagem(await getCollection('artigos'), import.meta.env.PROD);
+---
+
+<Base titulo="Artigos" descricao="Todos os artigos: computação, gestão pública e reflexões.">
+  <h1>Artigos</h1>
+  <nav class="filtro-categorias registro" aria-label="Categorias">
+    {
+      Object.entries(CATEGORIAS).map(([slug, nome]) => (
+        <a href={`/artigos/${slug}/`}>{nome}</a>
+      ))
+    }
+  </nav>
+  <ListaArtigos artigos={artigos} mensagemVazia="Nenhum artigo publicado ainda." linhaDoTempo />
+</Base>

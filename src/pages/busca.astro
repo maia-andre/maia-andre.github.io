@@ -1,0 +1,98 @@
+---
+import Base from '../layouts/Base.astro';
+---
+
+<Base titulo="Busca" descricao="Busque artigos e projetos por palavra, tag, categoria ou tecnologia.">
+  <h1>Busca</h1>
+  <form class="form-busca" role="search" onsubmit="return false">
+    <label for="campo-busca">Buscar no arquivo</label>
+    <input
+      type="search"
+      id="campo-busca"
+      name="q"
+      placeholder="palavra, tag ou categoria…"
+      autocomplete="off"
+    />
+  </form>
+  <noscript>
+    <p class="estado-vazio">
+      A busca requer JavaScript. Sem ele, você ainda pode navegar por
+      <a href="/artigos/">artigos</a>, <a href="/projetos/">projetos</a> e
+      <a href="/tags/">tags</a>.
+    </p>
+  </noscript>
+  <div id="resultados" aria-live="polite"></div>
+</Base>
+
+<script>
+  import { criarBusca, type ItemDeBusca } from '../lib/busca';
+
+  // REQ-13 sob o roteador (REQ-E10): o campo é recriado a cada troca de
+  // página — religa em astro:page-load. O índice é baixado uma vez por
+  // sessão (e a falha permite nova tentativa na próxima visita).
+  let indicePromise: Promise<ItemDeBusca[]> | null = null;
+  const carregarIndice = () => {
+    indicePromise ??= fetch('/busca-indice.json').then((r) => r.json());
+    return indicePromise;
+  };
+
+  document.addEventListener('astro:page-load', async () => {
+    const campo = document.getElementById('campo-busca') as HTMLInputElement | null;
+    const resultados = document.getElementById('resultados') as HTMLDivElement | null;
+    if (!campo || !resultados) return;
+
+    function mensagem(texto: string) {
+      resultados!.replaceChildren();
+      const p = document.createElement('p');
+      p.className = 'estado-vazio';
+      p.textContent = texto;
+      resultados!.appendChild(p);
+    }
+
+    try {
+      const indice = await carregarIndice();
+      const buscar = criarBusca(indice);
+
+      function renderizar() {
+        const termo = campo!.value;
+        if (!termo.trim()) {
+          resultados!.replaceChildren();
+          return;
+        }
+        const itens = buscar(termo);
+        if (itens.length === 0) {
+          mensagem('Nenhum resultado para essa busca.');
+          return;
+        }
+        const lista = document.createElement('ol');
+        lista.className = 'lista-artigos';
+        for (const item of itens) {
+          const li = document.createElement('li');
+          li.className = 'item-artigo';
+          const meta = document.createElement('p');
+          meta.className = 'registro artigo-meta';
+          meta.textContent = item.url.startsWith('/projetos/')
+            ? 'projeto'
+            : `artigo${item.categoria ? ` · ${item.categoria}` : ''}`;
+          const titulo = document.createElement('h2');
+          titulo.className = 'item-titulo';
+          const link = document.createElement('a');
+          link.href = item.url;
+          link.textContent = item.titulo;
+          titulo.appendChild(link);
+          const descricao = document.createElement('p');
+          descricao.className = 'item-descricao';
+          descricao.textContent = item.descricao;
+          li.append(meta, titulo, descricao);
+          lista.appendChild(li);
+        }
+        resultados!.replaceChildren(lista);
+      }
+
+      campo.addEventListener('input', renderizar);
+    } catch {
+      indicePromise = null;
+      mensagem('Não foi possível carregar o índice de busca. Recarregue a página.');
+    }
+  });
+</script>

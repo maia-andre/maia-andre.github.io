@@ -1,0 +1,30 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import { colecionarTags } from '../../lib/conteudo';
+
+const tags = colecionarTags(
+  await getCollection('artigos'),
+  await getCollection('projetos'),
+  import.meta.env.PROD,
+);
+---
+
+<Base titulo="Tags" descricao="Todo o conteúdo do arquivo, organizado por tags.">
+  <h1>Tags</h1>
+  {
+    tags.size === 0 ? (
+      <p class="estado-vazio">Nenhuma tag em uso ainda.</p>
+    ) : (
+      <ul class="nuvem-tags registro">
+        {[...tags.entries()].map(([tag, { artigos, projetos }]) => (
+          <li>
+            <a href={`/tags/${tag}/`}>
+              #{tag} ({artigos.length + projetos.length})
+            </a>
+          </li>
+        ))}
+      </ul>
+    )
+  }
+</Base>
