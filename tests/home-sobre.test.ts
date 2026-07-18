@@ -61,9 +61,10 @@ describe('REQ-02 — Home', () => {
     const main = parsePage('index.html').querySelector('main')!;
     expect(main.text).toContain('Artigos recentes');
     const hrefs = main.querySelectorAll('a').map((a) => a.getAttribute('href'));
-    // com 6 publicados, a Home mostra os 5 mais recentes (RN-04) — o mais
-    // antigo (construindo-este-site) sai; o recém-publicado tem que entrar
-    expect(hrefs).toContain('/artigos/o-velorio-que-nao-houve/');
+    // com 10 publicados, a Home mostra os 5 mais recentes (RN-04) — o
+    // recém-publicado entra e O velório (agora o sexto) sai da vitrine
+    expect(hrefs).toContain('/artigos/a-pergunta-errada/');
+    expect(hrefs).not.toContain('/artigos/o-velorio-que-nao-houve/');
     expect(hrefs).not.toContain('/artigos/construindo-este-site/');
     expect(hrefs).toContain('/artigos/');
   });

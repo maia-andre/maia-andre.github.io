@@ -47,7 +47,7 @@ describe('v1.0.0 — os 4 projetos reais', () => {
   });
 });
 
-describe('conteúdo real — nove artigos publicados', () => {
+describe('conteúdo real — dez artigos publicados', () => {
   it('o segundo artigo (derivado do Matrix) existe com categoria reflexoes', () => {
     expect(pageExists('artigos/a-regua-que-desbota/index.html')).toBe(true);
     const main = parsePage('artigos/a-regua-que-desbota/index.html').querySelector('main')!;
@@ -117,22 +117,30 @@ describe('conteúdo real — nove artigos publicados', () => {
     expect(main.text).toContain('Reflexões');
   });
 
-  it('a listagem mostra os 9 publicados na ordem da RN-02 (data desc; empate → alfabético)', () => {
+  it('o décimo artigo (crônica) existe com categoria reflexoes', () => {
+    expect(pageExists('artigos/a-pergunta-errada/index.html')).toBe(true);
+    const main = parsePage('artigos/a-pergunta-errada/index.html').querySelector('main')!;
+    expect(main.querySelector('h1')?.text).toContain('pergunta');
+    expect(main.text).toContain('Reflexões');
+  });
+
+  it('a listagem mostra os 10 publicados na ordem da RN-02 (data desc; empate → alfabético)', () => {
     const titulos = parsePage('artigos/index.html')
       .querySelectorAll('main .item-titulo a')
       .map((a) => a.text.trim());
-    expect(titulos).toHaveLength(9);
-    // 2026-07-16 sem empate; empate em 2026-07-15 (A memória / O menino) e em
-    // 2026-07-14 (A cidade / O velório): desempate alfabético pt-BR
-    expect(titulos[0]).toMatch(/^A resposta/);
-    expect(titulos[1]).toMatch(/^A memória/);
-    expect(titulos[2]).toMatch(/^O menino/);
-    expect(titulos[3]).toMatch(/^A cidade/);
-    expect(titulos[4]).toMatch(/^O velório/);
-    expect(titulos[5]).toMatch(/^O jardineiro/);
-    expect(titulos[6]).toMatch(/^O silêncio/);
-    expect(titulos[7]).toMatch(/^A régua/);
-    expect(titulos[8]).toMatch(/^Construindo/);
+    expect(titulos).toHaveLength(10);
+    // 2026-07-17 e 2026-07-16 sem empate; empate em 2026-07-15 (A memória /
+    // O menino) e em 2026-07-14 (A cidade / O velório): desempate alfabético pt-BR
+    expect(titulos[0]).toMatch(/^A pergunta/);
+    expect(titulos[1]).toMatch(/^A resposta/);
+    expect(titulos[2]).toMatch(/^A memória/);
+    expect(titulos[3]).toMatch(/^O menino/);
+    expect(titulos[4]).toMatch(/^A cidade/);
+    expect(titulos[5]).toMatch(/^O velório/);
+    expect(titulos[6]).toMatch(/^O jardineiro/);
+    expect(titulos[7]).toMatch(/^O silêncio/);
+    expect(titulos[8]).toMatch(/^A régua/);
+    expect(titulos[9]).toMatch(/^Construindo/);
   });
 });
 
