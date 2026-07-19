@@ -47,7 +47,7 @@ describe('v1.0.0 — os 4 projetos reais', () => {
   });
 });
 
-describe('conteúdo real — onze artigos publicados', () => {
+describe('conteúdo real — doze artigos publicados', () => {
   it('o segundo artigo (derivado do Matrix) existe com categoria reflexoes', () => {
     expect(pageExists('artigos/a-regua-que-desbota/index.html')).toBe(true);
     const main = parsePage('artigos/a-regua-que-desbota/index.html').querySelector('main')!;
@@ -133,24 +133,32 @@ describe('conteúdo real — onze artigos publicados', () => {
     expect(main.text).toContain('Reflexões');
   });
 
-  it('a listagem mostra os 11 publicados na ordem da RN-02 (data desc; empate → alfabético)', () => {
+  it('o décimo segundo artigo (ensaio) existe com categoria reflexoes', () => {
+    expect(pageExists('artigos/a-nevoa-nao-decide/index.html')).toBe(true);
+    const main = parsePage('artigos/a-nevoa-nao-decide/index.html').querySelector('main')!;
+    expect(main.querySelector('h1')?.text).toContain('névoa');
+    expect(main.text).toContain('Reflexões');
+  });
+
+  it('a listagem mostra os 12 publicados na ordem da RN-02 (data desc; empate → alfabético)', () => {
     const titulos = parsePage('artigos/index.html')
       .querySelectorAll('main .item-titulo a')
       .map((a) => a.text.trim());
-    expect(titulos).toHaveLength(11);
-    // 2026-07-18 a 2026-07-16 sem empate; empate em 2026-07-15 (A memória /
+    expect(titulos).toHaveLength(12);
+    // 2026-07-19 a 2026-07-16 sem empate; empate em 2026-07-15 (A memória /
     // O menino) e em 2026-07-14 (A cidade / O velório): desempate alfabético pt-BR
-    expect(titulos[0]).toMatch(/^Carta/);
-    expect(titulos[1]).toMatch(/^A pergunta/);
-    expect(titulos[2]).toMatch(/^A resposta/);
-    expect(titulos[3]).toMatch(/^A memória/);
-    expect(titulos[4]).toMatch(/^O menino/);
-    expect(titulos[5]).toMatch(/^A cidade/);
-    expect(titulos[6]).toMatch(/^O velório/);
-    expect(titulos[7]).toMatch(/^O jardineiro/);
-    expect(titulos[8]).toMatch(/^O silêncio/);
-    expect(titulos[9]).toMatch(/^A régua/);
-    expect(titulos[10]).toMatch(/^Construindo/);
+    expect(titulos[0]).toMatch(/^A névoa/);
+    expect(titulos[1]).toMatch(/^Carta/);
+    expect(titulos[2]).toMatch(/^A pergunta/);
+    expect(titulos[3]).toMatch(/^A resposta/);
+    expect(titulos[4]).toMatch(/^A memória/);
+    expect(titulos[5]).toMatch(/^O menino/);
+    expect(titulos[6]).toMatch(/^A cidade/);
+    expect(titulos[7]).toMatch(/^O velório/);
+    expect(titulos[8]).toMatch(/^O jardineiro/);
+    expect(titulos[9]).toMatch(/^O silêncio/);
+    expect(titulos[10]).toMatch(/^A régua/);
+    expect(titulos[11]).toMatch(/^Construindo/);
   });
 });
 
