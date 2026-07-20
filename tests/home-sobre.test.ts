@@ -61,12 +61,15 @@ describe('REQ-02 — Home', () => {
     const main = parsePage('index.html').querySelector('main')!;
     expect(main.text).toContain('Artigos recentes');
     const hrefs = main.querySelectorAll('a').map((a) => a.getAttribute('href'));
-    // com 14 publicados, a Home mostra os 5 mais recentes (RN-04) — Todo software
-    // (2026-07-20) entra no topo e A resposta (agora a sexta) sai da vitrine
+    // com 15 publicados, a Home mostra os 5 mais recentes (RN-04) — Organizar
+    // (2026-07-20, empate com Todo software) entra e A pergunta (agora a sexta)
+    // sai da vitrine
+    expect(hrefs).toContain(
+      '/artigos/organizar-um-almoxarifado-e-organizar-software-sao-o-mesmo-problema/',
+    );
     expect(hrefs).toContain('/artigos/todo-software-conta-uma-historia/');
     expect(hrefs).toContain('/artigos/a-nevoa-nao-decide/');
-    expect(hrefs).toContain('/artigos/os-canteiros-que-espalharam-sementes/');
-    expect(hrefs).not.toContain('/artigos/a-resposta-que-fiquei-devendo/');
+    expect(hrefs).not.toContain('/artigos/a-pergunta-errada/');
     expect(hrefs).not.toContain('/artigos/construindo-este-site/');
     expect(hrefs).toContain('/artigos/');
   });
