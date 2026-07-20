@@ -61,12 +61,12 @@ describe('REQ-02 — Home', () => {
     const main = parsePage('index.html').querySelector('main')!;
     expect(main.text).toContain('Artigos recentes');
     const hrefs = main.querySelectorAll('a').map((a) => a.getAttribute('href'));
-    // com 13 publicados, a Home mostra os 5 mais recentes (RN-04) — Os canteiros
-    // (2026-07-19, empate com A névoa) entra e A memória (agora a sexta) sai da vitrine
+    // com 14 publicados, a Home mostra os 5 mais recentes (RN-04) — Todo software
+    // (2026-07-20) entra no topo e A resposta (agora a sexta) sai da vitrine
+    expect(hrefs).toContain('/artigos/todo-software-conta-uma-historia/');
     expect(hrefs).toContain('/artigos/a-nevoa-nao-decide/');
     expect(hrefs).toContain('/artigos/os-canteiros-que-espalharam-sementes/');
-    expect(hrefs).toContain('/artigos/carta-ao-menino-de-seis-anos/');
-    expect(hrefs).not.toContain('/artigos/a-memoria-que-nao-desbota/');
+    expect(hrefs).not.toContain('/artigos/a-resposta-que-fiquei-devendo/');
     expect(hrefs).not.toContain('/artigos/construindo-este-site/');
     expect(hrefs).toContain('/artigos/');
   });
