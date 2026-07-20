@@ -80,10 +80,14 @@ describe('REQ-05 — página de listagem /artigos/', () => {
     expect(main.text).toContain('Construindo este site');
   });
 
-  it('categoria sem artigos mostra estado vazio, sem vazar artigos de outras', () => {
+  // Desde a estreia de gestao-publica (2026-07-20) as três categorias têm
+  // artigo publicado — o estado vazio ("nenhum artigo") não tem mais categoria
+  // real que o exercite; o que segue coberto é o não-vazamento entre categorias.
+  it('a categoria estreante lista o seu artigo, sem vazar artigos de outras', () => {
     const main = parsePage('artigos/gestao-publica/index.html').querySelector('main')!;
+    expect(main.text).toContain('Organizar um almoxarifado');
     expect(main.text).not.toContain('Construindo este site');
-    expect(main.text).toMatch(/nenhum artigo/i);
+    expect(main.text).not.toContain('A névoa não decide');
   });
 });
 
