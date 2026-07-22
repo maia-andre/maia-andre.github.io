@@ -47,7 +47,7 @@ describe('v1.0.0 — os 4 projetos reais', () => {
   });
 });
 
-describe('conteúdo real — quinze artigos publicados', () => {
+describe('conteúdo real — dezesseis artigos publicados', () => {
   it('o segundo artigo (derivado do Matrix) existe com categoria reflexoes', () => {
     expect(pageExists('artigos/a-regua-que-desbota/index.html')).toBe(true);
     const main = parsePage('artigos/a-regua-que-desbota/index.html').querySelector('main')!;
@@ -178,29 +178,43 @@ describe('conteúdo real — quinze artigos publicados', () => {
     expect(main.text).toContain('antes de trabalhar com computadores, trabalhamos com informação');
   });
 
-  it('a listagem mostra os 15 publicados na ordem da RN-02 (data desc; empate → alfabético)', () => {
+  it('o décimo sexto artigo (requisito vs problema) existe com categoria computacao', () => {
+    expect(
+      pageExists('artigos/quando-o-requisito-esta-certo-e-o-problema-continua-errado/index.html'),
+    ).toBe(true);
+    const main = parsePage(
+      'artigos/quando-o-requisito-esta-certo-e-o-problema-continua-errado/index.html',
+    ).querySelector('main')!;
+    expect(main.querySelector('h1')?.text).toContain('requisito');
+    expect(main.text).toContain('Computação');
+    // a distinção que sustenta o artigo, por extenso
+    expect(main.text).toContain('Requisito é o que foi pedido. Problema é o que dói');
+  });
+
+  it('a listagem mostra os 16 publicados na ordem da RN-02 (data desc; empate → alfabético)', () => {
     const titulos = parsePage('artigos/index.html')
       .querySelectorAll('main .item-titulo a')
       .map((a) => a.text.trim());
-    expect(titulos).toHaveLength(15);
-    // empate em 2026-07-20 (Organizar / Todo software), em 2026-07-19 (A névoa /
-    // Os canteiros), em 2026-07-15 (A memória / O menino) e em 2026-07-14
-    // (A cidade / O velório): desempate alfabético pt-BR
-    expect(titulos[0]).toMatch(/^Organizar/);
-    expect(titulos[1]).toMatch(/^Todo software/);
-    expect(titulos[2]).toMatch(/^A névoa/);
-    expect(titulos[3]).toMatch(/^Os canteiros/);
-    expect(titulos[4]).toMatch(/^Carta/);
-    expect(titulos[5]).toMatch(/^A pergunta/);
-    expect(titulos[6]).toMatch(/^A resposta/);
-    expect(titulos[7]).toMatch(/^A memória/);
-    expect(titulos[8]).toMatch(/^O menino/);
-    expect(titulos[9]).toMatch(/^A cidade/);
-    expect(titulos[10]).toMatch(/^O velório/);
-    expect(titulos[11]).toMatch(/^O jardineiro/);
-    expect(titulos[12]).toMatch(/^O silêncio/);
-    expect(titulos[13]).toMatch(/^A régua/);
-    expect(titulos[14]).toMatch(/^Construindo/);
+    expect(titulos).toHaveLength(16);
+    // 2026-07-21 sem empate; empate em 2026-07-20 (Organizar / Todo software),
+    // em 2026-07-19 (A névoa / Os canteiros), em 2026-07-15 (A memória /
+    // O menino) e em 2026-07-14 (A cidade / O velório): desempate alfabético pt-BR
+    expect(titulos[0]).toMatch(/^Quando o requisito/);
+    expect(titulos[1]).toMatch(/^Organizar/);
+    expect(titulos[2]).toMatch(/^Todo software/);
+    expect(titulos[3]).toMatch(/^A névoa/);
+    expect(titulos[4]).toMatch(/^Os canteiros/);
+    expect(titulos[5]).toMatch(/^Carta/);
+    expect(titulos[6]).toMatch(/^A pergunta/);
+    expect(titulos[7]).toMatch(/^A resposta/);
+    expect(titulos[8]).toMatch(/^A memória/);
+    expect(titulos[9]).toMatch(/^O menino/);
+    expect(titulos[10]).toMatch(/^A cidade/);
+    expect(titulos[11]).toMatch(/^O velório/);
+    expect(titulos[12]).toMatch(/^O jardineiro/);
+    expect(titulos[13]).toMatch(/^O silêncio/);
+    expect(titulos[14]).toMatch(/^A régua/);
+    expect(titulos[15]).toMatch(/^Construindo/);
   });
 });
 
