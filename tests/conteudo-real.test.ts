@@ -47,7 +47,7 @@ describe('v1.0.0 — os 4 projetos reais', () => {
   });
 });
 
-describe('conteúdo real — dezessete artigos publicados', () => {
+describe('conteúdo real — dezoito artigos publicados', () => {
   it('o segundo artigo (derivado do Matrix) existe com categoria reflexoes', () => {
     expect(pageExists('artigos/a-regua-que-desbota/index.html')).toBe(true);
     const main = parsePage('artigos/a-regua-que-desbota/index.html').querySelector('main')!;
@@ -206,32 +206,42 @@ describe('conteúdo real — dezessete artigos publicados', () => {
     );
   });
 
-  it('a listagem mostra os 17 publicados na ordem da RN-02 (data desc; empate → alfabético)', () => {
+  it('o décimo oitavo artigo (a certidão da névoa) existe com categoria reflexoes', () => {
+    expect(pageExists('artigos/para-sair-abra-aqui/index.html')).toBe(true);
+    const main = parsePage('artigos/para-sair-abra-aqui/index.html').querySelector('main')!;
+    expect(main.querySelector('h1')?.text).toContain('abra aqui');
+    expect(main.text).toContain('Reflexões');
+    // a frase-âncora da peça, por extenso
+    expect(main.text).toContain('Eu não queria desaparecer. Eu queria ser achado');
+  });
+
+  it('a listagem mostra os 18 publicados na ordem da RN-02 (data desc; empate → alfabético)', () => {
     const titulos = parsePage('artigos/index.html')
       .querySelectorAll('main .item-titulo a')
       .map((a) => a.text.trim());
-    expect(titulos).toHaveLength(17);
-    // 2026-07-24 e 2026-07-21 sem empate; empate em 2026-07-20 (Organizar /
-    // Todo software), em 2026-07-19 (A névoa / Os canteiros), em 2026-07-15
-    // (A memória / O menino) e em 2026-07-14 (A cidade / O velório):
-    // desempate alfabético pt-BR
+    expect(titulos).toHaveLength(18);
+    // empate em 2026-07-24 (Do outro lado / Para sair), em 2026-07-20
+    // (Organizar / Todo software), em 2026-07-19 (A névoa / Os canteiros),
+    // em 2026-07-15 (A memória / O menino) e em 2026-07-14 (A cidade /
+    // O velório): desempate alfabético pt-BR; 2026-07-21 sem empate
     expect(titulos[0]).toMatch(/^Do outro lado/);
-    expect(titulos[1]).toMatch(/^Quando o requisito/);
-    expect(titulos[2]).toMatch(/^Organizar/);
-    expect(titulos[3]).toMatch(/^Todo software/);
-    expect(titulos[4]).toMatch(/^A névoa/);
-    expect(titulos[5]).toMatch(/^Os canteiros/);
-    expect(titulos[6]).toMatch(/^Carta/);
-    expect(titulos[7]).toMatch(/^A pergunta/);
-    expect(titulos[8]).toMatch(/^A resposta/);
-    expect(titulos[9]).toMatch(/^A memória/);
-    expect(titulos[10]).toMatch(/^O menino/);
-    expect(titulos[11]).toMatch(/^A cidade/);
-    expect(titulos[12]).toMatch(/^O velório/);
-    expect(titulos[13]).toMatch(/^O jardineiro/);
-    expect(titulos[14]).toMatch(/^O silêncio/);
-    expect(titulos[15]).toMatch(/^A régua/);
-    expect(titulos[16]).toMatch(/^Construindo/);
+    expect(titulos[1]).toMatch(/^Para sair/);
+    expect(titulos[2]).toMatch(/^Quando o requisito/);
+    expect(titulos[3]).toMatch(/^Organizar/);
+    expect(titulos[4]).toMatch(/^Todo software/);
+    expect(titulos[5]).toMatch(/^A névoa/);
+    expect(titulos[6]).toMatch(/^Os canteiros/);
+    expect(titulos[7]).toMatch(/^Carta/);
+    expect(titulos[8]).toMatch(/^A pergunta/);
+    expect(titulos[9]).toMatch(/^A resposta/);
+    expect(titulos[10]).toMatch(/^A memória/);
+    expect(titulos[11]).toMatch(/^O menino/);
+    expect(titulos[12]).toMatch(/^A cidade/);
+    expect(titulos[13]).toMatch(/^O velório/);
+    expect(titulos[14]).toMatch(/^O jardineiro/);
+    expect(titulos[15]).toMatch(/^O silêncio/);
+    expect(titulos[16]).toMatch(/^A régua/);
+    expect(titulos[17]).toMatch(/^Construindo/);
   });
 });
 
