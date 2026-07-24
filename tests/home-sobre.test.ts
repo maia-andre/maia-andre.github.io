@@ -61,10 +61,11 @@ describe('REQ-02 — Home', () => {
     const main = parsePage('index.html').querySelector('main')!;
     expect(main.text).toContain('Artigos recentes');
     const hrefs = main.querySelectorAll('a').map((a) => a.getAttribute('href'));
-    // com 17 publicados, a Home mostra os 5 mais recentes (RN-04) — Do outro
-    // lado do vidro (2026-07-24, sem empate) entra no topo e Os canteiros
-    // (agora o sexto) sai da vitrine
+    // com 18 publicados, a Home mostra os 5 mais recentes (RN-04) — Para
+    // sair, abra aqui (2026-07-24, empate com Do outro lado; desempate
+    // alfabético) entra e A névoa (agora a sexta) sai da vitrine
     expect(hrefs).toContain('/artigos/do-outro-lado-do-vidro/');
+    expect(hrefs).toContain('/artigos/para-sair-abra-aqui/');
     expect(hrefs).toContain(
       '/artigos/quando-o-requisito-esta-certo-e-o-problema-continua-errado/',
     );
@@ -72,8 +73,7 @@ describe('REQ-02 — Home', () => {
       '/artigos/organizar-um-almoxarifado-e-organizar-software-sao-o-mesmo-problema/',
     );
     expect(hrefs).toContain('/artigos/todo-software-conta-uma-historia/');
-    expect(hrefs).toContain('/artigos/a-nevoa-nao-decide/');
-    expect(hrefs).not.toContain('/artigos/os-canteiros-que-espalharam-sementes/');
+    expect(hrefs).not.toContain('/artigos/a-nevoa-nao-decide/');
     expect(hrefs).not.toContain('/artigos/construindo-este-site/');
     expect(hrefs).toContain('/artigos/');
   });
