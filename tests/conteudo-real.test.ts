@@ -47,7 +47,7 @@ describe('v1.0.0 — os 4 projetos reais', () => {
   });
 });
 
-describe('conteúdo real — dezenove artigos publicados', () => {
+describe('conteúdo real — vinte artigos publicados', () => {
   it('o segundo artigo (derivado do Matrix) existe com categoria reflexoes', () => {
     expect(pageExists('artigos/a-regua-que-desbota/index.html')).toBe(true);
     const main = parsePage('artigos/a-regua-que-desbota/index.html').querySelector('main')!;
@@ -232,34 +232,45 @@ describe('conteúdo real — dezenove artigos publicados', () => {
     expect(hrefs).toContain('/artigos/a-memoria-que-nao-desbota/');
   });
 
-  it('a listagem mostra os 19 publicados na ordem da RN-02 (data desc; empate → alfabético)', () => {
+  it('o vigésimo artigo (a peça-economia) existe com categoria reflexoes', () => {
+    expect(pageExists('artigos/o-emprestimo-com-juros/index.html')).toBe(true);
+    const main = parsePage('artigos/o-emprestimo-com-juros/index.html').querySelector('main')!;
+    expect(main.querySelector('h1')?.text).toContain('empréstimo');
+    expect(main.text).toContain('Reflexões');
+    // a frase-âncora da peça, por extenso
+    expect(main.text).toContain('anestesia é sempre alugada');
+  });
+
+  it('a listagem mostra os 20 publicados na ordem da RN-02 (data desc; empate → alfabético)', () => {
     const titulos = parsePage('artigos/index.html')
       .querySelectorAll('main .item-titulo a')
       .map((a) => a.text.trim());
-    expect(titulos).toHaveLength(19);
-    // empate triplo em 2026-07-24 (Do outro lado / O dia / Para sair), duplo
-    // em 2026-07-20 (Organizar / Todo software), em 2026-07-19 (A névoa /
-    // Os canteiros), em 2026-07-15 (A memória / O menino) e em 2026-07-14
-    // (A cidade / O velório): desempate alfabético pt-BR; 2026-07-21 sem empate
-    expect(titulos[0]).toMatch(/^Do outro lado/);
-    expect(titulos[1]).toMatch(/^O dia em que descobri/);
-    expect(titulos[2]).toMatch(/^Para sair/);
-    expect(titulos[3]).toMatch(/^Quando o requisito/);
-    expect(titulos[4]).toMatch(/^Organizar/);
-    expect(titulos[5]).toMatch(/^Todo software/);
-    expect(titulos[6]).toMatch(/^A névoa/);
-    expect(titulos[7]).toMatch(/^Os canteiros/);
-    expect(titulos[8]).toMatch(/^Carta/);
-    expect(titulos[9]).toMatch(/^A pergunta/);
-    expect(titulos[10]).toMatch(/^A resposta/);
-    expect(titulos[11]).toMatch(/^A memória/);
-    expect(titulos[12]).toMatch(/^O menino/);
-    expect(titulos[13]).toMatch(/^A cidade/);
-    expect(titulos[14]).toMatch(/^O velório/);
-    expect(titulos[15]).toMatch(/^O jardineiro/);
-    expect(titulos[16]).toMatch(/^O silêncio/);
-    expect(titulos[17]).toMatch(/^A régua/);
-    expect(titulos[18]).toMatch(/^Construindo/);
+    expect(titulos).toHaveLength(20);
+    // 2026-07-26 sem empate; empate triplo em 2026-07-24 (Do outro lado /
+    // O dia / Para sair), duplo em 2026-07-20 (Organizar / Todo software),
+    // em 2026-07-19 (A névoa / Os canteiros), em 2026-07-15 (A memória /
+    // O menino) e em 2026-07-14 (A cidade / O velório): desempate
+    // alfabético pt-BR; 2026-07-21 sem empate
+    expect(titulos[0]).toMatch(/^O empréstimo/);
+    expect(titulos[1]).toMatch(/^Do outro lado/);
+    expect(titulos[2]).toMatch(/^O dia em que descobri/);
+    expect(titulos[3]).toMatch(/^Para sair/);
+    expect(titulos[4]).toMatch(/^Quando o requisito/);
+    expect(titulos[5]).toMatch(/^Organizar/);
+    expect(titulos[6]).toMatch(/^Todo software/);
+    expect(titulos[7]).toMatch(/^A névoa/);
+    expect(titulos[8]).toMatch(/^Os canteiros/);
+    expect(titulos[9]).toMatch(/^Carta/);
+    expect(titulos[10]).toMatch(/^A pergunta/);
+    expect(titulos[11]).toMatch(/^A resposta/);
+    expect(titulos[12]).toMatch(/^A memória/);
+    expect(titulos[13]).toMatch(/^O menino/);
+    expect(titulos[14]).toMatch(/^A cidade/);
+    expect(titulos[15]).toMatch(/^O velório/);
+    expect(titulos[16]).toMatch(/^O jardineiro/);
+    expect(titulos[17]).toMatch(/^O silêncio/);
+    expect(titulos[18]).toMatch(/^A régua/);
+    expect(titulos[19]).toMatch(/^Construindo/);
   });
 });
 
