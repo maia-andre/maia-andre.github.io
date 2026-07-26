@@ -34,10 +34,8 @@ Fui no ônibus sentado do lado dela, feliz de um jeito simples que na época me
 parecia comum: minha amiga ali, o dia inteiro pela frente.
 
 Mas ela tinha planos para o dia. Adolescente tem todo direito de ter planos que
-não incluem a gente — essa parte eu só aprendi depois. No parque, ela apostou
-com as amigas quantos meninos conseguiria beijar antes da hora de voltar.
-
-Ganhou de uns quinze a zero.
+não incluem a gente — essa parte eu só aprendi depois. No parque, ela foi
+adolescente num idioma que eu ainda não falava — e eu assisti de longe.
 
 Eu fiquei arrasado. Sem direito nenhum: a gente era amigo, ela não me devia
 nada. Mas arrasado.
