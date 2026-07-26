@@ -302,10 +302,29 @@ const NOTAS_DO_DIARIO = [
   '07-o-dedo-do-espectador',
   '08-o-sinal-e-a-mentira',
   '09-o-self-ja-estava-la',
+  '10-o-zero-estrutural',
+  '11-a-replicacao',
+  '12-a-janela-longa',
+  '13-o-fatorial',
+  '14-o-torneio',
+  '15-o-imposto',
+  '16-a-varredura-do-desconto',
+  '17-ruido-ou-teimosia',
+  '18-o-erro-do-plano',
+  '19-a-grade-fina',
+  '20-o-invasor-raro',
+  '21-o-imposto-que-recicla',
+  '22-a-sonda-ordinal',
+  '23-o-teste-de-bimodalidade',
+  '24-o-detector-de-colapso',
+  '25-a-dose-resposta-do-detector',
+  '26-duas-linhagens-sem-h-conhecido',
+  '27-o-detector-de-nova-estrategia',
+  '28-mutacao-ou-ramificacao-em-delta-080',
 ] as const;
 
 describe('página do Matrix — diário de pesquisa', () => {
-  it('tem a seção com as 9 notas na ordem, cada uma linkando o arquivo no repositório', () => {
+  it('tem a seção com as 28 notas na ordem, cada uma linkando o arquivo no repositório', () => {
     const main = parsePage('projetos/matrix/index.html').querySelector('main')!;
     expect(main.querySelectorAll('h2').map((h) => h.text.trim())).toContain(
       'Diário de pesquisa',
