@@ -61,16 +61,18 @@ describe('REQ-02 — Home', () => {
     const main = parsePage('index.html').querySelector('main')!;
     expect(main.text).toContain('Artigos recentes');
     const hrefs = main.querySelectorAll('a').map((a) => a.getAttribute('href'));
-    // com 21 publicados, a Home mostra os 5 mais recentes (RN-04) — O réu
-    // que era a vítima (2026-07-26, empate com O empréstimo; desempate
-    // alfabético) entra e Quando o requisito (agora o sexto) sai da vitrine
+    // com 22 publicados, a Home mostra os 5 mais recentes (RN-04) — O
+    // moletom preto (2026-07-27, sem empate) entra no topo e Para sair,
+    // abra aqui (agora o sexto, atrás do empate triplo de 2026-07-24) sai
+    // da vitrine
+    expect(hrefs).toContain('/artigos/o-moletom-preto/');
     expect(hrefs).toContain('/artigos/o-emprestimo-com-juros/');
     expect(hrefs).toContain('/artigos/o-reu-que-era-a-vitima/');
     expect(hrefs).toContain('/artigos/do-outro-lado-do-vidro/');
     expect(hrefs).toContain(
       '/artigos/o-dia-em-que-descobri-que-documentacao-tambem-e-codigo/',
     );
-    expect(hrefs).toContain('/artigos/para-sair-abra-aqui/');
+    expect(hrefs).not.toContain('/artigos/para-sair-abra-aqui/');
     expect(hrefs).not.toContain(
       '/artigos/quando-o-requisito-esta-certo-e-o-problema-continua-errado/',
     );
