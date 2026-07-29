@@ -61,16 +61,16 @@ describe('REQ-02 — Home', () => {
     const main = parsePage('index.html').querySelector('main')!;
     expect(main.text).toContain('Artigos recentes');
     const hrefs = main.querySelectorAll('a').map((a) => a.getAttribute('href'));
-    // com 23 publicados, a Home mostra os 5 mais recentes (RN-04) — empate
-    // duplo em 2026-07-27 (O moletom preto / Rápido demais, devagar
-    // demais; desempate alfabético) preenche as duas primeiras vagas e
-    // empurra O dia em que descobri (agora o sexto, atrás do empate
-    // triplo de 2026-07-24) para fora da vitrine
+    // com 24 publicados, a Home mostra os 5 mais recentes (RN-04) — A
+    // Rainha Vermelha (2026-07-28, sem empate) abre a vitrine sozinha e
+    // empurra Do outro lado do vidro (agora o sexto, atrás do empate
+    // duplo de 2026-07-27) para fora
+    expect(hrefs).toContain('/artigos/a-rainha-vermelha-da-propria-cabeca/');
     expect(hrefs).toContain('/artigos/o-moletom-preto/');
     expect(hrefs).toContain('/artigos/rapido-demais-devagar-demais/');
     expect(hrefs).toContain('/artigos/o-emprestimo-com-juros/');
     expect(hrefs).toContain('/artigos/o-reu-que-era-a-vitima/');
-    expect(hrefs).toContain('/artigos/do-outro-lado-do-vidro/');
+    expect(hrefs).not.toContain('/artigos/do-outro-lado-do-vidro/');
     expect(hrefs).not.toContain(
       '/artigos/o-dia-em-que-descobri-que-documentacao-tambem-e-codigo/',
     );
