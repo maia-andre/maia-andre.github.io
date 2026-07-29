@@ -293,9 +293,7 @@ describe('conteúdo real — vinte e quatro artigos publicados', () => {
     expect(main.querySelector('h1')?.text).toContain('Rainha Vermelha');
     expect(main.text).toContain('Reflexões');
     // a frase-âncora da peça, por extenso
-    expect(main.text).toContain(
-      'quanto mais paciente o mundo, mais raso deveria ser o horizonte ideal.',
-    );
+    expect(main.text).toContain('horizonte fundo não produz nada');
     // a peça linka o projeto e o repositório do Matrix
     const hrefs = main.querySelectorAll('a').map((a) => a.getAttribute('href'));
     expect(hrefs).toContain('/projetos/matrix/');
