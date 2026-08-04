@@ -51,7 +51,7 @@ describe('REQ-E09 — linha do tempo em /artigos/', () => {
 
   it('os dados e a ordem por item não mudam (mesma estrutura de título/meta)', () => {
     const itens = parsePage('artigos/index.html').querySelectorAll('main .item-artigo');
-    expect(itens.length).toBe(26);
+    expect(itens.length).toBe(27);
     for (const item of itens) {
       expect(item.querySelector('.item-titulo a')).not.toBeNull();
       expect(item.querySelector('.artigo-meta time')).not.toBeNull();
