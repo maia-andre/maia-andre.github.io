@@ -61,15 +61,17 @@ describe('REQ-02 — Home', () => {
     const main = parsePage('index.html').querySelector('main')!;
     expect(main.text).toContain('Artigos recentes');
     const hrefs = main.querySelectorAll('a').map((a) => a.getAttribute('href'));
-    // com 27 publicados, a Home mostra os 5 mais recentes (RN-04) — o
-    // empate duplo de 2026-08-04 (A ilusão / O estranho pássaro, ordem
-    // alfabética pt-BR) abre a vitrine e empurra Rápido demais, devagar
-    // demais (o segundo do par de 2026-07-27, agora o sexto) para fora
+    // com 28 publicados, a Home mostra os 5 mais recentes (RN-04) — o
+    // empate triplo de 2026-08-04 (A ilusão / O estranho pássaro / O
+    // poema da contracapa, ordem alfabética pt-BR) abre a vitrine e
+    // empurra O moletom preto (o primeiro do par de 2026-07-27, agora o
+    // sexto) para fora
     expect(hrefs).toContain('/artigos/a-ilusao-do-desenvolvedor-heroi/');
     expect(hrefs).toContain('/artigos/o-estranho-passaro/');
+    expect(hrefs).toContain('/artigos/o-poema-da-contracapa/');
     expect(hrefs).toContain('/artigos/o-mar-de-sao-sebastiao/');
     expect(hrefs).toContain('/artigos/a-rainha-vermelha-da-propria-cabeca/');
-    expect(hrefs).toContain('/artigos/o-moletom-preto/');
+    expect(hrefs).not.toContain('/artigos/o-moletom-preto/');
     expect(hrefs).not.toContain('/artigos/rapido-demais-devagar-demais/');
     expect(hrefs).not.toContain('/artigos/o-emprestimo-com-juros/');
     expect(hrefs).not.toContain('/artigos/o-reu-que-era-a-vitima/');
