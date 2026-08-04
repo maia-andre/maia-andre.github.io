@@ -47,7 +47,7 @@ describe('v1.0.0 — os 4 projetos reais', () => {
   });
 });
 
-describe('conteúdo real — vinte e sete artigos publicados', () => {
+describe('conteúdo real — vinte e oito artigos publicados', () => {
   it('o segundo artigo (derivado do Matrix) existe com categoria reflexoes', () => {
     expect(pageExists('artigos/a-regua-que-desbota/index.html')).toBe(true);
     const main = parsePage('artigos/a-regua-que-desbota/index.html').querySelector('main')!;
@@ -329,47 +329,64 @@ describe('conteúdo real — vinte e sete artigos publicados', () => {
     expect(main.text).toContain('quem deixa o mapa em vez de ser o mapa');
   });
 
-  it('a listagem mostra os 27 publicados na ordem da RN-02 (data desc; empate → alfabético)', () => {
+  it('o vigésimo oitavo artigo (o primeiro poema do site) existe com categoria reflexoes', () => {
+    expect(pageExists('artigos/o-poema-da-contracapa/index.html')).toBe(true);
+    const main = parsePage('artigos/o-poema-da-contracapa/index.html').querySelector('main')!;
+    expect(main.querySelector('h1')?.text).toContain('poema da contracapa');
+    expect(main.text).toContain('Reflexões');
+    // a frase-âncora da peça, por extenso (contida numa única linha-fonte)
+    expect(main.text).toContain('Eu li e reconheci o quintal');
+    // os versos quebram de verdade: hard breaks do markdown viram <br>
+    expect(main.querySelectorAll('br').length).toBeGreaterThanOrEqual(30);
+    // a nota "Sobre o original" linka o poema resgatado no Internet Archive
+    const hrefs = main.querySelectorAll('a').map((a) => a.getAttribute('href'));
+    expect(hrefs).toContain(
+      'https://web.archive.org/web/20080228173611/http://www.spectrumgothic.com.br:80/literatura/poemas/visitantes/galeria03/jardim.htm',
+    );
+  });
+
+  it('a listagem mostra os 28 publicados na ordem da RN-02 (data desc; empate → alfabético)', () => {
     const titulos = parsePage('artigos/index.html')
       .querySelectorAll('main .item-titulo a')
       .map((a) => a.text.trim());
-    expect(titulos).toHaveLength(27);
-    // empate duplo em 2026-08-04 (A ilusão / O estranho pássaro) abre a
-    // lista com desempate alfabético pt-BR; O mar de São Sebastião
-    // (2026-07-29, sem empate) e A Rainha Vermelha (2026-07-28, sem
-    // empate) vêm a seguir; empate duplo em 2026-07-27 (O moletom / Rápido
-    // demais), duplo em 2026-07-26 (O empréstimo / O réu), triplo em
-    // 2026-07-24 (Do outro lado / O dia / Para sair), duplo em 2026-07-20
-    // (Organizar / Todo software), em 2026-07-19 (A névoa / Os canteiros),
-    // em 2026-07-15 (A memória / O menino) e em 2026-07-14 (A cidade / O
-    // velório); 2026-07-21 sem empate
+    expect(titulos).toHaveLength(28);
+    // empate TRIPLO em 2026-08-04 (A ilusão / O estranho pássaro / O
+    // poema da contracapa) abre a lista com desempate alfabético pt-BR; O
+    // mar de São Sebastião (2026-07-29, sem empate) e A Rainha Vermelha
+    // (2026-07-28, sem empate) vêm a seguir; empate duplo em 2026-07-27
+    // (O moletom / Rápido demais), duplo em 2026-07-26 (O empréstimo / O
+    // réu), triplo em 2026-07-24 (Do outro lado / O dia / Para sair),
+    // duplo em 2026-07-20 (Organizar / Todo software), em 2026-07-19 (A
+    // névoa / Os canteiros), em 2026-07-15 (A memória / O menino) e em
+    // 2026-07-14 (A cidade / O velório); 2026-07-21 sem empate
     expect(titulos[0]).toMatch(/^A ilusão do desenvolvedor herói/);
     expect(titulos[1]).toMatch(/^O estranho pássaro/);
-    expect(titulos[2]).toMatch(/^O mar de São Sebastião/);
-    expect(titulos[3]).toMatch(/^A Rainha Vermelha/);
-    expect(titulos[4]).toMatch(/^O moletom/);
-    expect(titulos[5]).toMatch(/^Rápido demais/);
-    expect(titulos[6]).toMatch(/^O empréstimo/);
-    expect(titulos[7]).toMatch(/^O réu/);
-    expect(titulos[8]).toMatch(/^Do outro lado/);
-    expect(titulos[9]).toMatch(/^O dia em que descobri/);
-    expect(titulos[10]).toMatch(/^Para sair/);
-    expect(titulos[11]).toMatch(/^Quando o requisito/);
-    expect(titulos[12]).toMatch(/^Organizar/);
-    expect(titulos[13]).toMatch(/^Todo software/);
-    expect(titulos[14]).toMatch(/^A névoa/);
-    expect(titulos[15]).toMatch(/^Os canteiros/);
-    expect(titulos[16]).toMatch(/^Carta/);
-    expect(titulos[17]).toMatch(/^A pergunta/);
-    expect(titulos[18]).toMatch(/^A resposta/);
-    expect(titulos[19]).toMatch(/^A memória/);
-    expect(titulos[20]).toMatch(/^O menino/);
-    expect(titulos[21]).toMatch(/^A cidade/);
-    expect(titulos[22]).toMatch(/^O velório/);
-    expect(titulos[23]).toMatch(/^O jardineiro/);
-    expect(titulos[24]).toMatch(/^O silêncio/);
-    expect(titulos[25]).toMatch(/^A régua/);
-    expect(titulos[26]).toMatch(/^Construindo/);
+    expect(titulos[2]).toMatch(/^O poema da contracapa/);
+    expect(titulos[3]).toMatch(/^O mar de São Sebastião/);
+    expect(titulos[4]).toMatch(/^A Rainha Vermelha/);
+    expect(titulos[5]).toMatch(/^O moletom/);
+    expect(titulos[6]).toMatch(/^Rápido demais/);
+    expect(titulos[7]).toMatch(/^O empréstimo/);
+    expect(titulos[8]).toMatch(/^O réu/);
+    expect(titulos[9]).toMatch(/^Do outro lado/);
+    expect(titulos[10]).toMatch(/^O dia em que descobri/);
+    expect(titulos[11]).toMatch(/^Para sair/);
+    expect(titulos[12]).toMatch(/^Quando o requisito/);
+    expect(titulos[13]).toMatch(/^Organizar/);
+    expect(titulos[14]).toMatch(/^Todo software/);
+    expect(titulos[15]).toMatch(/^A névoa/);
+    expect(titulos[16]).toMatch(/^Os canteiros/);
+    expect(titulos[17]).toMatch(/^Carta/);
+    expect(titulos[18]).toMatch(/^A pergunta/);
+    expect(titulos[19]).toMatch(/^A resposta/);
+    expect(titulos[20]).toMatch(/^A memória/);
+    expect(titulos[21]).toMatch(/^O menino/);
+    expect(titulos[22]).toMatch(/^A cidade/);
+    expect(titulos[23]).toMatch(/^O velório/);
+    expect(titulos[24]).toMatch(/^O jardineiro/);
+    expect(titulos[25]).toMatch(/^O silêncio/);
+    expect(titulos[26]).toMatch(/^A régua/);
+    expect(titulos[27]).toMatch(/^Construindo/);
   });
 });
 
