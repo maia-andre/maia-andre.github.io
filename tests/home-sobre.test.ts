@@ -61,15 +61,16 @@ describe('REQ-02 — Home', () => {
     const main = parsePage('index.html').querySelector('main')!;
     expect(main.text).toContain('Artigos recentes');
     const hrefs = main.querySelectorAll('a').map((a) => a.getAttribute('href'));
-    // com 25 publicados, a Home mostra os 5 mais recentes (RN-04) — O mar
-    // de São Sebastião (2026-07-29, sem empate) abre a vitrine sozinho e
-    // empurra O réu que era a vítima (agora o sexto, atrás do empate
-    // duplo de 2026-07-26) para fora
+    // com 26 publicados, a Home mostra os 5 mais recentes (RN-04) — O
+    // estranho pássaro (2026-08-04, sem empate) abre a vitrine sozinho e
+    // empurra O empréstimo com juros (agora o sexto, à frente do par de
+    // 2026-07-26) para fora
+    expect(hrefs).toContain('/artigos/o-estranho-passaro/');
     expect(hrefs).toContain('/artigos/o-mar-de-sao-sebastiao/');
     expect(hrefs).toContain('/artigos/a-rainha-vermelha-da-propria-cabeca/');
     expect(hrefs).toContain('/artigos/o-moletom-preto/');
     expect(hrefs).toContain('/artigos/rapido-demais-devagar-demais/');
-    expect(hrefs).toContain('/artigos/o-emprestimo-com-juros/');
+    expect(hrefs).not.toContain('/artigos/o-emprestimo-com-juros/');
     expect(hrefs).not.toContain('/artigos/o-reu-que-era-a-vitima/');
     expect(hrefs).not.toContain('/artigos/do-outro-lado-do-vidro/');
     expect(hrefs).not.toContain(
