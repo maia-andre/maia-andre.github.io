@@ -3,11 +3,19 @@ import { z } from 'astro/zod';
 // RN-01 — categorias válidas (slug exato → nome de exibição)
 export const CATEGORIAS = {
   computacao: 'Computação',
+  fundamentos: 'Fundamentos',
   'gestao-publica': 'Gestão Pública',
   reflexoes: 'Reflexões',
 } as const;
 
 export type CategoriaSlug = keyof typeof CATEGORIAS;
+
+// A mensagem do CE-01 é derivada do mapa, não escrita à mão: categoria nova
+// entra em RN-01 e o erro do build já a nomeia sozinho.
+function listarCategorias(): string {
+  const slugs = Object.keys(CATEGORIAS);
+  return `${slugs.slice(0, -1).join(', ')} ou ${slugs[slugs.length - 1]}`;
+}
 
 // RN-03 — tags em kebab-case minúsculo, sem acentos
 export const PADRAO_TAG = /^[a-z0-9]+(-[a-z0-9]+)*$/;
@@ -25,7 +33,7 @@ export const esquemaArtigo = z.object({
   }),
   categoria: z.enum(
     Object.keys(CATEGORIAS) as [CategoriaSlug, ...CategoriaSlug[]],
-    { errorMap: () => ({ message: 'categoria deve ser computacao, gestao-publica ou reflexoes' }) },
+    { errorMap: () => ({ message: `categoria deve ser ${listarCategorias()}` }) },
   ),
   tags: esquemaTags,
   atualizado: z.coerce.date().optional(),

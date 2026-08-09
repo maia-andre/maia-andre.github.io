@@ -14,7 +14,7 @@ Construir o site estático pessoal de André Maia — um "arquivo vivo" que reú
 
 **Artigos**
 - **REQ-03** — Artigos são arquivos Markdown em coleção de conteúdo do Astro, com frontmatter validado no build (schema zod). Obrigatórios: `titulo`, `descricao`, `data` (YYYY-MM-DD), `categoria`, `tags` (mínimo 1). Opcionais: `atualizado` (data), `rascunho` (bool, default false).
-- **REQ-04** — `categoria` aceita exatamente um valor entre `computacao`, `gestao-publica`, `reflexoes`. Valor fora da lista ou campo obrigatório ausente ⇒ o build falha apontando o arquivo (RN-01, CE-01).
+- **REQ-04** — `categoria` aceita exatamente um valor entre `computacao`, `fundamentos`, `gestao-publica`, `reflexoes`. Valor fora da lista ou campo obrigatório ausente ⇒ o build falha apontando o arquivo (RN-01, CE-01).
 - **REQ-05** — Página `/artigos/` lista todos os artigos publicados ordenados por RN-02, exibindo título, descrição, data, categoria e tags. Existem páginas por categoria (`/artigos/computacao/` etc.) com a mesma listagem filtrada.
 - **REQ-06** — Cada artigo tem página própria em `/artigos/<slug>/` (slug = nome do arquivo), renderizando título, data, categoria, tags (linkadas) e o corpo Markdown.
 - **REQ-07** — Artigo com `rascunho: true` não existe no build de produção: sem página própria, fora de todas as listagens, das tags e do índice de busca (RN-05).
@@ -48,7 +48,7 @@ Construir o site estático pessoal de André Maia — um "arquivo vivo" que reú
 - **RNF-05** — Layout responsivo e legível de 320px a desktop, sem scroll horizontal; design minimalista conforme o documento de visão (tipografia confortável, muito espaço em branco, poucas cores).
 
 ## Regras de negócio
-- **RN-01** — Categorias válidas (slugs exatos): `computacao`, `gestao-publica`, `reflexoes` — exibidas como "Computação", "Gestão Pública", "Reflexões". Um artigo tem exatamente uma categoria; subtópicos do documento de visão são tags livres.
+- **RN-01** — Categorias válidas (slugs exatos): `computacao`, `fundamentos`, `gestao-publica`, `reflexoes` — exibidas como "Computação", "Fundamentos", "Gestão Pública", "Reflexões". Um artigo tem exatamente uma categoria; subtópicos do documento de visão são tags livres. `fundamentos` entrou em 2026-08-08 (v1.6.0), para a série que explica os conceitos que sustentam software — o lado didático de `computacao`.
 - **RN-02** — Ordenação de listagens de artigos: `data` decrescente; empate resolvido por título em ordem alfabética.
 - **RN-03** — Tags são kebab-case minúsculo (`^[a-z0-9]+(-[a-z0-9]+)*$`, acentos não permitidos); tag fora do padrão ⇒ build falha apontando o arquivo.
 - **RN-04** — Home exibe no máximo 5 artigos recentes e no máximo 4 projetos em destaque; havendo menos, exibe os existentes; havendo zero, a seção é omitida (CE-04).
