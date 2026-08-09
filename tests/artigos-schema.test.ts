@@ -62,23 +62,37 @@ describe('REQ-03 — schema do artigo', () => {
 });
 
 describe('REQ-04 / RN-01 — categoria restrita', () => {
-  it.each(['computacao', 'gestao-publica', 'reflexoes'])('aceita a categoria %s', (categoria) => {
-    expect(esquemaArtigo.safeParse({ ...valido, categoria }).success).toBe(true);
-  });
+  it.each(['computacao', 'fundamentos', 'gestao-publica', 'reflexoes'])(
+    'aceita a categoria %s',
+    (categoria) => {
+      expect(esquemaArtigo.safeParse({ ...valido, categoria }).success).toBe(true);
+    },
+  );
 
-  it.each(['outra', 'Computação', 'computação', 'gestao_publica', ''])(
+  it.each(['outra', 'Computação', 'computação', 'gestao_publica', 'Fundamentos', ''])(
     'rejeita a categoria inválida "%s"',
     (categoria) => {
       expect(esquemaArtigo.safeParse({ ...valido, categoria }).success).toBe(false);
     },
   );
 
-  it('RN-01 — mapeia exatamente os três slugs aos nomes de exibição', () => {
+  it('RN-01 — mapeia exatamente os quatro slugs aos nomes de exibição', () => {
     expect(CATEGORIAS).toEqual({
       computacao: 'Computação',
+      fundamentos: 'Fundamentos',
       'gestao-publica': 'Gestão Pública',
       reflexoes: 'Reflexões',
     });
+  });
+
+  // A mensagem de erro é o que o autor vê quando o build cai (CE-01): ela
+  // precisa listar as categorias que existem hoje, não as de 2026-07.
+  it('CE-01 — a mensagem de erro nomeia as quatro categorias válidas', () => {
+    const erro = esquemaArtigo.safeParse({ ...valido, categoria: 'inexistente' });
+    const mensagem = erro.success ? '' : erro.error.issues[0].message;
+    for (const slug of Object.keys(CATEGORIAS)) {
+      expect(mensagem, `a mensagem omite "${slug}"`).toContain(slug);
+    }
   });
 });
 
