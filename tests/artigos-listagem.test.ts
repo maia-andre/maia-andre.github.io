@@ -68,7 +68,7 @@ describe('REQ-05 — página de listagem /artigos/', () => {
     expect(hrefs, 'tags do artigo ausentes na listagem').toContain('/tags/astro/');
   });
 
-  it.each(['computacao', 'gestao-publica', 'reflexoes'])(
+  it.each(['computacao', 'fundamentos', 'gestao-publica', 'reflexoes'])(
     'existe página da categoria %s',
     (categoria) => {
       expect(pageExists(`artigos/${categoria}/index.html`)).toBe(true);
