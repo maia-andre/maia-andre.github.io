@@ -8,6 +8,25 @@ incremento do [plano](docs/plan.md) entregue gera uma release `v0.x.0`, até a
 `v1.0.0` fechar o escopo da primeira versão. Pós-v1, cada incremento da
 [direção estética](docs/specs/direcao-estetica.md) gera `v1.x.0`.
 
+## [1.6.0] — 2026-08-08 — Categoria Fundamentos
+
+Primeira mudança de código desde o fechamento da direção estética: o site
+ganha uma quarta categoria para abrigar a série Fundamentos, que explica os
+conceitos que sustentam software. Altera a RN-01 e o REQ-04 da spec.
+
+### Adicionado
+
+- Categoria `fundamentos` ("Fundamentos"), ao lado de `computacao` — com
+  página própria em `/artigos/fundamentos/`, filtro na listagem e entrada no
+  índice de busca, tudo pelo caminho que já existia para as outras três
+
+### Corrigido
+
+- A mensagem de erro do CE-01 (frontmatter com categoria inválida) era uma
+  lista escrita à mão e teria continuado nomeando só três categorias depois
+  desta release; agora é derivada do mapa `CATEGORIAS`, com teste que exige
+  que toda categoria válida apareça nela
+
 ## [1.5.0] — 2026-07-14 · INC-15 — Auditoria estética executável
 
 Review APROVADO em 2026-07-14. Atende RNF-E01 e RNF-E04 — **e fecha o
