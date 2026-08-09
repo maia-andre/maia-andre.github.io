@@ -61,16 +61,17 @@ describe('REQ-02 — Home', () => {
     const main = parsePage('index.html').querySelector('main')!;
     expect(main.text).toContain('Artigos recentes');
     const hrefs = main.querySelectorAll('a').map((a) => a.getAttribute('href'));
-    // com 28 publicados, a Home mostra os 5 mais recentes (RN-04) — o
+    // com 29 publicados, a Home mostra os 5 mais recentes (RN-04) — a
+    // estreia de Fundamentos (2026-08-08) abre a vitrine sozinha, o
     // empate triplo de 2026-08-04 (A ilusão / O estranho pássaro / O
-    // poema da contracapa, ordem alfabética pt-BR) abre a vitrine e
-    // empurra O moletom preto (o primeiro do par de 2026-07-27, agora o
-    // sexto) para fora
+    // poema da contracapa, ordem alfabética pt-BR) desce um degrau e A
+    // Rainha Vermelha (2026-07-28, agora a sexta) sai
+    expect(hrefs).toContain('/artigos/o-que-realmente-acontece-quando-um-programa-roda/');
     expect(hrefs).toContain('/artigos/a-ilusao-do-desenvolvedor-heroi/');
     expect(hrefs).toContain('/artigos/o-estranho-passaro/');
     expect(hrefs).toContain('/artigos/o-poema-da-contracapa/');
     expect(hrefs).toContain('/artigos/o-mar-de-sao-sebastiao/');
-    expect(hrefs).toContain('/artigos/a-rainha-vermelha-da-propria-cabeca/');
+    expect(hrefs).not.toContain('/artigos/a-rainha-vermelha-da-propria-cabeca/');
     expect(hrefs).not.toContain('/artigos/o-moletom-preto/');
     expect(hrefs).not.toContain('/artigos/rapido-demais-devagar-demais/');
     expect(hrefs).not.toContain('/artigos/o-emprestimo-com-juros/');
