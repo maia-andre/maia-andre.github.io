@@ -61,16 +61,18 @@ describe('REQ-02 — Home', () => {
     const main = parsePage('index.html').querySelector('main')!;
     expect(main.text).toContain('Artigos recentes');
     const hrefs = main.querySelectorAll('a').map((a) => a.getAttribute('href'));
-    // com 29 publicados, a Home mostra os 5 mais recentes (RN-04) — a
-    // estreia de Fundamentos (2026-08-08) abre a vitrine sozinha, o
-    // empate triplo de 2026-08-04 (A ilusão / O estranho pássaro / O
-    // poema da contracapa, ordem alfabética pt-BR) desce um degrau e A
-    // Rainha Vermelha (2026-07-28, agora a sexta) sai
+    // com 30 publicados, a Home mostra os 5 mais recentes (RN-04) — o
+    // segundo Fundamentos (2026-08-15) abre a vitrine sozinho, a estreia
+    // da série (2026-08-08) desce um degrau, o empate triplo de
+    // 2026-08-04 (A ilusão / O estranho pássaro / O poema da contracapa,
+    // ordem alfabética pt-BR) fecha a vitrine e O mar de São Sebastião
+    // (2026-07-29, agora o sexto) sai
+    expect(hrefs).toContain('/artigos/variaveis-nao-sao-caixas/');
     expect(hrefs).toContain('/artigos/o-que-realmente-acontece-quando-um-programa-roda/');
     expect(hrefs).toContain('/artigos/a-ilusao-do-desenvolvedor-heroi/');
     expect(hrefs).toContain('/artigos/o-estranho-passaro/');
     expect(hrefs).toContain('/artigos/o-poema-da-contracapa/');
-    expect(hrefs).toContain('/artigos/o-mar-de-sao-sebastiao/');
+    expect(hrefs).not.toContain('/artigos/o-mar-de-sao-sebastiao/');
     expect(hrefs).not.toContain('/artigos/a-rainha-vermelha-da-propria-cabeca/');
     expect(hrefs).not.toContain('/artigos/o-moletom-preto/');
     expect(hrefs).not.toContain('/artigos/rapido-demais-devagar-demais/');
