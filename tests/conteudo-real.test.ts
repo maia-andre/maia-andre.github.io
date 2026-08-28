@@ -47,7 +47,7 @@ describe('v1.0.0 — os 4 projetos reais', () => {
   });
 });
 
-describe('conteúdo real — vinte e nove artigos publicados', () => {
+describe('conteúdo real — trinta e um artigos publicados', () => {
   it('o segundo artigo (derivado do Matrix) existe com categoria reflexoes', () => {
     expect(pageExists('artigos/a-regua-que-desbota/index.html')).toBe(true);
     const main = parsePage('artigos/a-regua-que-desbota/index.html').querySelector('main')!;
@@ -376,64 +376,87 @@ describe('conteúdo real — vinte e nove artigos publicados', () => {
     expect(hrefs).toContain('/artigos/o-que-realmente-acontece-quando-um-programa-roda/');
   });
 
-  it('a categoria Fundamentos lista os seus dois artigos, na ordem da RN-02', () => {
+  it('o trigésimo primeiro artigo (terceiro de Fundamentos) existe com categoria fundamentos', () => {
+    expect(
+      pageExists('artigos/estado-o-problema-que-voce-criou-sem-perceber/index.html'),
+    ).toBe(true);
+    const main = parsePage(
+      'artigos/estado-o-problema-que-voce-criou-sem-perceber/index.html',
+    ).querySelector('main')!;
+    expect(main.querySelector('h1')?.text).toContain('Estado');
+    expect(main.text).toContain('Fundamentos');
+    // a virada do texto, por extenso (contida numa única linha-fonte)
+    expect(main.text).toContain('É o nome que a gente dá às peças que não fotografou');
+    // o fecho, que separa o texto do tabuleiro
+    expect(main.text).toContain('O estado decide o que acontece agora');
+    // o guichê é a demonstração do estado — se sumir, o artigo perde a cena
+    expect(main.querySelector('pre')?.text).toContain('contador = contador + 1');
+    // a série se costura (convenção decidida aqui): o F-03 retoma F-01 e F-02
+    const hrefs = main.querySelectorAll('a').map((a) => a.getAttribute('href'));
+    expect(hrefs).toContain('/artigos/o-que-realmente-acontece-quando-um-programa-roda/');
+    expect(hrefs).toContain('/artigos/variaveis-nao-sao-caixas/');
+  });
+
+  it('a categoria Fundamentos lista os seus três artigos, na ordem da RN-02', () => {
     const main = parsePage('artigos/fundamentos/index.html').querySelector('main')!;
     const titulos = main.querySelectorAll('.item-titulo a').map((a) => a.text.trim());
-    expect(titulos).toHaveLength(2);
-    expect(titulos[0]).toMatch(/^Variáveis não são caixas/);
-    expect(titulos[1]).toMatch(/^O que realmente acontece/);
+    expect(titulos).toHaveLength(3);
+    expect(titulos[0]).toMatch(/^Estado/);
+    expect(titulos[1]).toMatch(/^Variáveis não são caixas/);
+    expect(titulos[2]).toMatch(/^O que realmente acontece/);
     expect(main.text).not.toContain('A ilusão do desenvolvedor herói');
     expect(main.text).not.toContain('Todo software conta uma história');
     expect(main.text).not.toContain('Nenhum artigo nesta categoria ainda');
   });
 
-  it('a listagem mostra os 30 publicados na ordem da RN-02 (data desc; empate → alfabético)', () => {
+  it('a listagem mostra os 31 publicados na ordem da RN-02 (data desc; empate → alfabético)', () => {
     const titulos = parsePage('artigos/index.html')
       .querySelectorAll('main .item-titulo a')
       .map((a) => a.text.trim());
-    expect(titulos).toHaveLength(30);
-    // o segundo Fundamentos (2026-08-15, sem empate) abre a lista sozinho
-    // e empurra todo o resto um degrau; a estreia da série (2026-08-08,
-    // sem empate) vem logo atrás; o empate TRIPLO de 2026-08-04 (A ilusão
-    // / O estranho pássaro / O poema da contracapa) mantém o desempate
-    // alfabético pt-BR intacto; O mar de São Sebastião (2026-07-29, sem
-    // empate) e A Rainha Vermelha (2026-07-28, sem empate) vêm a seguir;
-    // empate duplo em 2026-07-27 (O moletom / Rápido demais), duplo em
-    // 2026-07-26 (O empréstimo / O réu), triplo em 2026-07-24 (Do outro
-    // lado / O dia / Para sair), duplo em 2026-07-20 (Organizar / Todo
-    // software), em 2026-07-19 (A névoa / Os canteiros), em 2026-07-15 (A
-    // memória / O menino) e em 2026-07-14 (A cidade / O velório);
-    // 2026-07-21 sem empate
-    expect(titulos[0]).toMatch(/^Variáveis não são caixas/);
-    expect(titulos[1]).toMatch(/^O que realmente acontece/);
-    expect(titulos[2]).toMatch(/^A ilusão do desenvolvedor herói/);
-    expect(titulos[3]).toMatch(/^O estranho pássaro/);
-    expect(titulos[4]).toMatch(/^O poema da contracapa/);
-    expect(titulos[5]).toMatch(/^O mar de São Sebastião/);
-    expect(titulos[6]).toMatch(/^A Rainha Vermelha/);
-    expect(titulos[7]).toMatch(/^O moletom/);
-    expect(titulos[8]).toMatch(/^Rápido demais/);
-    expect(titulos[9]).toMatch(/^O empréstimo/);
-    expect(titulos[10]).toMatch(/^O réu/);
-    expect(titulos[11]).toMatch(/^Do outro lado/);
-    expect(titulos[12]).toMatch(/^O dia em que descobri/);
-    expect(titulos[13]).toMatch(/^Para sair/);
-    expect(titulos[14]).toMatch(/^Quando o requisito/);
-    expect(titulos[15]).toMatch(/^Organizar/);
-    expect(titulos[16]).toMatch(/^Todo software/);
-    expect(titulos[17]).toMatch(/^A névoa/);
-    expect(titulos[18]).toMatch(/^Os canteiros/);
-    expect(titulos[19]).toMatch(/^Carta/);
-    expect(titulos[20]).toMatch(/^A pergunta/);
-    expect(titulos[21]).toMatch(/^A resposta/);
-    expect(titulos[22]).toMatch(/^A memória/);
-    expect(titulos[23]).toMatch(/^O menino/);
-    expect(titulos[24]).toMatch(/^A cidade/);
-    expect(titulos[25]).toMatch(/^O velório/);
-    expect(titulos[26]).toMatch(/^O jardineiro/);
-    expect(titulos[27]).toMatch(/^O silêncio/);
-    expect(titulos[28]).toMatch(/^A régua/);
-    expect(titulos[29]).toMatch(/^Construindo/);
+    expect(titulos).toHaveLength(31);
+    // o terceiro Fundamentos (2026-08-27, sem empate) abre a lista sozinho
+    // e empurra todo o resto um degrau; o segundo (2026-08-15) e a estreia
+    // da série (2026-08-08), ambos sem empate, vêm logo atrás; o empate
+    // TRIPLO de 2026-08-04 (A ilusão / O estranho pássaro / O poema da
+    // contracapa) mantém o desempate alfabético pt-BR intacto; O mar de
+    // São Sebastião (2026-07-29, sem empate) e A Rainha Vermelha
+    // (2026-07-28, sem empate) vêm a seguir; empate duplo em 2026-07-27
+    // (O moletom / Rápido demais), duplo em 2026-07-26 (O empréstimo / O
+    // réu), triplo em 2026-07-24 (Do outro lado / O dia / Para sair),
+    // duplo em 2026-07-20 (Organizar / Todo software), em 2026-07-19 (A
+    // névoa / Os canteiros), em 2026-07-15 (A memória / O menino) e em
+    // 2026-07-14 (A cidade / O velório); 2026-07-21 sem empate
+    expect(titulos[0]).toMatch(/^Estado/);
+    expect(titulos[1]).toMatch(/^Variáveis não são caixas/);
+    expect(titulos[2]).toMatch(/^O que realmente acontece/);
+    expect(titulos[3]).toMatch(/^A ilusão do desenvolvedor herói/);
+    expect(titulos[4]).toMatch(/^O estranho pássaro/);
+    expect(titulos[5]).toMatch(/^O poema da contracapa/);
+    expect(titulos[6]).toMatch(/^O mar de São Sebastião/);
+    expect(titulos[7]).toMatch(/^A Rainha Vermelha/);
+    expect(titulos[8]).toMatch(/^O moletom/);
+    expect(titulos[9]).toMatch(/^Rápido demais/);
+    expect(titulos[10]).toMatch(/^O empréstimo/);
+    expect(titulos[11]).toMatch(/^O réu/);
+    expect(titulos[12]).toMatch(/^Do outro lado/);
+    expect(titulos[13]).toMatch(/^O dia em que descobri/);
+    expect(titulos[14]).toMatch(/^Para sair/);
+    expect(titulos[15]).toMatch(/^Quando o requisito/);
+    expect(titulos[16]).toMatch(/^Organizar/);
+    expect(titulos[17]).toMatch(/^Todo software/);
+    expect(titulos[18]).toMatch(/^A névoa/);
+    expect(titulos[19]).toMatch(/^Os canteiros/);
+    expect(titulos[20]).toMatch(/^Carta/);
+    expect(titulos[21]).toMatch(/^A pergunta/);
+    expect(titulos[22]).toMatch(/^A resposta/);
+    expect(titulos[23]).toMatch(/^A memória/);
+    expect(titulos[24]).toMatch(/^O menino/);
+    expect(titulos[25]).toMatch(/^A cidade/);
+    expect(titulos[26]).toMatch(/^O velório/);
+    expect(titulos[27]).toMatch(/^O jardineiro/);
+    expect(titulos[28]).toMatch(/^O silêncio/);
+    expect(titulos[29]).toMatch(/^A régua/);
+    expect(titulos[30]).toMatch(/^Construindo/);
   });
 });
 
