@@ -61,17 +61,17 @@ describe('REQ-02 — Home', () => {
     const main = parsePage('index.html').querySelector('main')!;
     expect(main.text).toContain('Artigos recentes');
     const hrefs = main.querySelectorAll('a').map((a) => a.getAttribute('href'));
-    // com 31 publicados, a Home mostra os 5 mais recentes (RN-04) — o
-    // terceiro Fundamentos (2026-08-27) abre a vitrine sozinho, o segundo
-    // (2026-08-15) e a estreia da série (2026-08-08) descem um degrau, e
-    // do empate triplo de 2026-08-04 (ordem alfabética pt-BR) só A ilusão
-    // e O estranho pássaro seguem dentro — O poema da contracapa (agora o
-    // sexto) sai
+    // com 32 publicados, a Home mostra os 5 mais recentes (RN-04) — o
+    // poema Quatro palavras (2026-09-04) abre a vitrine sozinho, os três
+    // Fundamentos (2026-08-27, 2026-08-15 e 2026-08-08) descem um degrau,
+    // e do empate triplo de 2026-08-04 (ordem alfabética pt-BR) só A
+    // ilusão segue dentro — O estranho pássaro (agora o sexto) sai
+    expect(hrefs).toContain('/artigos/quatro-palavras/');
     expect(hrefs).toContain('/artigos/estado-o-problema-que-voce-criou-sem-perceber/');
     expect(hrefs).toContain('/artigos/variaveis-nao-sao-caixas/');
     expect(hrefs).toContain('/artigos/o-que-realmente-acontece-quando-um-programa-roda/');
     expect(hrefs).toContain('/artigos/a-ilusao-do-desenvolvedor-heroi/');
-    expect(hrefs).toContain('/artigos/o-estranho-passaro/');
+    expect(hrefs).not.toContain('/artigos/o-estranho-passaro/');
     expect(hrefs).not.toContain('/artigos/o-poema-da-contracapa/');
     expect(hrefs).not.toContain('/artigos/o-mar-de-sao-sebastiao/');
     expect(hrefs).not.toContain('/artigos/a-rainha-vermelha-da-propria-cabeca/');
