@@ -47,7 +47,7 @@ describe('v1.0.0 — os 4 projetos reais', () => {
   });
 });
 
-describe('conteúdo real — trinta e dois artigos publicados', () => {
+describe('conteúdo real — trinta e três artigos publicados', () => {
   it('o segundo artigo (derivado do Matrix) existe com categoria reflexoes', () => {
     expect(pageExists('artigos/a-regua-que-desbota/index.html')).toBe(true);
     const main = parsePage('artigos/a-regua-que-desbota/index.html').querySelector('main')!;
@@ -421,6 +421,25 @@ describe('conteúdo real — trinta e dois artigos publicados', () => {
     expect(main.querySelectorAll('br').length).toBeGreaterThanOrEqual(40);
   });
 
+  it('o trigésimo terceiro artigo (a crônica da Dona Marocas) existe com categoria reflexoes', () => {
+    expect(pageExists('artigos/dona-marocas-quer-tomar-cha/index.html')).toBe(true);
+    const main = parsePage('artigos/dona-marocas-quer-tomar-cha/index.html').querySelector(
+      'main',
+    )!;
+    expect(main.querySelector('h1')?.text).toContain('Dona Marocas, quer tomar chá?');
+    expect(main.text).toContain('Reflexões');
+    // a frase-âncora da peça, por extenso (contida numa única linha-fonte)
+    expect(main.text).toContain('A máquina escreveu linhas. Eu decidi quais existiam.');
+    // a tese da série: a piada carrega o que o argumento não carrega
+    expect(main.text).toContain('a piada aguenta um peso que o argumento não aguenta');
+    // o fecho, que troca o voo pela queda
+    expect(main.text).toContain('Não foi voo. Foi queda com estilo.');
+    // a última linha devolve a pergunta do título
+    expect(main.text).toContain('Tá bom, Dona Marocas. Quer tomar chá?');
+    // o refrão em maiúsculas é o dispositivo da peça: volta três vezes
+    expect(main.text.match(/EU SOU UMA FRAUDE/g)).toHaveLength(3);
+  });
+
   it('a categoria Fundamentos lista os seus três artigos, na ordem da RN-02', () => {
     const main = parsePage('artigos/fundamentos/index.html').querySelector('main')!;
     const titulos = main.querySelectorAll('.item-titulo a').map((a) => a.text.trim());
@@ -433,14 +452,15 @@ describe('conteúdo real — trinta e dois artigos publicados', () => {
     expect(main.text).not.toContain('Nenhum artigo nesta categoria ainda');
   });
 
-  it('a listagem mostra os 32 publicados na ordem da RN-02 (data desc; empate → alfabético)', () => {
+  it('a listagem mostra os 33 publicados na ordem da RN-02 (data desc; empate → alfabético)', () => {
     const titulos = parsePage('artigos/index.html')
       .querySelectorAll('main .item-titulo a')
       .map((a) => a.text.trim());
-    expect(titulos).toHaveLength(32);
-    // o poema Quatro palavras (2026-09-04, sem empate) abre a lista sozinho
-    // e empurra todo o resto um degrau; os três Fundamentos (2026-08-27,
-    // 2026-08-15 e 2026-08-08), todos sem empate, vêm logo atrás; o empate
+    expect(titulos).toHaveLength(33);
+    // a crônica Dona Marocas (2026-09-05, sem empate) abre a lista sozinha
+    // e empurra todo o resto um degrau; o poema Quatro palavras
+    // (2026-09-04) e os três Fundamentos (2026-08-27, 2026-08-15 e
+    // 2026-08-08), todos sem empate, vêm logo atrás; o empate
     // TRIPLO de 2026-08-04 (A ilusão / O estranho pássaro / O poema da
     // contracapa) mantém o desempate alfabético pt-BR intacto; O mar de
     // São Sebastião (2026-07-29, sem empate) e A Rainha Vermelha
@@ -450,38 +470,39 @@ describe('conteúdo real — trinta e dois artigos publicados', () => {
     // duplo em 2026-07-20 (Organizar / Todo software), em 2026-07-19 (A
     // névoa / Os canteiros), em 2026-07-15 (A memória / O menino) e em
     // 2026-07-14 (A cidade / O velório); 2026-07-21 sem empate
-    expect(titulos[0]).toMatch(/^Quatro palavras/);
-    expect(titulos[1]).toMatch(/^Estado/);
-    expect(titulos[2]).toMatch(/^Variáveis não são caixas/);
-    expect(titulos[3]).toMatch(/^O que realmente acontece/);
-    expect(titulos[4]).toMatch(/^A ilusão do desenvolvedor herói/);
-    expect(titulos[5]).toMatch(/^O estranho pássaro/);
-    expect(titulos[6]).toMatch(/^O poema da contracapa/);
-    expect(titulos[7]).toMatch(/^O mar de São Sebastião/);
-    expect(titulos[8]).toMatch(/^A Rainha Vermelha/);
-    expect(titulos[9]).toMatch(/^O moletom/);
-    expect(titulos[10]).toMatch(/^Rápido demais/);
-    expect(titulos[11]).toMatch(/^O empréstimo/);
-    expect(titulos[12]).toMatch(/^O réu/);
-    expect(titulos[13]).toMatch(/^Do outro lado/);
-    expect(titulos[14]).toMatch(/^O dia em que descobri/);
-    expect(titulos[15]).toMatch(/^Para sair/);
-    expect(titulos[16]).toMatch(/^Quando o requisito/);
-    expect(titulos[17]).toMatch(/^Organizar/);
-    expect(titulos[18]).toMatch(/^Todo software/);
-    expect(titulos[19]).toMatch(/^A névoa/);
-    expect(titulos[20]).toMatch(/^Os canteiros/);
-    expect(titulos[21]).toMatch(/^Carta/);
-    expect(titulos[22]).toMatch(/^A pergunta/);
-    expect(titulos[23]).toMatch(/^A resposta/);
-    expect(titulos[24]).toMatch(/^A memória/);
-    expect(titulos[25]).toMatch(/^O menino/);
-    expect(titulos[26]).toMatch(/^A cidade/);
-    expect(titulos[27]).toMatch(/^O velório/);
-    expect(titulos[28]).toMatch(/^O jardineiro/);
-    expect(titulos[29]).toMatch(/^O silêncio/);
-    expect(titulos[30]).toMatch(/^A régua/);
-    expect(titulos[31]).toMatch(/^Construindo/);
+    expect(titulos[0]).toMatch(/^Dona Marocas/);
+    expect(titulos[1]).toMatch(/^Quatro palavras/);
+    expect(titulos[2]).toMatch(/^Estado/);
+    expect(titulos[3]).toMatch(/^Variáveis não são caixas/);
+    expect(titulos[4]).toMatch(/^O que realmente acontece/);
+    expect(titulos[5]).toMatch(/^A ilusão do desenvolvedor herói/);
+    expect(titulos[6]).toMatch(/^O estranho pássaro/);
+    expect(titulos[7]).toMatch(/^O poema da contracapa/);
+    expect(titulos[8]).toMatch(/^O mar de São Sebastião/);
+    expect(titulos[9]).toMatch(/^A Rainha Vermelha/);
+    expect(titulos[10]).toMatch(/^O moletom/);
+    expect(titulos[11]).toMatch(/^Rápido demais/);
+    expect(titulos[12]).toMatch(/^O empréstimo/);
+    expect(titulos[13]).toMatch(/^O réu/);
+    expect(titulos[14]).toMatch(/^Do outro lado/);
+    expect(titulos[15]).toMatch(/^O dia em que descobri/);
+    expect(titulos[16]).toMatch(/^Para sair/);
+    expect(titulos[17]).toMatch(/^Quando o requisito/);
+    expect(titulos[18]).toMatch(/^Organizar/);
+    expect(titulos[19]).toMatch(/^Todo software/);
+    expect(titulos[20]).toMatch(/^A névoa/);
+    expect(titulos[21]).toMatch(/^Os canteiros/);
+    expect(titulos[22]).toMatch(/^Carta/);
+    expect(titulos[23]).toMatch(/^A pergunta/);
+    expect(titulos[24]).toMatch(/^A resposta/);
+    expect(titulos[25]).toMatch(/^A memória/);
+    expect(titulos[26]).toMatch(/^O menino/);
+    expect(titulos[27]).toMatch(/^A cidade/);
+    expect(titulos[28]).toMatch(/^O velório/);
+    expect(titulos[29]).toMatch(/^O jardineiro/);
+    expect(titulos[30]).toMatch(/^O silêncio/);
+    expect(titulos[31]).toMatch(/^A régua/);
+    expect(titulos[32]).toMatch(/^Construindo/);
   });
 });
 
