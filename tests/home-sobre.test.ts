@@ -61,16 +61,17 @@ describe('REQ-02 — Home', () => {
     const main = parsePage('index.html').querySelector('main')!;
     expect(main.text).toContain('Artigos recentes');
     const hrefs = main.querySelectorAll('a').map((a) => a.getAttribute('href'));
-    // com 33 publicados, a Home mostra os 5 mais recentes (RN-04) — a
-    // crônica Dona Marocas (2026-09-05) abre a vitrine sozinha, o poema
-    // Quatro palavras (2026-09-04) e os três Fundamentos (2026-08-27,
-    // 2026-08-15 e 2026-08-08) descem um degrau, e o empate triplo de
-    // 2026-08-04 sai inteiro — A ilusão (agora a sexta) fica de fora
+    // com 34 publicados, a Home mostra os 5 mais recentes (RN-04) — a
+    // crônica da feira (2026-09-09) abre a vitrine sozinha, a crônica
+    // Dona Marocas (2026-09-05), o poema Quatro palavras (2026-09-04) e
+    // os dois Fundamentos mais novos (2026-08-27 e 2026-08-15) descem um
+    // degrau, e o primeiro da série (2026-08-08) sai da vitrine
+    expect(hrefs).toContain('/artigos/o-ultimo-dia-da-feira/');
     expect(hrefs).toContain('/artigos/dona-marocas-quer-tomar-cha/');
     expect(hrefs).toContain('/artigos/quatro-palavras/');
     expect(hrefs).toContain('/artigos/estado-o-problema-que-voce-criou-sem-perceber/');
     expect(hrefs).toContain('/artigos/variaveis-nao-sao-caixas/');
-    expect(hrefs).toContain('/artigos/o-que-realmente-acontece-quando-um-programa-roda/');
+    expect(hrefs).not.toContain('/artigos/o-que-realmente-acontece-quando-um-programa-roda/');
     expect(hrefs).not.toContain('/artigos/a-ilusao-do-desenvolvedor-heroi/');
     expect(hrefs).not.toContain('/artigos/o-estranho-passaro/');
     expect(hrefs).not.toContain('/artigos/o-poema-da-contracapa/');
