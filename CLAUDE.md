@@ -10,6 +10,8 @@ nenhuma atribuição de autoria de IA aos commits**, em nenhuma hipótese:
 - **Não** inclua o trailer `Co-Authored-By:` apontando para Claude, Anthropic
   ou qualquer outro assistente.
 - **Não** inclua o trailer `Claude-Session:` nem links de sessão.
+- **Não** inclua o trailer `Assisted-by:` nem qualquer outro trailer de
+  assistência (`Helped-by:`, `Reviewed-by:` apontando para IA etc.).
 - **Não** inclua linhas do tipo "Generated with ..." nas mensagens de commit.
 - **Não** crie commits com `--author` diferente de `André Maia
   <andrefnkmm@gmail.com>`.
