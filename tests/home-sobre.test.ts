@@ -61,16 +61,17 @@ describe('REQ-02 — Home', () => {
     const main = parsePage('index.html').querySelector('main')!;
     expect(main.text).toContain('Artigos recentes');
     const hrefs = main.querySelectorAll('a').map((a) => a.getAttribute('href'));
-    // com 34 publicados, a Home mostra os 5 mais recentes (RN-04) — a
-    // crônica da feira (2026-09-09) abre a vitrine sozinha, a crônica
-    // Dona Marocas (2026-09-05), o poema Quatro palavras (2026-09-04) e
-    // os dois Fundamentos mais novos (2026-08-27 e 2026-08-15) descem um
-    // degrau, e o primeiro da série (2026-08-08) sai da vitrine
+    // com 35 publicados, a Home mostra os 5 mais recentes (RN-04) — o
+    // quarto Fundamentos (2026-09-28) abre a vitrine sozinho, a crônica
+    // da feira (2026-09-09), a crônica Dona Marocas (2026-09-05), o poema
+    // Quatro palavras (2026-09-04) e o terceiro Fundamentos (2026-08-27)
+    // descem um degrau, e Variáveis não são caixas (2026-08-15) sai
+    expect(hrefs).toContain('/artigos/memoria-nao-e-um-detalhe/');
     expect(hrefs).toContain('/artigos/o-ultimo-dia-da-feira/');
     expect(hrefs).toContain('/artigos/dona-marocas-quer-tomar-cha/');
     expect(hrefs).toContain('/artigos/quatro-palavras/');
     expect(hrefs).toContain('/artigos/estado-o-problema-que-voce-criou-sem-perceber/');
-    expect(hrefs).toContain('/artigos/variaveis-nao-sao-caixas/');
+    expect(hrefs).not.toContain('/artigos/variaveis-nao-sao-caixas/');
     expect(hrefs).not.toContain('/artigos/o-que-realmente-acontece-quando-um-programa-roda/');
     expect(hrefs).not.toContain('/artigos/a-ilusao-do-desenvolvedor-heroi/');
     expect(hrefs).not.toContain('/artigos/o-estranho-passaro/');
